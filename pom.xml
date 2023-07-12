@@ -6,7 +6,7 @@
 
     <groupId>de.kifo</groupId>
     <artifactId>DiscordBot</artifactId>
-    <version>1.0</version>
+    <version>1.1.0</version>
 
     <properties>
         <maven.compiler.source>19</maven.compiler.source>
@@ -49,7 +49,7 @@
         <dependency>
             <groupId>net.dv8tion</groupId>
             <artifactId>JDA</artifactId>
-            <version>5.0.0-beta.2</version>
+            <version>5.0.0-beta.12</version>
         </dependency>
         <dependency>
             <groupId>com.sedmelluq</groupId>
@@ -59,7 +59,7 @@
         <dependency>
             <groupId>org.mongodb</groupId>
             <artifactId>mongodb-driver-sync</artifactId>
-            <version>4.8.1</version>
+            <version>4.9.1</version>
         </dependency>
     </dependencies>
 

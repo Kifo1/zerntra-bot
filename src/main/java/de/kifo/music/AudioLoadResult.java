@@ -89,8 +89,11 @@ public class AudioLoadResult extends AudioEventAdapter implements AudioLoadResul
             }
 
             if(player.getPlayingTrack() == null) {
-                guild.getAudioManager().closeAudioConnection();
-                guild.getAudioManager().getConnectedChannel().asVoiceChannel().sendMessage("Wegen inaktivität verlasse ich jetzt den Sparchkanal.").queue();
+                if(guild.getAudioManager().getConnectedChannel() != null) {
+                    guild.getAudioManager().closeAudioConnection();
+                    guild.getAudioManager().getConnectedChannel().asVoiceChannel().sendMessage("Wegen inaktivität verlasse ich jetzt den Sprachkanal.").queue();
+
+                }
             }
         });
     }

@@ -13,9 +13,8 @@ import java.awt.*;
 
 public class MessageListener extends ListenerAdapter {
 
-
     public void onMessageReceived(MessageReceivedEvent event) {
-        long guidlId = event.getGuild().getIdLong();
+        long guildId = event.getGuild().getIdLong();
         long userId = event.getMember().getUser().getIdLong();
         String message = event.getMessage().getContentRaw();
 
@@ -23,7 +22,7 @@ public class MessageListener extends ListenerAdapter {
             CreateUserFile.createUserFile(event.getGuild().getIdLong(), event.getMember().getUser().getIdLong());
         }
 
-        UserDataUtils.addMessages(guidlId, userId, 1);
+        UserDataUtils.addMessages(guildId, userId, 1);
 
         if(message.startsWith("!")) {
             String[] args = message.substring(1).split(" ");
@@ -33,7 +32,7 @@ public class MessageListener extends ListenerAdapter {
                 builder.setDescription("Du kannst nur in Textkanälen Befehle verwenden. " + event.getMember().getAsMention());
                 builder.setColor(Color.MAGENTA);
                 event.getChannel().sendMessageEmbeds(builder.build()).queue();
-                UserErrorsDataUtils.addWrongChannelError(guidlId, userId, 1);
+                UserErrorsDataUtils.addWrongChannelError(guildId, userId, 1);
                 return;
             }
 
@@ -43,9 +42,9 @@ public class MessageListener extends ListenerAdapter {
                     builder.setDescription("Dieser Befehl existiert nicht. " + event.getMember().getAsMention());
                     builder.setColor(Color.MAGENTA);
                     event.getChannel().sendMessageEmbeds(builder.build()).queue();
-                    UserErrorsDataUtils.addNotCommandError(guidlId, userId, 1);
+                    UserErrorsDataUtils.addNotCommandError(guildId, userId, 1);
                 } else {
-                    UserDataUtils.addCommandQuantity(guidlId, userId, 1);
+                    UserDataUtils.addCommandQuantity(guildId, userId, 1);
                 }
             }
         }

@@ -4,7 +4,6 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import de.kifo.Main;
 import de.kifo.commands.types.ServerCommand;
 import de.kifo.database.utils.UserCommandsDataUtils;
-import de.kifo.database.utils.UserDataUtils;
 import de.kifo.database.utils.UserErrorsDataUtils;
 import de.kifo.music.AudioLoadResult;
 import de.kifo.music.MusicController;
@@ -46,6 +45,9 @@ public class StopCommand implements ServerCommand {
                 if(player.getPlayingTrack() != null) {
                     AudioLoadResult.map.get(channel.getGuild()).clear();
                     player.stopTrack();
+                    manager.closeAudioConnection();
+                    message.addReaction(Emoji.fromFormatted("U+1F44C")).queue();
+                } else if(manager.isConnected()) {
                     manager.closeAudioConnection();
                     message.addReaction(Emoji.fromFormatted("U+1F44C")).queue();
                 } else {

@@ -12,7 +12,6 @@ import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 
-
 public class Main {
 
     public static AudioPlayerManager audioPlayerManager;
@@ -26,11 +25,11 @@ public class Main {
     public static void main(String[] args) {
         audioPlayerManager = new DefaultAudioPlayerManager();
 
-        jda = JDABuilder.createDefault("MTA1OTQzMTY0NDA4MTE3MjQ4MQ.G387y1.UOe97vGVPgjJ4LeuOCRJOEa6U0h77jeN21pBBk")
+        jda = JDABuilder.createDefault("MTA1OTQzMTY0NDA4MTE3MjQ4MQ.GtNeSW.ofKvtIws0Zsbe9a2fH9iOEv4wC5-r_Cpzz4pUI")
                 .enableIntents(GatewayIntent.MESSAGE_CONTENT)
                 .enableIntents(GatewayIntent.GUILD_PRESENCES)
                 .enableIntents(GatewayIntent.DIRECT_MESSAGES)
-                .setActivity(Activity.playing("Version: 1.0.0"))
+                .setActivity(Activity.playing("Version: 1.1.0"))
                 .build();
 
         AudioSourceManagers.registerRemoteSources(audioPlayerManager);

@@ -28,7 +28,11 @@ public class CommandManager {
     public boolean perform(String command, Member member, TextChannel channel, Message message) {
         ServerCommand cmd;
         if((cmd = this.commands.get(command.toLowerCase())) != null) {
-            cmd.executeCommand(member, channel, message);
+            try {
+                cmd.executeCommand(member, channel, message);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
             return true;
         }
 

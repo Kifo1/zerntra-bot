@@ -6,7 +6,7 @@ import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 
 public interface ServerCommand {
 
-    public default void executeCommand(Member member, TextChannel channel, Message message) {
+    public default void executeCommand(Member member, TextChannel channel, Message message) throws InterruptedException {
 
     }
 
