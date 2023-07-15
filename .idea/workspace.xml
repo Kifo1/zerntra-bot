@@ -9,19 +9,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="69c77520-5d36-493a-933a-b0e88f110f1e" name="Changes" comment="JavaBot Database Update">
+    <list default="true" id="69c77520-5d36-493a-933a-b0e88f110f1e" name="Changes" comment="- Updated token">
       <change beforePath="$PROJECT_DIR$/.idea/artifacts/DiscordBot_jar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/artifacts/DiscordBot_jar.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/de/kifo/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/kifo/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/de/kifo/commands/InfoCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/kifo/commands/InfoCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/de/kifo/commands/types/CommandManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/kifo/commands/types/CommandManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/de/kifo/commands/types/ServerCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/kifo/commands/types/ServerCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/de/kifo/listener/MessageListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/kifo/listener/MessageListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/de/kifo/music/AudioLoadResult.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/kifo/music/AudioLoadResult.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/de/kifo/music/commands/PlayCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/kifo/music/commands/PlayCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/de/kifo/music/commands/SkipCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/kifo/music/commands/SkipCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/de/kifo/music/commands/StopCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/kifo/music/commands/StopCommand.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -80,7 +71,10 @@
       <workItem from="1689092088968" duration="1563000" />
       <workItem from="1689097149950" duration="474000" />
       <workItem from="1689097914812" duration="311000" />
-      <workItem from="1689182659448" duration="665000" />
+      <workItem from="1689182659448" duration="1507000" />
+      <workItem from="1689189770417" duration="1311000" />
+      <workItem from="1689274439121" duration="69000" />
+      <workItem from="1689443779414" duration="15000" />
     </task>
     <task id="LOCAL-00001" summary="First Event">
       <created>1672659796446</created>
@@ -110,7 +104,14 @@
       <option name="project" value="LOCAL" />
       <updated>1672929750259</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="JavaBot 1.1.0&#10;&#10;Fixed:&#10;- Fixed writing errors.&#10;- Fixed issue with rejoin loop -&gt; Updated dependencies&#10;- Removed exception if the bot tries to leave while it's not in a channel.&#10;&#10;Changes:&#10;- Mention the user in info-command&#10;&#10;Miscellaneous:&#10;- Updated dependencies&#10;- Clean up code">
+      <created>1689183514200</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1689183514200</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -132,7 +133,8 @@
     <MESSAGE value="JavaBot music" />
     <MESSAGE value="JavaBot music initial" />
     <MESSAGE value="JavaBot Database Update" />
-    <option name="LAST_COMMIT_MESSAGE" value="JavaBot Database Update" />
+    <MESSAGE value="JavaBot 1.1.0&#10;&#10;Fixed:&#10;- Fixed writing errors.&#10;- Fixed issue with rejoin loop -&gt; Updated dependencies&#10;- Removed exception if the bot tries to leave while it's not in a channel.&#10;&#10;Changes:&#10;- Mention the user in info-command&#10;&#10;Miscellaneous:&#10;- Updated dependencies&#10;- Clean up code" />
+    <option name="LAST_COMMIT_MESSAGE" value="JavaBot 1.1.0&#10;&#10;Fixed:&#10;- Fixed writing errors.&#10;- Fixed issue with rejoin loop -&gt; Updated dependencies&#10;- Removed exception if the bot tries to leave while it's not in a channel.&#10;&#10;Changes:&#10;- Mention the user in info-command&#10;&#10;Miscellaneous:&#10;- Updated dependencies&#10;- Clean up code" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

@@ -15,7 +15,7 @@ public class MusicController {
 
         this.guild.getAudioManager().setSendingHandler(new AudioPlayerSendHandler(player));
         this.player.addListener(new AudioLoadResult(this.guild));
-        this.player.setVolume(10);
+        this.player.setVolume(15);
         this.player.setFrameBufferDuration(1000000000);
     }
 

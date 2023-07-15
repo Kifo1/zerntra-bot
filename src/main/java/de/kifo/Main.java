@@ -25,7 +25,7 @@ public class Main {
     public static void main(String[] args) {
         audioPlayerManager = new DefaultAudioPlayerManager();
 
-        jda = JDABuilder.createDefault("MTA1OTQzMTY0NDA4MTE3MjQ4MQ.GtNeSW.ofKvtIws0Zsbe9a2fH9iOEv4wC5-r_Cpzz4pUI")
+        jda = JDABuilder.createDefault("MTA1OTQzMTY0NDA4MTE3MjQ4MQ.GFY5Eo.TcwNJzrB9aSYt_1fYTd6OgHb6BpWgrBFfsAqP4")
                 .enableIntents(GatewayIntent.MESSAGE_CONTENT)
                 .enableIntents(GatewayIntent.GUILD_PRESENCES)
                 .enableIntents(GatewayIntent.DIRECT_MESSAGES)
