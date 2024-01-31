@@ -29,8 +29,13 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>de.kifo.Main</mainClass>
+                        </manifest>
+                    </archive>
                     <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                        <descriptorRef>jar-with-dependencies</descriptorRef> <!--jar contains manifest with main class-->
                     </descriptorRefs>
                 </configuration>
             </plugin>

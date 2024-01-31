@@ -1,10 +1,11 @@
 package de.kifo.commands.types;
 
+import de.kifo.commands.HelpCommand;
 import de.kifo.commands.InfoCommand;
 import de.kifo.commands.InviteCommand;
 import de.kifo.music.commands.PlayCommand;
-import de.kifo.music.commands.PlayListCommand;
 import de.kifo.music.commands.SkipCommand;
+import de.kifo.music.commands.PlayListCommand;
 import de.kifo.music.commands.StopCommand;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
@@ -25,6 +26,8 @@ public class CommandManager {
         this.commands.put("stop", new StopCommand());
         this.commands.put("info", new InfoCommand());
         this.commands.put("playlist", new PlayListCommand());
+        //TODO Add command to bot
+        //this.commands.put("help", new HelpCommand());
     }
 
     public boolean perform(String command, Member member, TextChannel channel, Message message) {

@@ -9,5 +9,4 @@ public interface ServerCommand {
     public default void executeCommand(Member member, TextChannel channel, Message message) throws InterruptedException {
 
     }
-
 }

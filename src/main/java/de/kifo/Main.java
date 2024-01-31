@@ -29,7 +29,7 @@ public class Main {
                 .enableIntents(GatewayIntent.MESSAGE_CONTENT)
                 .enableIntents(GatewayIntent.GUILD_PRESENCES)
                 .enableIntents(GatewayIntent.DIRECT_MESSAGES)
-                .setActivity(Activity.playing("Version: 1.1.2"))
+                .setActivity(Activity.playing("Musik für die Rasselbande"))
                 .build();
 
         AudioSourceManagers.registerRemoteSources(audioPlayerManager);
