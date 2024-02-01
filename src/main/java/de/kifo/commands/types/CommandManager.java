@@ -1,6 +1,5 @@
 package de.kifo.commands.types;
 
-import de.kifo.commands.HelpCommand;
 import de.kifo.commands.InfoCommand;
 import de.kifo.commands.InviteCommand;
 import de.kifo.music.commands.PlayCommand;

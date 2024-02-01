@@ -1,16 +1,17 @@
 package de.kifo.commands;
 
 import de.kifo.commands.types.ServerCommand;
-import de.kifo.database.utils.UserCommandsDataUtils;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+
+import static de.kifo.database.utils.UserCommandsDataUtils.addInviteCommand;
 
 public class InviteCommand implements ServerCommand {
 
     @Override
     public void executeCommand(Member member, TextChannel channel, Message message) {
-        UserCommandsDataUtils.addInviteCommand(member.getGuild().getIdLong(), member.getUser().getIdLong(), 1);
+        addInviteCommand(member.getGuild().getIdLong(), member.getUser().getIdLong(), 1);
         String[] args = message.getContentRaw().split(" ");
 
         if(args[0].equalsIgnoreCase("!invite")) {

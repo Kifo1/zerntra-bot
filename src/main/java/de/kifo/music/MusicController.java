@@ -1,8 +1,9 @@
 package de.kifo.music;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
-import de.kifo.Main;
 import net.dv8tion.jda.api.entities.Guild;
+
+import static de.kifo.Main.getInstance;
 
 public class MusicController {
 
@@ -11,7 +12,7 @@ public class MusicController {
 
     public MusicController(Guild guild) {
         this.guild = guild;
-        this.player = Main.getInstance().getAudioPlayerManager().createPlayer();
+        this.player = getInstance().getAudioPlayerManager().createPlayer();
 
         this.guild.getAudioManager().setSendingHandler(new AudioPlayerSendHandler(player));
         this.player.addListener(new AudioLoadResult(this.guild));

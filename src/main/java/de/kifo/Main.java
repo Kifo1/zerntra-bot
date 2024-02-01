@@ -15,13 +15,21 @@ import static net.dv8tion.jda.api.JDABuilder.createDefault;
 
 public class Main {
 
-    public static AudioPlayerManager audioPlayerManager;
     private static Main instance;
+
+    private static AudioPlayerManager audioPlayerManager;
     private static JDA jda;
-    public PlayerManager playerManager;
+    private PlayerManager playerManager;
     private DataConnection dataConnection;
     private CommandManager commandManager;
 
+    public Main() {
+        instance = this;
+
+        this.commandManager = new CommandManager();
+        this.playerManager = new PlayerManager();
+        this.dataConnection = new DataConnection();
+    }
 
     public static void main(String[] args) {
         audioPlayerManager = new DefaultAudioPlayerManager();
@@ -42,23 +50,15 @@ public class Main {
         new Main();
     }
 
-    public Main() {
-        instance = this;
-
-        this.commandManager = new CommandManager();
-        this.playerManager = new PlayerManager();
-        this.dataConnection = new DataConnection();
-    }
-
     public static Main getInstance() {
         return instance;
     }
 
-    public AudioPlayerManager getAudioPlayerManager() {
+    public static AudioPlayerManager getAudioPlayerManager() {
         return audioPlayerManager;
     }
 
-    public JDA getJDA() {
+    public static JDA getJDA() {
         return jda;
     }
 
@@ -73,4 +73,5 @@ public class Main {
     public CommandManager getCommandManager() {
         return commandManager;
     }
+
 }

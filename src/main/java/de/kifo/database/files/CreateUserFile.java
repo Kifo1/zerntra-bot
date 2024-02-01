@@ -1,7 +1,8 @@
 package de.kifo.database.files;
 
-import de.kifo.Main;
 import org.bson.Document;
+
+import static de.kifo.Main.getInstance;
 
 public class CreateUserFile {
 
@@ -20,7 +21,7 @@ public class CreateUserFile {
                         .append("stop", 0)
                         .append("info", 0));
 
-        Main.getInstance().getDataConnection().getCollection().insertOne(userDocument);
+        getInstance().getDataConnection().getCollection().insertOne(userDocument);
 
     }
     /*public static void update() {

@@ -9,9 +9,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="69c77520-5d36-493a-933a-b0e88f110f1e" name="Changes" comment="Update dependencies">
+    <list default="true" id="69c77520-5d36-493a-933a-b0e88f110f1e" name="Changes" comment="Add lombok, improve gitignore, cleanup code">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/de/kifo/music/AudioLoadResult.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/kifo/music/AudioLoadResult.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/de/kifo/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/kifo/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/de/kifo/commands/InfoCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/kifo/commands/InfoCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/de/kifo/commands/InviteCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/kifo/commands/InviteCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/de/kifo/database/DataConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/kifo/database/DataConnection.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/de/kifo/database/files/CreateUserFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/kifo/database/files/CreateUserFile.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/de/kifo/listener/MessageListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/kifo/listener/MessageListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/de/kifo/music/AudioPlayerSendHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/kifo/music/AudioPlayerSendHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/de/kifo/music/MusicController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/kifo/music/MusicController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/de/kifo/music/PlayerManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/kifo/music/PlayerManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/de/kifo/music/commands/PlayCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/kifo/music/commands/PlayCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/de/kifo/music/commands/PlayListCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/kifo/music/commands/PlayListCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/de/kifo/music/commands/SkipCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/kifo/music/commands/SkipCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/de/kifo/music/commands/StopCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/kifo/music/commands/StopCommand.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,24 +55,24 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;last_opened_file_path&quot;: &quot;E:/Developement/Workspace IntelliJ/DiscordBot&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15527344&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;Errors&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "E:/Developement/Workspace IntelliJ/DiscordBot",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "project.structure.last.edited": "Libraries",
+    "project.structure.proportion": "0.15527344",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -85,7 +97,8 @@
       <workItem from="1690042997449" duration="101000" />
       <workItem from="1706728635603" duration="2596000" />
       <workItem from="1706731761090" duration="4066000" />
-      <workItem from="1706778796027" duration="814000" />
+      <workItem from="1706778796027" duration="2326000" />
+      <workItem from="1706781150577" duration="2052000" />
     </task>
     <task id="LOCAL-00001" summary="First Event">
       <created>1672659796446</created>
@@ -166,7 +179,15 @@
       <option name="project" value="LOCAL" />
       <updated>1706738594859</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="Add lombok, improve gitignore, cleanup code">
+      <option name="closed" value="true" />
+      <created>1706779883087</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1706779883087</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -195,7 +216,8 @@
     <MESSAGE value="Version 1.1.2&#10;&#10;Changed:&#10;- Changed the version name&#10;- Changed playing name" />
     <MESSAGE value="Add basics for help command and new play description" />
     <MESSAGE value="Update dependencies" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update dependencies" />
+    <MESSAGE value="Add lombok, improve gitignore, cleanup code" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add lombok, improve gitignore, cleanup code" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
