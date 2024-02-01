@@ -2,15 +2,16 @@ package de.kifo;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
-import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import de.kifo.commands.types.CommandManager;
 import de.kifo.database.DataConnection;
 import de.kifo.listener.MessageListener;
 import de.kifo.music.PlayerManager;
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+
+import static com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers.registerRemoteSources;
+import static net.dv8tion.jda.api.JDABuilder.createDefault;
 
 public class Main {
 
@@ -25,14 +26,14 @@ public class Main {
     public static void main(String[] args) {
         audioPlayerManager = new DefaultAudioPlayerManager();
 
-        jda = JDABuilder.createDefault("MTA1OTQzMTY0NDA4MTE3MjQ4MQ.GFY5Eo.TcwNJzrB9aSYt_1fYTd6OgHb6BpWgrBFfsAqP4")
+        jda = createDefault("MTA1OTQzMTY0NDA4MTE3MjQ4MQ.GFY5Eo.TcwNJzrB9aSYt_1fYTd6OgHb6BpWgrBFfsAqP4")
                 .enableIntents(GatewayIntent.MESSAGE_CONTENT)
                 .enableIntents(GatewayIntent.GUILD_PRESENCES)
                 .enableIntents(GatewayIntent.DIRECT_MESSAGES)
                 .setActivity(Activity.playing("Musik für die Rasselbande"))
                 .build();
 
-        AudioSourceManagers.registerRemoteSources(audioPlayerManager);
+        registerRemoteSources(audioPlayerManager);
         audioPlayerManager.getConfiguration().setFilterHotSwapEnabled(true);
 
         //Events

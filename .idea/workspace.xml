@@ -9,14 +9,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="69c77520-5d36-493a-933a-b0e88f110f1e" name="Changes" comment="Version 1.1.2&#10;&#10;Changed:&#10;- Changed the version name&#10;- Changed playing name">
-      <change afterPath="$PROJECT_DIR$/src/main/java/de/kifo/commands/HelpCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="69c77520-5d36-493a-933a-b0e88f110f1e" name="Changes" comment="Update dependencies">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/de/kifo/commands/types/CommandManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/kifo/commands/types/CommandManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/de/kifo/commands/types/ServerCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/kifo/commands/types/ServerCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/de/kifo/database/utils/UserCommandsDataUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/kifo/database/utils/UserCommandsDataUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/de/kifo/music/AudioLoadResult.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/kifo/music/AudioLoadResult.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -89,7 +84,8 @@
       <workItem from="1690042267073" duration="99000" />
       <workItem from="1690042997449" duration="101000" />
       <workItem from="1706728635603" duration="2596000" />
-      <workItem from="1706731761090" duration="1879000" />
+      <workItem from="1706731761090" duration="4066000" />
+      <workItem from="1706778796027" duration="814000" />
     </task>
     <task id="LOCAL-00001" summary="First Event">
       <created>1672659796446</created>
@@ -154,7 +150,23 @@
       <option name="project" value="LOCAL" />
       <updated>1689458981081</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Add basics for help command and new play description">
+      <option name="closed" value="true" />
+      <created>1706736981724</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1706736981724</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Update dependencies">
+      <option name="closed" value="true" />
+      <created>1706738594859</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1706738594859</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -181,7 +193,9 @@
     <MESSAGE value="Version 1.1.1&#10;&#10;Changes:&#10;- Updated version name&#10;- Updated playing title" />
     <MESSAGE value="Version 1.1.2&#10;&#10;Added:&#10;- New playlist command to see the playlist&#10;&#10;Changed:&#10;- Skip command can now skip songs which are in the playlist" />
     <MESSAGE value="Version 1.1.2&#10;&#10;Changed:&#10;- Changed the version name&#10;- Changed playing name" />
-    <option name="LAST_COMMIT_MESSAGE" value="Version 1.1.2&#10;&#10;Changed:&#10;- Changed the version name&#10;- Changed playing name" />
+    <MESSAGE value="Add basics for help command and new play description" />
+    <MESSAGE value="Update dependencies" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update dependencies" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
