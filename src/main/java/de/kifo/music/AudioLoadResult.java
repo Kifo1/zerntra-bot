@@ -15,7 +15,9 @@ import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 
 import java.awt.*;
 import java.util.*;
-import java.util.concurrent.Executors;
+
+import static java.lang.Thread.sleep;
+import static java.util.concurrent.Executors.newSingleThreadExecutor;
 
 public class AudioLoadResult extends AudioEventAdapter implements AudioLoadResultHandler {
 
@@ -81,9 +83,9 @@ public class AudioLoadResult extends AudioEventAdapter implements AudioLoadResul
         if(!map.get(guild).isEmpty()) {
             nextSong(player);
         }
-        Executors.newSingleThreadExecutor().execute( () -> {
+        newSingleThreadExecutor().execute( () -> {
             try {
-                Thread.sleep(60000);
+                sleep(60000);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
@@ -92,7 +94,6 @@ public class AudioLoadResult extends AudioEventAdapter implements AudioLoadResul
                 if(guild.getAudioManager().getConnectedChannel() != null) {
                     guild.getAudioManager().closeAudioConnection();
                     guild.getAudioManager().getConnectedChannel().asVoiceChannel().sendMessage("Wegen inaktivität verlasse ich jetzt den Sprachkanal.").queue();
-
                 }
             }
         });

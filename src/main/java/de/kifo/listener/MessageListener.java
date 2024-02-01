@@ -1,15 +1,18 @@
 package de.kifo.listener;
 
-import de.kifo.Main;
-import de.kifo.database.files.CreateUserFile;
-import de.kifo.database.utils.UserDataUtils;
 import de.kifo.database.utils.UserErrorsDataUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
-import java.awt.*;
+import static de.kifo.Main.getInstance;
+import static de.kifo.database.files.CreateUserFile.createUserFile;
+import static de.kifo.database.utils.UserDataUtils.addCommandQuantity;
+import static de.kifo.database.utils.UserDataUtils.addMessages;
+import static de.kifo.database.utils.UserDataUtils.fileExist;
+import static de.kifo.database.utils.UserErrorsDataUtils.addNotCommandError;
+import static java.awt.Color.MAGENTA;
 
 public class MessageListener extends ListenerAdapter {
 
@@ -18,11 +21,11 @@ public class MessageListener extends ListenerAdapter {
         long userId = event.getMember().getUser().getIdLong();
         String message = event.getMessage().getContentRaw();
 
-        if(!UserDataUtils.fileExist(event.getGuild().getIdLong(), event.getMember().getUser().getIdLong())) {
-            CreateUserFile.createUserFile(event.getGuild().getIdLong(), event.getMember().getUser().getIdLong());
+        if(!fileExist(event.getGuild().getIdLong(), event.getMember().getUser().getIdLong())) {
+            createUserFile(event.getGuild().getIdLong(), event.getMember().getUser().getIdLong());
         }
 
-        UserDataUtils.addMessages(guildId, userId, 1);
+        addMessages(guildId, userId, 1);
 
         if(message.startsWith("!")) {
             String[] args = message.substring(1).split(" ");
@@ -30,21 +33,21 @@ public class MessageListener extends ListenerAdapter {
             if(!event.getChannel().getType().equals(ChannelType.TEXT)) {
                 EmbedBuilder builder = new EmbedBuilder();
                 builder.setDescription("Du kannst nur in Textkanälen Befehle verwenden. " + event.getMember().getAsMention());
-                builder.setColor(Color.MAGENTA);
+                builder.setColor(MAGENTA);
                 event.getChannel().sendMessageEmbeds(builder.build()).queue();
                 UserErrorsDataUtils.addWrongChannelError(guildId, userId, 1);
                 return;
             }
 
             if(args.length > 0) {
-                if(!Main.getInstance().getCommandManager().perform(args[0], event.getMember(), event.getChannel().asTextChannel(), event.getMessage())) {
+                if(!getInstance().getCommandManager().perform(args[0], event.getMember(), event.getChannel().asTextChannel(), event.getMessage())) {
                     EmbedBuilder builder = new EmbedBuilder();
                     builder.setDescription("Dieser Befehl existiert nicht. " + event.getMember().getAsMention());
-                    builder.setColor(Color.MAGENTA);
+                    builder.setColor(MAGENTA);
                     event.getChannel().sendMessageEmbeds(builder.build()).queue();
-                    UserErrorsDataUtils.addNotCommandError(guildId, userId, 1);
+                    addNotCommandError(guildId, userId, 1);
                 } else {
-                    UserDataUtils.addCommandQuantity(guildId, userId, 1);
+                    addCommandQuantity(guildId, userId, 1);
                 }
             }
         }
