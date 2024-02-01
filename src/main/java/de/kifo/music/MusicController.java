@@ -1,10 +1,12 @@
 package de.kifo.music;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
+import lombok.Data;
 import net.dv8tion.jda.api.entities.Guild;
 
 import static de.kifo.Main.getInstance;
 
+@Data
 public class MusicController {
 
     private final Guild guild;
@@ -18,13 +20,5 @@ public class MusicController {
         this.player.addListener(new AudioLoadResult(this.guild));
         this.player.setVolume(15);
         this.player.setFrameBufferDuration(1000000000);
-    }
-
-    public AudioPlayer getPlayer() {
-        return player;
-    }
-
-    public Guild getGuild() {
-        return guild;
     }
 }
