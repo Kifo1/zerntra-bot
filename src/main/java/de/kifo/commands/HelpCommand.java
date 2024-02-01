@@ -1,7 +1,6 @@
 package de.kifo.commands;
 
 import de.kifo.commands.types.ServerCommand;
-import de.kifo.database.utils.UserCommandsDataUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;

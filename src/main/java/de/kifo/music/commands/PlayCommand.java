@@ -1,12 +1,7 @@
 package de.kifo.music.commands;
 
-import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
-import de.kifo.Main;
 import de.kifo.commands.types.ServerCommand;
-import de.kifo.database.utils.UserCommandsDataUtils;
-import de.kifo.database.utils.UserDataUtils;
-import de.kifo.database.utils.UserErrorsDataUtils;
 import de.kifo.music.AudioLoadResult;
 import de.kifo.music.MusicController;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -17,8 +12,12 @@ import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
 import net.dv8tion.jda.api.managers.AudioManager;
 
-import java.awt.*;
 import java.util.HashMap;
+
+import static de.kifo.Main.getInstance;
+import static de.kifo.database.utils.UserCommandsDataUtils.addPlayCommand;
+import static de.kifo.database.utils.UserErrorsDataUtils.addWrongUsageError;
+import static java.awt.Color.MAGENTA;
 
 public class PlayCommand implements ServerCommand {
 
@@ -26,7 +25,7 @@ public class PlayCommand implements ServerCommand {
 
     @Override
     public void executeCommand(Member member, TextChannel channel, Message message) {
-        UserCommandsDataUtils.addPlayCommand(member.getGuild().getIdLong(), member.getUser().getIdLong(), 1);
+        addPlayCommand(member.getGuild().getIdLong(), member.getUser().getIdLong(), 1);
         String[] args = message.getContentRaw().split(" ");
 
         if(args.length > 1) {
@@ -39,9 +38,8 @@ public class PlayCommand implements ServerCommand {
                 }
 
                 if(vc != null) {
-                    MusicController controller = Main.getInstance().getPlayerManager().getController(vc.getGuild().getIdLong());
-                    AudioPlayer player = controller.getPlayer();
-                    AudioPlayerManager apm = Main.getInstance().getAudioPlayerManager();
+                    MusicController controller = getInstance().getPlayerManager().getController(vc.getGuild().getIdLong());
+                    AudioPlayerManager apm = getInstance().getAudioPlayerManager();
                     AudioManager manager = vc.getGuild().getAudioManager();
                     manager.openAudioConnection(vc);
 
@@ -62,23 +60,23 @@ public class PlayCommand implements ServerCommand {
                 } else {
                     EmbedBuilder builder = new EmbedBuilder();
                     builder.setDescription("Du musst in einem Sprachkanal sein. " + member.getAsMention());
-                    builder.setColor(Color.MAGENTA);
+                    builder.setColor(MAGENTA);
                     channel.sendMessageEmbeds(builder.build()).queue();
-                    UserErrorsDataUtils.addWrongUsageError(member.getGuild().getIdLong(), member.getUser().getIdLong(), 1);
+                    addWrongUsageError(member.getGuild().getIdLong(), member.getUser().getIdLong(), 1);
                 }
             } else {
                 EmbedBuilder builder = new EmbedBuilder();
                 builder.setDescription("Du musst in einem Sprachkanal sein. " + member.getAsMention());
-                builder.setColor(Color.MAGENTA);
+                builder.setColor(MAGENTA);
                 channel.sendMessageEmbeds(builder.build()).queue();
-                UserErrorsDataUtils.addWrongUsageError(member.getGuild().getIdLong(), member.getUser().getIdLong(), 1);
+                addWrongUsageError(member.getGuild().getIdLong(), member.getUser().getIdLong(), 1);
             }
         } else {
             EmbedBuilder builder = new EmbedBuilder();
             builder.setDescription("Verwende bitte \"!play <Url/Suchbegriffe>\". " + member.getAsMention());
-            builder.setColor(Color.MAGENTA);
+            builder.setColor(MAGENTA);
             channel.sendMessageEmbeds(builder.build()).queue();
-            UserErrorsDataUtils.addWrongUsageError(member.getGuild().getIdLong(), member.getUser().getIdLong(), 1);
+            addWrongUsageError(member.getGuild().getIdLong(), member.getUser().getIdLong(), 1);
         }
     }
 }

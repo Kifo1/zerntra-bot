@@ -6,6 +6,8 @@ import net.dv8tion.jda.api.audio.AudioSendHandler;
 
 import java.nio.ByteBuffer;
 
+import static java.nio.ByteBuffer.wrap;
+
 public class AudioPlayerSendHandler implements AudioSendHandler {
 
     private final AudioPlayer audioPlayer;
@@ -23,8 +25,7 @@ public class AudioPlayerSendHandler implements AudioSendHandler {
 
     @Override
     public ByteBuffer provide20MsAudio() {
-
-        return ByteBuffer.wrap(lastFrame.getData());
+        return wrap(lastFrame.getData());
     }
 
     @Override

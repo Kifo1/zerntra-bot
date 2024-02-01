@@ -2,9 +2,7 @@ package de.kifo.music.commands;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import de.kifo.Main;
 import de.kifo.commands.types.ServerCommand;
-import de.kifo.database.utils.UserErrorsDataUtils;
 import de.kifo.music.AudioLoadResult;
 import de.kifo.music.MusicController;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -14,8 +12,11 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
 
-import java.awt.*;
 import java.util.LinkedList;
+
+import static de.kifo.Main.getInstance;
+import static de.kifo.database.utils.UserErrorsDataUtils.addWrongUsageError;
+import static java.awt.Color.MAGENTA;
 
 public class PlayListCommand implements ServerCommand {
 
@@ -33,26 +34,26 @@ public class PlayListCommand implements ServerCommand {
         } else {
             EmbedBuilder builder = new EmbedBuilder();
             builder.setDescription("Du musst in einem Sprachkanal sein. " + member.getAsMention());
-            builder.setColor(Color.MAGENTA);
+            builder.setColor(MAGENTA);
             channel.sendMessageEmbeds(builder.build()).queue();
-            UserErrorsDataUtils.addWrongUsageError(member.getGuild().getIdLong(), member.getUser().getIdLong(), 1);
+            addWrongUsageError(member.getGuild().getIdLong(), member.getUser().getIdLong(), 1);
         }
 
         if(vc != null) {
-            MusicController controller = Main.getInstance().playerManager.getController(vc.getGuild().getIdLong());
+            MusicController controller = getInstance().getPlayerManager().getController(vc.getGuild().getIdLong());
             AudioPlayer player = controller.getPlayer();
 
             if(player.getPlayingTrack() != null ) {
                 LinkedList<AudioTrack> tracks = (LinkedList<AudioTrack>) AudioLoadResult.map.get(channel.getGuild());
                 EmbedBuilder builder = new EmbedBuilder();
-                builder.setColor(Color.MAGENTA);
+                builder.setColor(MAGENTA);
 
                 if(tracks.isEmpty()) {
                     EmbedBuilder embedBuilder = new EmbedBuilder();
-                    embedBuilder.setColor(Color.MAGENTA);
+                    embedBuilder.setColor(MAGENTA);
                     embedBuilder.setDescription("Die Playlist ist aktuell leer. " + member.getAsMention());
                     channel.sendMessageEmbeds(embedBuilder.build()).queue();
-                    UserErrorsDataUtils.addWrongUsageError(member.getGuild().getIdLong(), member.getUser().getIdLong(), 1);
+                    addWrongUsageError(member.getGuild().getIdLong(), member.getUser().getIdLong(), 1);
                     return;
                 }
 
@@ -63,14 +64,14 @@ public class PlayListCommand implements ServerCommand {
                     trackNumber += 1;
                 }
 
-                builder.setFooter("Verwende /skip <Nummer>, um das gewünschte Lied aus der Playlist zu entfernen.");
+                builder.setFooter("Verwende !skip <Nummer>, um das gewünschte Lied aus der Playlist zu entfernen.");
                 channel.sendMessageEmbeds(builder.build()).queue();
             } else {
                 EmbedBuilder builder = new EmbedBuilder();
-                builder.setColor(Color.MAGENTA);
+                builder.setColor(MAGENTA);
                 builder.setDescription("Es läuft im Moment kein Lied. " + member.getAsMention());
                 channel.sendMessageEmbeds(builder.build()).queue();
-                UserErrorsDataUtils.addWrongUsageError(member.getGuild().getIdLong(), member.getUser().getIdLong(), 1);
+                addWrongUsageError(member.getGuild().getIdLong(), member.getUser().getIdLong(), 1);
             }
         }
     }

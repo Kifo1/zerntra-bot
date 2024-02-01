@@ -1,7 +1,6 @@
 package de.kifo.commands;
 
 import de.kifo.commands.types.ServerCommand;
-import de.kifo.database.files.CreateUserFile;
 import de.kifo.database.utils.UserCommandsDataUtils;
 import de.kifo.database.utils.UserDataUtils;
 import de.kifo.database.utils.UserErrorsDataUtils;
@@ -11,16 +10,27 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 
-import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+
+import static de.kifo.database.files.CreateUserFile.createUserFile;
+import static de.kifo.database.utils.UserCommandsDataUtils.addInfoCommand;
+import static de.kifo.database.utils.UserCommandsDataUtils.getInfoCommands;
+import static de.kifo.database.utils.UserCommandsDataUtils.getPlayCommands;
+import static de.kifo.database.utils.UserCommandsDataUtils.getSkipCommands;
+import static de.kifo.database.utils.UserCommandsDataUtils.getStopCommands;
+import static de.kifo.database.utils.UserDataUtils.fileExist;
+import static de.kifo.database.utils.UserErrorsDataUtils.addWrongUsageError;
+import static de.kifo.database.utils.UserErrorsDataUtils.getNotCommandErrors;
+import static de.kifo.database.utils.UserErrorsDataUtils.getWrongChannelErrors;
+import static java.awt.Color.MAGENTA;
 
 public class InfoCommand implements ServerCommand {
 
     @Override
     public void executeCommand(Member member, TextChannel channel, Message message) {
-        UserCommandsDataUtils.addInfoCommand(member.getGuild().getIdLong(), member.getUser().getIdLong(), 1);
+        addInfoCommand(member.getGuild().getIdLong(), member.getUser().getIdLong(), 1);
 
         String[] args = message.getContentRaw().split(" ");
 
@@ -29,24 +39,24 @@ public class InfoCommand implements ServerCommand {
 
             if (member.getGuild().getMembersByName(userName, true).isEmpty()) {
                 EmbedBuilder builder = new EmbedBuilder();
-                builder.setColor(Color.MAGENTA);
+                builder.setColor(MAGENTA);
                 builder.setDescription("Der Nutzer konnte nicht gefunden werden. " + member.getAsMention());
                 channel.sendMessageEmbeds(builder.build()).queue();
-                UserErrorsDataUtils.addWrongUsageError(member.getGuild().getIdLong(), member.getUser().getIdLong(), 1);
+                addWrongUsageError(member.getGuild().getIdLong(), member.getUser().getIdLong(), 1);
                 return;
             }
 
             User user = member.getGuild().getMembersByName(userName, true).get(0).getUser();
 
-            if (!UserDataUtils.fileExist(member.getGuild().getIdLong(), user.getIdLong())) {
-                CreateUserFile.createUserFile(member.getGuild().getIdLong(), user.getIdLong());
+            if (!fileExist(member.getGuild().getIdLong(), user.getIdLong())) {
+                createUserFile(member.getGuild().getIdLong(), user.getIdLong());
             }
 
             Calendar calendar = GregorianCalendar.getInstance();
             String date = new SimpleDateFormat("dd.MM.YYYY   kk:mm:ss").format(calendar.getTime()) + " Uhr";
 
             EmbedBuilder builder = new EmbedBuilder();
-            builder.setColor(Color.MAGENTA);
+            builder.setColor(MAGENTA);
 
             builder.addField("Name", user.getName(), true);
             builder.addField("Status", member.getGuild().getMembersByName(userName, true).get(0).getOnlineStatus().toString(), true);
@@ -63,13 +73,13 @@ public class InfoCommand implements ServerCommand {
             builder.addBlankField(true);
 
             builder.addField("Befehle                  ", "!invite: " + UserCommandsDataUtils.getInviteCommands(member.getGuild().getIdLong(), user.getIdLong()) + "\n"
-                    + "!play: " + UserCommandsDataUtils.getPlayCommands(member.getGuild().getIdLong(), user.getIdLong()) + "\n"
-                    + "!skip: " + UserCommandsDataUtils.getSkipCommands(member.getGuild().getIdLong(), user.getIdLong()) + "\n"
-                    + "!stop: " + UserCommandsDataUtils.getStopCommands(member.getGuild().getIdLong(), user.getIdLong()) + "\n"
-                    + "!info: " + UserCommandsDataUtils.getInfoCommands(member.getGuild().getIdLong(), user.getIdLong()), true);
+                    + "!play: " + getPlayCommands(member.getGuild().getIdLong(), user.getIdLong()) + "\n"
+                    + "!skip: " + getSkipCommands(member.getGuild().getIdLong(), user.getIdLong()) + "\n"
+                    + "!stop: " + getStopCommands(member.getGuild().getIdLong(), user.getIdLong()) + "\n"
+                    + "!info: " + getInfoCommands(member.getGuild().getIdLong(), user.getIdLong()), true);
             builder.addField("Fehler                   ", "Verwendung: " + UserErrorsDataUtils.getWrongUsageErrors(member.getGuild().getIdLong(), user.getIdLong()) + "\n"
-                    + "Kein Befehl: " + UserErrorsDataUtils.getNotCommandErrors(member.getGuild().getIdLong(), user.getIdLong()) + "\n"
-                    + "Falscher Kanal: " + UserErrorsDataUtils.getWrongChannelErrors(member.getGuild().getIdLong(), user.getIdLong()), true);
+                    + "Kein Befehl: " + getNotCommandErrors(member.getGuild().getIdLong(), user.getIdLong()) + "\n"
+                    + "Falscher Kanal: " + getWrongChannelErrors(member.getGuild().getIdLong(), user.getIdLong()), true);
 
             builder.addBlankField(false);
 
@@ -83,10 +93,10 @@ public class InfoCommand implements ServerCommand {
             channel.sendMessageEmbeds(builder.build()).queue();
         } else {
             EmbedBuilder builder = new EmbedBuilder();
-            builder.setColor(Color.MAGENTA);
+            builder.setColor(MAGENTA);
             builder.setDescription("Verwende bitte \"!info <Name>\". " + member.getAsMention());
             channel.sendMessageEmbeds(builder.build()).queue();
-            UserErrorsDataUtils.addWrongUsageError(member.getGuild().getIdLong(), member.getUser().getIdLong(), 1);
+            addWrongUsageError(member.getGuild().getIdLong(), member.getUser().getIdLong(), 1);
         }
     }
 }

@@ -2,11 +2,7 @@ package de.kifo.music.commands;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import de.kifo.Main;
 import de.kifo.commands.types.ServerCommand;
-import de.kifo.database.utils.UserCommandsDataUtils;
-import de.kifo.database.utils.UserErrorsDataUtils;
-import de.kifo.music.AudioLoadResult;
 import de.kifo.music.MusicController;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
@@ -15,15 +11,20 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
 
-import java.awt.*;
-import java.util.ArrayList;
 import java.util.LinkedList;
+
+import static de.kifo.Main.getInstance;
+import static de.kifo.database.utils.UserCommandsDataUtils.addSkipCommand;
+import static de.kifo.database.utils.UserErrorsDataUtils.addWrongUsageError;
+import static de.kifo.music.AudioLoadResult.map;
+import static java.awt.Color.MAGENTA;
+import static java.lang.Integer.parseInt;
 
 public class SkipCommand implements ServerCommand {
 
     @Override
     public void executeCommand(Member member, TextChannel channel, Message message) {
-        UserCommandsDataUtils.addSkipCommand(member.getGuild().getIdLong(), member.getUser().getIdLong(), 1);
+        addSkipCommand(member.getGuild().getIdLong(), member.getUser().getIdLong(), 1);
         String[] args = message.getContentRaw().split(" ");
         GuildVoiceState state;
 
@@ -34,13 +35,13 @@ public class SkipCommand implements ServerCommand {
             } else {
                 EmbedBuilder builder = new EmbedBuilder();
                 builder.setDescription("Du musst in einem Sprachkanal sein. " + member.getAsMention());
-                builder.setColor(Color.MAGENTA);
+                builder.setColor(MAGENTA);
                 channel.sendMessageEmbeds(builder.build()).queue();
-                UserErrorsDataUtils.addWrongUsageError(member.getGuild().getIdLong(), member.getUser().getIdLong(), 1);
+                addWrongUsageError(member.getGuild().getIdLong(), member.getUser().getIdLong(), 1);
             }
 
             if(vc != null) {
-                MusicController controller = Main.getInstance().playerManager.getController(vc.getGuild().getIdLong());
+                MusicController controller = getInstance().getPlayerManager().getController(vc.getGuild().getIdLong());
                 AudioPlayer player = controller.getPlayer();
 
                 if(player.getPlayingTrack() != null) {
@@ -50,48 +51,48 @@ public class SkipCommand implements ServerCommand {
                     } else if(args.length == 2) {
                         int number;
                         try {
-                            number = Integer.parseInt(args[1]);
+                            number = parseInt(args[1]);
                         } catch (Exception e) {
                             EmbedBuilder builder = new EmbedBuilder();
-                            builder.setColor(Color.MAGENTA);
-                            builder.setDescription("Verwende bitte /skip oder /skip <Nummer>");
+                            builder.setColor(MAGENTA);
+                            builder.setDescription("Verwende bitte !skip oder !skip <Nummer>");
                             builder.setFooter("Verwende !playlist, um alle Lieder mit der jeweiligen Nummer angezeigt zu bekommen.");
                             channel.sendMessageEmbeds(builder.build()).queue();
-                            UserErrorsDataUtils.addWrongUsageError(member.getGuild().getIdLong(), member.getUser().getIdLong(), 1);
+                            addWrongUsageError(member.getGuild().getIdLong(), member.getUser().getIdLong(), 1);
                             return;
                         }
 
-                        LinkedList<AudioTrack> tracks = (LinkedList<AudioTrack>) AudioLoadResult.map.get(vc.getGuild());
+                        LinkedList<AudioTrack> tracks = (LinkedList<AudioTrack>) map.get(vc.getGuild());
                         if(tracks.size() < number) {
                             EmbedBuilder builder = new EmbedBuilder();
-                            builder.setColor(Color.MAGENTA);
+                            builder.setColor(MAGENTA);
                             builder.setDescription("Diese Nummer existiert nicht.");
                             builder.setFooter("Verwende !playlist, um alle Lieder mit der jeweiligen Nummer angezeigt zu bekommen.");
                             channel.sendMessageEmbeds(builder.build()).queue();
-                            UserErrorsDataUtils.addWrongUsageError(member.getGuild().getIdLong(), member.getUser().getIdLong(), 1);
+                            addWrongUsageError(member.getGuild().getIdLong(), member.getUser().getIdLong(), 1);
                             return;
                         }
 
                         AudioTrack track = tracks.get(number - 1);
-                        AudioLoadResult.map.get(vc.getGuild()).remove(track);
+                        map.get(vc.getGuild()).remove(track);
                         EmbedBuilder builder = new EmbedBuilder();
-                        builder.setColor(Color.MAGENTA);
+                        builder.setColor(MAGENTA);
                         builder.setDescription("" + track.getInfo().title + " von " + track.getInfo().author + " wurde aus der Playlist entfernt.");
                         channel.sendMessageEmbeds(builder.build()).queue();
                     } else {
                         EmbedBuilder builder = new EmbedBuilder();
-                        builder.setColor(Color.MAGENTA);
+                        builder.setColor(MAGENTA);
                         builder.setDescription("Verwende bitte /skip oder /skip <Nummer>");
                         builder.setFooter("Verwende !playlist, um alle Lieder mit der jeweiligen Nummer angezeigt zu bekommen.");
                         channel.sendMessageEmbeds(builder.build()).queue();
-                        UserErrorsDataUtils.addWrongUsageError(member.getGuild().getIdLong(), member.getUser().getIdLong(), 1);
+                        addWrongUsageError(member.getGuild().getIdLong(), member.getUser().getIdLong(), 1);
                     }
                 } else {
                     EmbedBuilder builder = new EmbedBuilder();
-                    builder.setColor(Color.MAGENTA);
+                    builder.setColor(MAGENTA);
                     builder.setDescription("Es läuft im Moment kein Lied. " + member.getAsMention());
                     channel.sendMessageEmbeds(builder.build()).queue();
-                    UserErrorsDataUtils.addWrongUsageError(member.getGuild().getIdLong(), member.getUser().getIdLong(), 1);
+                    addWrongUsageError(member.getGuild().getIdLong(), member.getUser().getIdLong(), 1);
                 }
             }
         }

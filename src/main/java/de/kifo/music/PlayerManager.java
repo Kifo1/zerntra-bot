@@ -1,15 +1,15 @@
 package de.kifo.music;
 
-import de.kifo.Main;
-
 import java.util.concurrent.ConcurrentHashMap;
+
+import static de.kifo.Main.getInstance;
 
 public class PlayerManager {
 
     public ConcurrentHashMap<Long, MusicController> controller;
 
     public PlayerManager() {
-        this.controller = new ConcurrentHashMap<Long, MusicController>();
+        this.controller = new ConcurrentHashMap<>();
     }
 
     public MusicController getController(long guildid) {
@@ -18,7 +18,7 @@ public class PlayerManager {
         if(this.controller.containsKey(guildid)) {
             mc = this.controller.get(guildid);
         } else {
-            mc = new MusicController(Main.getInstance().getJDA().getGuildById(guildid));
+            mc = new MusicController(getInstance().getJDA().getGuildById(guildid));
             this.controller.put(guildid, mc);
         }
 
