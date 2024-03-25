@@ -2,12 +2,15 @@ package de.kifo.registration;
 
 import com.google.common.reflect.ClassPath;
 import com.google.inject.Injector;
+import de.kifo.commands.handle.CommandBase;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.internal.interactions.CommandDataImpl;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -24,16 +27,27 @@ public class Registry {
     private final ClassLoader classLoader;
     private final Injector injector;
 
+    @Getter
+    private final Collection<CommandBase> commandBases = new ArrayList<>();
+    @Getter
+    private final Collection<CommandBase.Command> commands = new ArrayList<>();
+
     public void registerAllCommands() {
         AtomicInteger successCases = new AtomicInteger();
         List<Class<?>> commandClasses = getAllClassesFromPackage("de.kifo.commands").stream()
-                .filter(CommandDataImpl.class::isAssignableFrom)
+                .filter(CommandBase.class::isAssignableFrom)
+                .filter(commandClass -> commandClass.isAnnotationPresent(CommandBase.Command.class))
                 .toList();
 
         commandClasses.forEach(commandClass -> {
             try {
-                CommandDataImpl commandDataImpl = (CommandDataImpl) this.injector.getInstance(commandClass);
-                jda.upsertCommand(commandDataImpl.getName(), commandDataImpl.getDescription()).setGuildOnly(true).queue();
+                CommandBase.Command command = commandClass.getAnnotation(CommandBase.Command.class);
+                this.commands.add(command);
+                CommandBase commandBase = ((Class<CommandBase>) commandClass).getConstructor(CommandBase.Command.class).newInstance(command);
+                this.injector.injectMembers(commandBase);
+                commandBases.add(commandBase);
+
+                jda.upsertCommand(commandBase.getName(), commandBase.getDescription()).queue();
                 successCases.getAndIncrement();
             } catch (Exception e) {
                 System.out.println("Failed to register command: " + commandClass.getSimpleName());
@@ -67,7 +81,6 @@ public class Registry {
                     .collect(toSet());
         } catch (IOException e) {
             System.out.println(e);
-            System.out.println("Couldn't get all classes in registry");
         }
         return of();
     }

@@ -1,19 +1,16 @@
 package de.kifo;
 
 import com.google.inject.AbstractModule;
-import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import de.kifo.database.DataConnection;
 import de.kifo.music.PlayerManager;
-import de.kifo.commands.oldcommands.types.CommandManager;
 import de.kifo.registration.Registry;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.entities.Guild;
 
 import static com.google.inject.Guice.createInjector;
 import static com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers.registerRemoteSources;
@@ -32,7 +29,7 @@ public class JavaBot {
     private AudioPlayerManager audioPlayerManager;
     private PlayerManager playerManager ;
     private DataConnection dataConnection;
-    private CommandManager commandManager;
+    private Registry registry;
 
     public JavaBot() {
         injector = createInjector(new RegistrationModule(this));
@@ -57,11 +54,10 @@ public class JavaBot {
 
         this.playerManager = injector.getInstance(PlayerManager.class);
         this.dataConnection = injector.getInstance(DataConnection.class);
-        this.commandManager = new CommandManager(this);
 
-        Registry registry = new Registry(this.jda, this.getClass().getClassLoader(), this.injector);
-        registry.registerAllCommands();
-        registry.registerAllListeners();
+        this.registry = new Registry(this.jda, this.getClass().getClassLoader(), this.injector);
+        this.registry.registerAllCommands();
+        this.registry.registerAllListeners();
     }
 
     @Data

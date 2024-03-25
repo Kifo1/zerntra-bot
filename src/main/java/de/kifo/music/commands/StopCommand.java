@@ -2,7 +2,6 @@ package de.kifo.music.commands;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import de.kifo.JavaBot;
-import de.kifo.commands.oldcommands.types.ServerCommand;
 import de.kifo.database.utils.UserCommandsDataUtils;
 import de.kifo.database.utils.UserErrorsDataUtils;
 import de.kifo.music.MusicController;
@@ -20,12 +19,11 @@ import javax.inject.Inject;
 import static de.kifo.music.AudioLoadResult.map;
 import static java.awt.Color.MAGENTA;
 
-public class StopCommand implements ServerCommand {
+public class StopCommand {
 
     @Inject
     private JavaBot javaBot;
 
-    @Override
     public void executeCommand(Member member, TextChannel channel, Message message) {
         UserErrorsDataUtils userErrorsDataUtils = javaBot.getInjector().getInstance(UserErrorsDataUtils.class);
         UserCommandsDataUtils userCommandsDataUtils = javaBot.getInjector().getInstance(UserCommandsDataUtils.class);

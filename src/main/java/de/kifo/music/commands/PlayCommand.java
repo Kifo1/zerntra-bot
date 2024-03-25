@@ -2,7 +2,6 @@ package de.kifo.music.commands;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import de.kifo.JavaBot;
-import de.kifo.commands.oldcommands.types.ServerCommand;
 import de.kifo.database.utils.UserCommandsDataUtils;
 import de.kifo.database.utils.UserErrorsDataUtils;
 import de.kifo.music.AudioLoadResult;
@@ -20,14 +19,13 @@ import java.util.HashMap;
 
 import static java.awt.Color.MAGENTA;
 
-public class PlayCommand implements ServerCommand {
+public class PlayCommand {
 
     @Inject
     private JavaBot javaBot;
 
     public static HashMap<Long, TextChannel> map = new HashMap<>();
 
-    @Override
     public void executeCommand(Member member, TextChannel channel, Message message) {
         UserCommandsDataUtils userDataUtils = javaBot.getInjector().getInstance(UserCommandsDataUtils.class);
         UserErrorsDataUtils userErrorsDataUtils = javaBot.getInjector().getInstance(UserErrorsDataUtils.class);

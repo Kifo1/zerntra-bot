@@ -3,7 +3,6 @@ package de.kifo.music.commands;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import de.kifo.JavaBot;
-import de.kifo.commands.oldcommands.types.ServerCommand;
 import de.kifo.database.utils.UserCommandsDataUtils;
 import de.kifo.database.utils.UserErrorsDataUtils;
 import de.kifo.music.MusicController;
@@ -21,12 +20,11 @@ import static de.kifo.music.AudioLoadResult.map;
 import static java.awt.Color.MAGENTA;
 import static java.lang.Integer.parseInt;
 
-public class SkipCommand implements ServerCommand {
+public class SkipCommand {
 
     @Inject
     private JavaBot javaBot;
 
-    @Override
     public void executeCommand(Member member, TextChannel channel, Message message) {
         UserErrorsDataUtils userErrorsDataUtils = javaBot.getInjector().getInstance(UserErrorsDataUtils.class);
         UserCommandsDataUtils userCommandsDataUtils = javaBot.getInjector().getInstance(UserCommandsDataUtils.class);
