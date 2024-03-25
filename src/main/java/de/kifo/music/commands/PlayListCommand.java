@@ -2,7 +2,7 @@ package de.kifo.music.commands;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import de.kifo.commands.types.ServerCommand;
+import de.kifo.oldcommands.types.ServerCommand;
 import de.kifo.music.AudioLoadResult;
 import de.kifo.music.MusicController;
 import net.dv8tion.jda.api.EmbedBuilder;

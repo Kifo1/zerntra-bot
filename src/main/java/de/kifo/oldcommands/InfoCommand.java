@@ -1,6 +1,6 @@
-package de.kifo.commands;
+package de.kifo.oldcommands;
 
-import de.kifo.commands.types.ServerCommand;
+import de.kifo.oldcommands.types.ServerCommand;
 import de.kifo.database.utils.UserCommandsDataUtils;
 import de.kifo.database.utils.UserDataUtils;
 import de.kifo.database.utils.UserErrorsDataUtils;

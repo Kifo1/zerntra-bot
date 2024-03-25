@@ -1,10 +1,14 @@
 package de.kifo.music;
 
+import de.kifo.JavaBot;
+
+import javax.inject.Inject;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static de.kifo.Main.getInstance;
-
 public class PlayerManager {
+
+    @Inject
+    private JavaBot javaBot;
 
     public ConcurrentHashMap<Long, MusicController> controller;
 
@@ -18,7 +22,7 @@ public class PlayerManager {
         if(this.controller.containsKey(guildid)) {
             mc = this.controller.get(guildid);
         } else {
-            mc = new MusicController(getInstance().getJDA().getGuildById(guildid));
+            mc = new MusicController(javaBot.getJda().getGuildById(guildid));
             this.controller.put(guildid, mc);
         }
 

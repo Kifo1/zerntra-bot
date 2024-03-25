@@ -1,12 +1,14 @@
 package de.kifo.listener;
 
+import de.kifo.JavaBot;
 import de.kifo.database.utils.UserErrorsDataUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
-import static de.kifo.Main.getInstance;
+import javax.inject.Inject;
+
 import static de.kifo.database.files.CreateUserFile.createUserFile;
 import static de.kifo.database.utils.UserDataUtils.addCommandQuantity;
 import static de.kifo.database.utils.UserDataUtils.addMessages;
@@ -15,6 +17,9 @@ import static de.kifo.database.utils.UserErrorsDataUtils.addNotCommandError;
 import static java.awt.Color.MAGENTA;
 
 public class MessageListener extends ListenerAdapter {
+
+    @Inject
+    private JavaBot javaBot;
 
     public void onMessageReceived(MessageReceivedEvent event) {
         long guildId = event.getGuild().getIdLong();
@@ -40,7 +45,7 @@ public class MessageListener extends ListenerAdapter {
             }
 
             if(args.length > 0) {
-                if(!getInstance().getCommandManager().perform(args[0], event.getMember(), event.getChannel().asTextChannel(), event.getMessage())) {
+                if(!javaBot.getCommandManager().perform(args[0], event.getMember(), event.getChannel().asTextChannel(), event.getMessage())) {
                     EmbedBuilder builder = new EmbedBuilder();
                     builder.setDescription("Dieser Befehl existiert nicht. " + event.getMember().getAsMention());
                     builder.setColor(MAGENTA);

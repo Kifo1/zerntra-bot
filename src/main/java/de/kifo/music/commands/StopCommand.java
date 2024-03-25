@@ -1,7 +1,7 @@
 package de.kifo.music.commands;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
-import de.kifo.commands.types.ServerCommand;
+import de.kifo.oldcommands.types.ServerCommand;
 import de.kifo.music.MusicController;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.GuildVoiceState;

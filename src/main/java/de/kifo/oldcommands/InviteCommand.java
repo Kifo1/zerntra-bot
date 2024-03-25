@@ -1,6 +1,6 @@
-package de.kifo.commands;
+package de.kifo.oldcommands;
 
-import de.kifo.commands.types.ServerCommand;
+import de.kifo.oldcommands.types.ServerCommand;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;

@@ -1,7 +1,7 @@
-package de.kifo.commands.types;
+package de.kifo.oldcommands.types;
 
-import de.kifo.commands.InfoCommand;
-import de.kifo.commands.InviteCommand;
+import de.kifo.oldcommands.InfoCommand;
+import de.kifo.oldcommands.InviteCommand;
 import de.kifo.music.commands.PlayCommand;
 import de.kifo.music.commands.SkipCommand;
 import de.kifo.music.commands.PlayListCommand;
