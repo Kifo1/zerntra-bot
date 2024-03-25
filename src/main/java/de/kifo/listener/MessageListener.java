@@ -1,6 +1,9 @@
 package de.kifo.listener;
 
 import de.kifo.JavaBot;
+import de.kifo.database.files.CreateUserFile;
+import de.kifo.database.utils.UserCommandsDataUtils;
+import de.kifo.database.utils.UserDataUtils;
 import de.kifo.database.utils.UserErrorsDataUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
@@ -9,11 +12,6 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import javax.inject.Inject;
 
-import static de.kifo.database.files.CreateUserFile.createUserFile;
-import static de.kifo.database.utils.UserDataUtils.addCommandQuantity;
-import static de.kifo.database.utils.UserDataUtils.addMessages;
-import static de.kifo.database.utils.UserDataUtils.fileExist;
-import static de.kifo.database.utils.UserErrorsDataUtils.addNotCommandError;
 import static java.awt.Color.MAGENTA;
 
 public class MessageListener extends ListenerAdapter {
@@ -22,15 +20,19 @@ public class MessageListener extends ListenerAdapter {
     private JavaBot javaBot;
 
     public void onMessageReceived(MessageReceivedEvent event) {
+        UserErrorsDataUtils userErrorsDataUtils = javaBot.getInjector().getInstance(UserErrorsDataUtils.class);
+        UserCommandsDataUtils userCommandsDataUtils = javaBot.getInjector().getInstance(UserCommandsDataUtils.class);
+        UserDataUtils userDataUtils = javaBot.getInjector().getInstance(UserDataUtils.class);
+        CreateUserFile createUserFile = javaBot.getInjector().getInstance(CreateUserFile.class);
         long guildId = event.getGuild().getIdLong();
         long userId = event.getMember().getUser().getIdLong();
         String message = event.getMessage().getContentRaw();
 
-        if(!fileExist(event.getGuild().getIdLong(), event.getMember().getUser().getIdLong())) {
-            createUserFile(event.getGuild().getIdLong(), event.getMember().getUser().getIdLong());
+        if(!userDataUtils.fileExist(event.getGuild().getIdLong(), event.getMember().getUser().getIdLong())) {
+            createUserFile.createUserFile(event.getGuild().getIdLong(), event.getMember().getUser().getIdLong());
         }
 
-        addMessages(guildId, userId, 1);
+        userDataUtils.addMessages(guildId, userId, 1);
 
         if(message.startsWith("!")) {
             String[] args = message.substring(1).split(" ");
@@ -40,7 +42,7 @@ public class MessageListener extends ListenerAdapter {
                 builder.setDescription("Du kannst nur in Textkanälen Befehle verwenden. " + event.getMember().getAsMention());
                 builder.setColor(MAGENTA);
                 event.getChannel().sendMessageEmbeds(builder.build()).queue();
-                UserErrorsDataUtils.addWrongChannelError(guildId, userId, 1);
+                userErrorsDataUtils.addWrongChannelError(guildId, userId, 1);
                 return;
             }
 
@@ -50,9 +52,9 @@ public class MessageListener extends ListenerAdapter {
                     builder.setDescription("Dieser Befehl existiert nicht. " + event.getMember().getAsMention());
                     builder.setColor(MAGENTA);
                     event.getChannel().sendMessageEmbeds(builder.build()).queue();
-                    addNotCommandError(guildId, userId, 1);
+                    userErrorsDataUtils.addNotCommandError(guildId, userId, 1);
                 } else {
-                    addCommandQuantity(guildId, userId, 1);
+                    userDataUtils.addCommandQuantity(guildId, userId, 1);
                 }
             }
         }

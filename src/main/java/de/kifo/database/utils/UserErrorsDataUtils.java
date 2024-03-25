@@ -1,26 +1,31 @@
 package de.kifo.database.utils;
 
-import de.kifo.Main;
+import de.kifo.JavaBot;
 import org.bson.Document;
+
+import javax.inject.Inject;
 
 public class UserErrorsDataUtils {
 
-    public static int getWrongUsageErrors(Long guildId, Long userId) {
-        Document document = Main.getInstance().getDataConnection().getCollection().find(getFilter(guildId, userId)).first();
+    @Inject
+    private JavaBot javaBot;
+
+    public int getWrongUsageErrors(Long guildId, Long userId) {
+        Document document = javaBot.getDataConnection().getCollection().find(getFilter(guildId, userId)).first();
         Document object = (Document) document.get("errors");
 
         return object.getInteger("wrongUsage");
     }
 
-    public static int getNotCommandErrors(Long guildId, Long userId) {
-        Document document = Main.getInstance().getDataConnection().getCollection().find(getFilter(guildId, userId)).first();
+    public int getNotCommandErrors(Long guildId, Long userId) {
+        Document document = javaBot.getDataConnection().getCollection().find(getFilter(guildId, userId)).first();
         Document object = (Document) document.get("errors");
 
         return object.getInteger("notCommand");
     }
 
-    public static int getWrongChannelErrors(Long guildId, Long userId) {
-        Document document = Main.getInstance().getDataConnection().getCollection().find(getFilter(guildId, userId)).first();
+    public int getWrongChannelErrors(Long guildId, Long userId) {
+        Document document = javaBot.getDataConnection().getCollection().find(getFilter(guildId, userId)).first();
         Document object = (Document) document.get("errors");
 
         return object.getInteger("wrongChannel");
@@ -28,43 +33,46 @@ public class UserErrorsDataUtils {
 
 
 
-    public static void addWrongUsageError(Long guildId, Long userId, int amount) {
-        UserDataUtils.addErrorQuantity(guildId, userId, amount);
-        Document foundDocument = Main.getInstance().getDataConnection().getCollection().find(getFilter(guildId, userId)).first();
+    public void addWrongUsageError(Long guildId, Long userId, int amount) {
+        UserDataUtils userDataUtils = javaBot.getInjector().getInstance(UserDataUtils.class);
+        userDataUtils.addErrorQuantity(guildId, userId, amount);
+        Document foundDocument = javaBot.getDataConnection().getCollection().find(getFilter(guildId, userId)).first();
 
         if(foundDocument != null) {
             Document updateValue = new Document("errors.wrongUsage", (getWrongUsageErrors(guildId, userId) + amount));
             Document updateOperation = new Document("$set", updateValue);
 
-            Main.getInstance().getDataConnection().getCollection().updateOne(foundDocument, updateOperation);
+            javaBot.getDataConnection().getCollection().updateOne(foundDocument, updateOperation);
         }
     }
 
-    public static void addNotCommandError(Long guildId, Long userId, int amount) {
-        UserDataUtils.addErrorQuantity(guildId, userId, amount);
-        Document foundDocument = Main.getInstance().getDataConnection().getCollection().find(getFilter(guildId, userId)).first();
+    public void addNotCommandError(Long guildId, Long userId, int amount) {
+        UserDataUtils userDataUtils = javaBot.getInjector().getInstance(UserDataUtils.class);
+        userDataUtils.addErrorQuantity(guildId, userId, amount);
+        Document foundDocument = javaBot.getDataConnection().getCollection().find(getFilter(guildId, userId)).first();
 
         if(foundDocument != null) {
             Document updateValue = new Document("errors.notCommand", (getNotCommandErrors(guildId, userId) + amount));
             Document updateOperation = new Document("$set", updateValue);
 
-            Main.getInstance().getDataConnection().getCollection().updateOne(foundDocument, updateOperation);
+            javaBot.getDataConnection().getCollection().updateOne(foundDocument, updateOperation);
         }
     }
 
-    public static void addWrongChannelError(Long guildId, Long userId, int amount) {
-        UserDataUtils.addErrorQuantity(guildId, userId, amount);
-        Document foundDocument = Main.getInstance().getDataConnection().getCollection().find(getFilter(guildId, userId)).first();
+    public void addWrongChannelError(Long guildId, Long userId, int amount) {
+        UserDataUtils userDataUtils = javaBot.getInjector().getInstance(UserDataUtils.class);
+        userDataUtils.addErrorQuantity(guildId, userId, amount);
+        Document foundDocument = javaBot.getDataConnection().getCollection().find(getFilter(guildId, userId)).first();
 
         if(foundDocument != null) {
             Document updateValue = new Document("errors.wrongChannel", (getWrongChannelErrors(guildId, userId) + amount));
             Document updateOperation = new Document("$set", updateValue);
 
-            Main.getInstance().getDataConnection().getCollection().updateOne(foundDocument, updateOperation);
+            javaBot.getDataConnection().getCollection().updateOne(foundDocument, updateOperation);
         }
     }
 
-    public static Document getFilter(Long guildId, Long userId) {
+    public Document getFilter(Long guildId, Long userId) {
         return new Document("guildId", guildId).append("userId", userId);
     }
 }

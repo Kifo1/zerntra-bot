@@ -1,64 +1,69 @@
 package de.kifo.database.utils;
 
-import de.kifo.Main;
+import de.kifo.JavaBot;
 import org.bson.Document;
+
+import javax.inject.Inject;
 
 public class UserDataUtils {
 
-    public static int getMessages(Long guildId, Long userId) {
-        return Main.getInstance().getDataConnection().getCollection().find(getFilter(guildId, userId)).first().getInteger("messages");
+    @Inject
+    private JavaBot javaBot;
+
+    public int getMessages(Long guildId, Long userId) {
+        return javaBot.getDataConnection().getCollection().find(getFilter(guildId, userId)).first().getInteger("messages");
     }
 
-    public static int getCommandQuantity(Long guildId, Long userId) {
-        return Main.getInstance().getDataConnection().getCollection().find(getFilter(guildId, userId)).first().getInteger("commandQuantity");
+    public int getCommandQuantity(Long guildId, Long userId) {
+        return javaBot.getDataConnection().getCollection().find(getFilter(guildId, userId)).first().getInteger("commandQuantity");
     }
 
-    public static int getErrorQuantity(Long guildId, Long userId) {
-        return Main.getInstance().getDataConnection().getCollection().find(getFilter(guildId, userId)).first().getInteger("errorQuantity");
+    public int getErrorQuantity(Long guildId, Long userId) {
+        return javaBot.getDataConnection().getCollection().find(getFilter(guildId, userId)).first().getInteger("errorQuantity");
     }
 
-    public static void addMessages(Long guildId, Long userId, int messageAmount) {
-        Document foundDocument = Main.getInstance().getDataConnection().getCollection().find(getFilter(guildId, userId)).first();
+    public void addMessages(Long guildId, Long userId, int messageAmount) {
+        Document foundDocument = javaBot.getDataConnection().getCollection().find(getFilter(guildId, userId)).first();
 
         if(foundDocument != null) {
             Document updateValue = new Document("messages", (getMessages(guildId, userId) + messageAmount));
             Document updateOperation = new Document("$set", updateValue);
 
-            Main.getInstance().getDataConnection().getCollection().updateOne(foundDocument, updateOperation);
+            javaBot.getDataConnection().getCollection().updateOne(foundDocument, updateOperation);
         }
     }
 
-    public static void addCommandQuantity(Long guildId, Long userId, int commandAmount) {
-        Document foundDocument = Main.getInstance().getDataConnection().getCollection().find(getFilter(guildId, userId)).first();
+    public void addCommandQuantity(Long guildId, Long userId, int commandAmount) {
+        Document foundDocument = javaBot.getDataConnection().getCollection().find(getFilter(guildId, userId)).first();
 
         if(foundDocument != null) {
             Document updateValue = new Document("commandQuantity", ((getCommandQuantity(guildId, userId)) + commandAmount));
             Document updateOperation = new Document("$set", updateValue);
 
-            Main.getInstance().getDataConnection().getCollection().updateOne(foundDocument, updateOperation);
+            javaBot.getDataConnection().getCollection().updateOne(foundDocument, updateOperation);
         }
     }
 
-    public static void addErrorQuantity(Long guildId, Long userId, int amount) {
-        Document foundDocument = Main.getInstance().getDataConnection().getCollection().find(getFilter(guildId, userId)).first();
+    public void addErrorQuantity(Long guildId, Long userId, int amount) {
+        Document foundDocument = javaBot.getDataConnection().getCollection().find(getFilter(guildId, userId)).first();
 
         if(foundDocument != null) {
             Document updateValue = new Document("errorQuantity", ((getErrorQuantity(guildId, userId)) + amount));
             Document updateOperation = new Document("$set", updateValue);
 
-            Main.getInstance().getDataConnection().getCollection().updateOne(foundDocument, updateOperation);
+            javaBot.getDataConnection().getCollection().updateOne(foundDocument, updateOperation);
         }
     }
 
-    public static boolean fileExist(Long guildId, Long userId) {
-        Document foundDocument = Main.getInstance().getDataConnection().getCollection().find(getFilter(guildId, userId)).first();
+    public boolean fileExist(Long guildId, Long userId) {
+        Document foundDocument = javaBot.getDataConnection().getCollection().find(getFilter(guildId, userId)).first();
 
         if(foundDocument != null) return true;
 
         return false;
     }
 
-    private static Document getFilter(Long guildId, Long userId) {
+    private Document getFilter(Long guildId, Long userId) {
         return new Document("guildId", guildId).append("userId", userId);
     }
 }

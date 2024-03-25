@@ -1,4 +1,4 @@
-package de.kifo.oldcommands.types;
+package de.kifo.commands.oldcommands.types;
 
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;

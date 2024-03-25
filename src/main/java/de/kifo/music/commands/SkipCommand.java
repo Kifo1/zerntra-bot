@@ -2,7 +2,10 @@ package de.kifo.music.commands;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import de.kifo.oldcommands.types.ServerCommand;
+import de.kifo.JavaBot;
+import de.kifo.commands.oldcommands.types.ServerCommand;
+import de.kifo.database.utils.UserCommandsDataUtils;
+import de.kifo.database.utils.UserErrorsDataUtils;
 import de.kifo.music.MusicController;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
@@ -11,20 +14,23 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
 
+import javax.inject.Inject;
 import java.util.LinkedList;
 
-import static de.kifo.Main.getInstance;
-import static de.kifo.database.utils.UserCommandsDataUtils.addSkipCommand;
-import static de.kifo.database.utils.UserErrorsDataUtils.addWrongUsageError;
 import static de.kifo.music.AudioLoadResult.map;
 import static java.awt.Color.MAGENTA;
 import static java.lang.Integer.parseInt;
 
 public class SkipCommand implements ServerCommand {
 
+    @Inject
+    private JavaBot javaBot;
+
     @Override
     public void executeCommand(Member member, TextChannel channel, Message message) {
-        addSkipCommand(member.getGuild().getIdLong(), member.getUser().getIdLong(), 1);
+        UserErrorsDataUtils userErrorsDataUtils = javaBot.getInjector().getInstance(UserErrorsDataUtils.class);
+        UserCommandsDataUtils userCommandsDataUtils = javaBot.getInjector().getInstance(UserCommandsDataUtils.class);
+        userCommandsDataUtils.addSkipCommand(member.getGuild().getIdLong(), member.getUser().getIdLong(), 1);
         String[] args = message.getContentRaw().split(" ");
         GuildVoiceState state;
 
@@ -37,11 +43,11 @@ public class SkipCommand implements ServerCommand {
                 builder.setDescription("Du musst in einem Sprachkanal sein. " + member.getAsMention());
                 builder.setColor(MAGENTA);
                 channel.sendMessageEmbeds(builder.build()).queue();
-                addWrongUsageError(member.getGuild().getIdLong(), member.getUser().getIdLong(), 1);
+                userErrorsDataUtils.addWrongUsageError(member.getGuild().getIdLong(), member.getUser().getIdLong(), 1);
             }
 
             if(vc != null) {
-                MusicController controller = getInstance().getPlayerManager().getController(vc.getGuild().getIdLong());
+                MusicController controller = javaBot.getPlayerManager().getController(vc.getGuild().getIdLong());
                 AudioPlayer player = controller.getPlayer();
 
                 if(player.getPlayingTrack() != null) {
@@ -58,7 +64,7 @@ public class SkipCommand implements ServerCommand {
                             builder.setDescription("Verwende bitte !skip oder !skip <Nummer>");
                             builder.setFooter("Verwende !playlist, um alle Lieder mit der jeweiligen Nummer angezeigt zu bekommen.");
                             channel.sendMessageEmbeds(builder.build()).queue();
-                            addWrongUsageError(member.getGuild().getIdLong(), member.getUser().getIdLong(), 1);
+                            userErrorsDataUtils.addWrongUsageError(member.getGuild().getIdLong(), member.getUser().getIdLong(), 1);
                             return;
                         }
 
@@ -69,7 +75,7 @@ public class SkipCommand implements ServerCommand {
                             builder.setDescription("Diese Nummer existiert nicht.");
                             builder.setFooter("Verwende !playlist, um alle Lieder mit der jeweiligen Nummer angezeigt zu bekommen.");
                             channel.sendMessageEmbeds(builder.build()).queue();
-                            addWrongUsageError(member.getGuild().getIdLong(), member.getUser().getIdLong(), 1);
+                            userErrorsDataUtils.addWrongUsageError(member.getGuild().getIdLong(), member.getUser().getIdLong(), 1);
                             return;
                         }
 
@@ -85,14 +91,14 @@ public class SkipCommand implements ServerCommand {
                         builder.setDescription("Verwende bitte /skip oder /skip <Nummer>");
                         builder.setFooter("Verwende !playlist, um alle Lieder mit der jeweiligen Nummer angezeigt zu bekommen.");
                         channel.sendMessageEmbeds(builder.build()).queue();
-                        addWrongUsageError(member.getGuild().getIdLong(), member.getUser().getIdLong(), 1);
+                        userErrorsDataUtils.addWrongUsageError(member.getGuild().getIdLong(), member.getUser().getIdLong(), 1);
                     }
                 } else {
                     EmbedBuilder builder = new EmbedBuilder();
                     builder.setColor(MAGENTA);
                     builder.setDescription("Es läuft im Moment kein Lied. " + member.getAsMention());
                     channel.sendMessageEmbeds(builder.build()).queue();
-                    addWrongUsageError(member.getGuild().getIdLong(), member.getUser().getIdLong(), 1);
+                    userErrorsDataUtils.addWrongUsageError(member.getGuild().getIdLong(), member.getUser().getIdLong(), 1);
                 }
             }
         }

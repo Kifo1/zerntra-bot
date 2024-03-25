@@ -1,12 +1,16 @@
 package de.kifo.database.files;
 
+import de.kifo.JavaBot;
 import org.bson.Document;
 
-import static de.kifo.Main.getInstance;
+import javax.inject.Inject;
 
 public class CreateUserFile {
 
-    public static void createUserFile(Long guildId,Long userId) {
+    @Inject
+    private JavaBot javaBot;
+
+    public void createUserFile(Long guildId,Long userId) {
         Document userDocument = new Document("guildId", guildId)
                 .append("userId", userId)
                 .append("messages", 0)
@@ -21,7 +25,7 @@ public class CreateUserFile {
                         .append("stop", 0)
                         .append("info", 0));
 
-        getInstance().getDataConnection().getCollection().insertOne(userDocument);
+        javaBot.getDataConnection().getCollection().insertOne(userDocument);
 
     }
     /*public static void update() {

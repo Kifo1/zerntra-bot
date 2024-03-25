@@ -1,7 +1,10 @@
 package de.kifo.music.commands;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
-import de.kifo.oldcommands.types.ServerCommand;
+import de.kifo.JavaBot;
+import de.kifo.commands.oldcommands.types.ServerCommand;
+import de.kifo.database.utils.UserCommandsDataUtils;
+import de.kifo.database.utils.UserErrorsDataUtils;
 import de.kifo.music.AudioLoadResult;
 import de.kifo.music.MusicController;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -12,20 +15,23 @@ import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
 import net.dv8tion.jda.api.managers.AudioManager;
 
+import javax.inject.Inject;
 import java.util.HashMap;
 
-import static de.kifo.Main.getInstance;
-import static de.kifo.database.utils.UserCommandsDataUtils.addPlayCommand;
-import static de.kifo.database.utils.UserErrorsDataUtils.addWrongUsageError;
 import static java.awt.Color.MAGENTA;
 
 public class PlayCommand implements ServerCommand {
+
+    @Inject
+    private JavaBot javaBot;
 
     public static HashMap<Long, TextChannel> map = new HashMap<>();
 
     @Override
     public void executeCommand(Member member, TextChannel channel, Message message) {
-        addPlayCommand(member.getGuild().getIdLong(), member.getUser().getIdLong(), 1);
+        UserCommandsDataUtils userDataUtils = javaBot.getInjector().getInstance(UserCommandsDataUtils.class);
+        UserErrorsDataUtils userErrorsDataUtils = javaBot.getInjector().getInstance(UserErrorsDataUtils.class);
+        userDataUtils.addPlayCommand(member.getGuild().getIdLong(), member.getUser().getIdLong(), 1);
         String[] args = message.getContentRaw().split(" ");
 
         if(args.length > 1) {
@@ -38,8 +44,8 @@ public class PlayCommand implements ServerCommand {
                 }
 
                 if(vc != null) {
-                    MusicController controller = getInstance().getPlayerManager().getController(vc.getGuild().getIdLong());
-                    AudioPlayerManager apm = getInstance().getAudioPlayerManager();
+                    MusicController controller = javaBot.getPlayerManager().getController(vc.getGuild().getIdLong());
+                    AudioPlayerManager apm = javaBot.getAudioPlayerManager();
                     AudioManager manager = vc.getGuild().getAudioManager();
                     manager.openAudioConnection(vc);
 
@@ -62,21 +68,21 @@ public class PlayCommand implements ServerCommand {
                     builder.setDescription("Du musst in einem Sprachkanal sein. " + member.getAsMention());
                     builder.setColor(MAGENTA);
                     channel.sendMessageEmbeds(builder.build()).queue();
-                    addWrongUsageError(member.getGuild().getIdLong(), member.getUser().getIdLong(), 1);
+                    userErrorsDataUtils.addWrongUsageError(member.getGuild().getIdLong(), member.getUser().getIdLong(), 1);
                 }
             } else {
                 EmbedBuilder builder = new EmbedBuilder();
                 builder.setDescription("Du musst in einem Sprachkanal sein. " + member.getAsMention());
                 builder.setColor(MAGENTA);
                 channel.sendMessageEmbeds(builder.build()).queue();
-                addWrongUsageError(member.getGuild().getIdLong(), member.getUser().getIdLong(), 1);
+                userErrorsDataUtils.addWrongUsageError(member.getGuild().getIdLong(), member.getUser().getIdLong(), 1);
             }
         } else {
             EmbedBuilder builder = new EmbedBuilder();
             builder.setDescription("Verwende bitte \"!play <Url/Suchbegriffe>\". " + member.getAsMention());
             builder.setColor(MAGENTA);
             channel.sendMessageEmbeds(builder.build()).queue();
-            addWrongUsageError(member.getGuild().getIdLong(), member.getUser().getIdLong(), 1);
+            userErrorsDataUtils.addWrongUsageError(member.getGuild().getIdLong(), member.getUser().getIdLong(), 1);
         }
     }
 }

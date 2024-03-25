@@ -33,7 +33,7 @@ public class Registry {
         commandClasses.forEach(commandClass -> {
             try {
                 CommandDataImpl commandDataImpl = (CommandDataImpl) this.injector.getInstance(commandClass);
-                this.jda.upsertCommand(commandDataImpl).queue();
+                jda.upsertCommand(commandDataImpl.getName(), commandDataImpl.getDescription()).setGuildOnly(true).queue();
                 successCases.getAndIncrement();
             } catch (Exception e) {
                 System.out.println("Failed to register command: " + commandClass.getSimpleName());
@@ -67,6 +67,7 @@ public class Registry {
                     .collect(toSet());
         } catch (IOException e) {
             System.out.println(e);
+            System.out.println("Couldn't get all classes in registry");
         }
         return of();
     }

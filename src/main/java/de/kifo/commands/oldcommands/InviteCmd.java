@@ -1,17 +1,23 @@
-package de.kifo.oldcommands;
+package de.kifo.commands.oldcommands;
 
-import de.kifo.oldcommands.types.ServerCommand;
+import de.kifo.JavaBot;
+import de.kifo.commands.oldcommands.types.ServerCommand;
+import de.kifo.database.utils.UserCommandsDataUtils;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 
-import static de.kifo.database.utils.UserCommandsDataUtils.addInviteCommand;
+import javax.inject.Inject;
 
-public class InviteCommand implements ServerCommand {
+public class InviteCmd implements ServerCommand {
+
+    @Inject
+    private JavaBot javaBot;
 
     @Override
     public void executeCommand(Member member, TextChannel channel, Message message) {
-        addInviteCommand(member.getGuild().getIdLong(), member.getUser().getIdLong(), 1);
+        UserCommandsDataUtils userCommandsDataUtils = javaBot.getInjector().getInstance(UserCommandsDataUtils.class);
+        userCommandsDataUtils.addInviteCommand(member.getGuild().getIdLong(), member.getUser().getIdLong(), 1);
         String[] args = message.getContentRaw().split(" ");
 
         if(args[0].equalsIgnoreCase("!invite")) {
