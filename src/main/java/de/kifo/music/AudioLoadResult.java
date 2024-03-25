@@ -93,7 +93,7 @@ public class AudioLoadResult extends AudioEventAdapter implements AudioLoadResul
             if(player.getPlayingTrack() == null) {
                 if(guild.getAudioManager().getConnectedChannel() != null) {
                     guild.getAudioManager().closeAudioConnection();
-                    guild.getAudioManager().getConnectedChannel().asVoiceChannel().sendMessage("Wegen inaktivität verlasse ich jetzt den Sprachkanal.").queue();
+                    //guild.getAudioManager().getConnectedChannel().asVoiceChannel().sendMessage("Wegen inaktivität verlasse ich jetzt den Sprachkanal.").queue();
                 }
             }
         });
