@@ -52,13 +52,13 @@ public class PlayCommand extends CommandBase {
         AudioManager manager = voiceChannel.getGuild().getAudioManager();
         manager.openAudioConnection(voiceChannel);
 
-        String title = options.get(0).getAsString();
-        if (!title.startsWith("http")) {
-            title = "ytsearch:" + title + " audio";
+        String url = options.get(0).getAsString();
+        if (!url.startsWith("http")) {
+            url = "ytsearch:" + url + " audio";
         }
         event.reply("Suche nach dem Titel...").queue(); //TODO Replace with embed (EmbedBuilder builder = new EmbedBuilder())
 
-        audioPlayerManager.loadItem(title, new AudioLoadResult(controller, title, controller.getGuild()));
+        audioPlayerManager.loadItem(url, new AudioLoadResult(controller, url, controller.getGuild()));
         map.put(voiceChannel.getGuild().getIdLong(), textChannel);
     }
 
