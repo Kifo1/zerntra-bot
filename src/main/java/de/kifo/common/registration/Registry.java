@@ -1,4 +1,4 @@
-package de.kifo.registration;
+package de.kifo.common.registration;
 
 import com.google.common.reflect.ClassPath;
 import com.google.inject.Injector;

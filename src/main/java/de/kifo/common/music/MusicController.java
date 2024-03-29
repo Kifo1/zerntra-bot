@@ -1,4 +1,4 @@
-package de.kifo.music;
+package de.kifo.common.music;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import de.kifo.JavaBot;
