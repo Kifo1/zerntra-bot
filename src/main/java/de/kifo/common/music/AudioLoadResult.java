@@ -13,9 +13,9 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 
-import java.awt.*;
 import java.util.*;
 
+import static java.awt.Color.MAGENTA;
 import static java.lang.Thread.sleep;
 import static java.util.concurrent.Executors.newSingleThreadExecutor;
 
@@ -102,7 +102,7 @@ public class AudioLoadResult extends AudioEventAdapter implements AudioLoadResul
     @Override
     public void onTrackStart(AudioPlayer player, AudioTrack track) {
         EmbedBuilder builder = new EmbedBuilder();
-        builder.setColor(Color.MAGENTA);
+        builder.setColor(MAGENTA);
         AudioTrackInfo info = track.getInfo();
         builder.setTitle("Jetzt läuft: " + info.title);
 
@@ -144,7 +144,7 @@ public class AudioLoadResult extends AudioEventAdapter implements AudioLoadResul
 
     private void songAdded(AudioTrack track) {
         EmbedBuilder builder = new EmbedBuilder();
-        builder.setColor(Color.MAGENTA);
+        builder.setColor(MAGENTA);
         AudioTrackInfo info = track.getInfo();
         builder.setTitle(info.title + " von " + info.author + " wurde zur Playlist hinzugefügt.");
 
