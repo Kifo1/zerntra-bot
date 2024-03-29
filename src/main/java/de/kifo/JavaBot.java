@@ -4,7 +4,6 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
-import de.kifo.database.DataConnection;
 import de.kifo.music.PlayerManager;
 import de.kifo.registration.Registry;
 import lombok.AllArgsConstructor;
@@ -28,7 +27,6 @@ public class JavaBot {
     private JDA jda;
     private AudioPlayerManager audioPlayerManager;
     private PlayerManager playerManager ;
-    private DataConnection dataConnection;
     private Registry registry;
 
     public JavaBot() {
@@ -52,8 +50,7 @@ public class JavaBot {
         registerRemoteSources(audioPlayerManager);
         audioPlayerManager.getConfiguration().setFilterHotSwapEnabled(true);
 
-        this.playerManager = injector.getInstance(PlayerManager.class);
-        this.dataConnection = injector.getInstance(DataConnection.class);
+        this.playerManager = new PlayerManager(this);
 
         this.registry = new Registry(this.jda, this.getClass().getClassLoader(), this.injector);
         this.registry.registerAllCommands();

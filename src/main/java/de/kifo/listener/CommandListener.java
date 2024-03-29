@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.inject.Inject;
 import java.util.List;
 
-public class InviteCommandListener extends ListenerAdapter {
+public class CommandListener extends ListenerAdapter {
 
     @Inject
     private JavaBot javaBot;
@@ -23,7 +23,7 @@ public class InviteCommandListener extends ListenerAdapter {
         List<OptionMapping> options = event.getOptions();
 
         this.javaBot.getRegistry().getCommandBases().stream()
-                .filter(command -> command.getName().equalsIgnoreCase(event.getCommandString().replaceAll("/", "")))
+                .filter(command -> command.getName().equalsIgnoreCase(event.getFullCommandName()))
                 .findFirst()
                 .ifPresent(command -> command.execute(member, textChannel, options, event));
     }

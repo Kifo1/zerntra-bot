@@ -2,8 +2,6 @@ package de.kifo.music.commands;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import de.kifo.JavaBot;
-import de.kifo.database.utils.UserCommandsDataUtils;
-import de.kifo.database.utils.UserErrorsDataUtils;
 import de.kifo.music.MusicController;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
@@ -25,9 +23,6 @@ public class StopCommand {
     private JavaBot javaBot;
 
     public void executeCommand(Member member, TextChannel channel, Message message) {
-        UserErrorsDataUtils userErrorsDataUtils = javaBot.getInjector().getInstance(UserErrorsDataUtils.class);
-        UserCommandsDataUtils userCommandsDataUtils = javaBot.getInjector().getInstance(UserCommandsDataUtils.class);
-        userCommandsDataUtils.addStopCommand(member.getGuild().getIdLong(), member.getUser().getIdLong(), 1);
         GuildVoiceState state;
 
         if((state = member.getVoiceState()) != null) {
@@ -39,7 +34,6 @@ public class StopCommand {
                 builder.setDescription("Du musst in einem Sprachkanal sein. " + member.getAsMention());
                 builder.setColor(MAGENTA);
                 channel.sendMessageEmbeds(builder.build()).queue();
-                userErrorsDataUtils.addWrongUsageError(member.getGuild().getIdLong(), member.getUser().getIdLong(), 1);
             }
 
             if(vc != null) {
@@ -60,7 +54,6 @@ public class StopCommand {
                     builder.setColor(MAGENTA);
                     builder.setDescription("Es läuft im Moment kein Lied. " + member.getAsMention());
                     channel.sendMessageEmbeds(builder.build()).queue();
-                    userErrorsDataUtils.addWrongUsageError(member.getGuild().getIdLong(), member.getUser().getIdLong(), 1);
                 }
             }
         }

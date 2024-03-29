@@ -5,18 +5,16 @@ import de.kifo.JavaBot;
 import lombok.Data;
 import net.dv8tion.jda.api.entities.Guild;
 
-import javax.inject.Inject;
-
 @Data
 public class MusicController {
 
-    @Inject
     private JavaBot javaBot;
 
     private final Guild guild;
     private final AudioPlayer player;
 
-    public MusicController(Guild guild) {
+    public MusicController(Guild guild, JavaBot javaBot) {
+        this.javaBot = javaBot;
         this.guild = guild;
         this.player = javaBot.getAudioPlayerManager().createPlayer();
 

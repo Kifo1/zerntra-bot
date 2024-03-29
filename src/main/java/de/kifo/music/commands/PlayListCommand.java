@@ -3,7 +3,6 @@ package de.kifo.music.commands;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import de.kifo.JavaBot;
-import de.kifo.database.utils.UserErrorsDataUtils;
 import de.kifo.music.AudioLoadResult;
 import de.kifo.music.MusicController;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -24,8 +23,6 @@ public class PlayListCommand {
     private JavaBot javaBot;
 
     public void executeCommand(Member member, TextChannel channel, Message message) throws InterruptedException {
-        //TODO Add data to database
-        UserErrorsDataUtils userErrorsDataUtils = javaBot.getInjector().getInstance(UserErrorsDataUtils.class);
         GuildVoiceState state;
 
         if((state = member.getVoiceState()) == null)
@@ -39,7 +36,6 @@ public class PlayListCommand {
             builder.setDescription("Du musst in einem Sprachkanal sein. " + member.getAsMention());
             builder.setColor(MAGENTA);
             channel.sendMessageEmbeds(builder.build()).queue();
-            userErrorsDataUtils.addWrongUsageError(member.getGuild().getIdLong(), member.getUser().getIdLong(), 1);
         }
 
         if(vc != null) {
@@ -56,7 +52,6 @@ public class PlayListCommand {
                     embedBuilder.setColor(MAGENTA);
                     embedBuilder.setDescription("Die Playlist ist aktuell leer. " + member.getAsMention());
                     channel.sendMessageEmbeds(embedBuilder.build()).queue();
-                    userErrorsDataUtils.addWrongUsageError(member.getGuild().getIdLong(), member.getUser().getIdLong(), 1);
                     return;
                 }
 
@@ -74,7 +69,6 @@ public class PlayListCommand {
                 builder.setColor(MAGENTA);
                 builder.setDescription("Es läuft im Moment kein Lied. " + member.getAsMention());
                 channel.sendMessageEmbeds(builder.build()).queue();
-                userErrorsDataUtils.addWrongUsageError(member.getGuild().getIdLong(), member.getUser().getIdLong(), 1);
             }
         }
     }

@@ -2,6 +2,7 @@ package de.kifo.registration;
 
 import com.google.common.reflect.ClassPath;
 import com.google.inject.Injector;
+import de.kifo.JavaBot;
 import de.kifo.commands.handle.CommandBase;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,6 +10,7 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -19,6 +21,7 @@ import static com.google.common.collect.ImmutableSet.of;
 import static com.google.common.reflect.ClassPath.from;
 import static java.lang.String.format;
 import static java.util.stream.Collectors.toSet;
+import static net.dv8tion.jda.api.interactions.commands.OptionType.STRING;
 
 @AllArgsConstructor
 public class Registry {
@@ -47,10 +50,19 @@ public class Registry {
                 this.injector.injectMembers(commandBase);
                 commandBases.add(commandBase);
 
-                jda.upsertCommand(commandBase.getName(), commandBase.getDescription()).queue();
+                if (command.hasOptions()) {
+                    jda.upsertCommand(commandBase.getName(), commandBase.getDescription()).addOptions(commandBase.getOptions()).queue();
+                } else {
+                    jda.upsertCommand(commandBase.getName(), commandBase.getDescription()).queue();
+                }
                 successCases.getAndIncrement();
             } catch (Exception e) {
                 System.out.println("Failed to register command: " + commandClass.getSimpleName());
+                try {
+                    throw e;
+                } catch (Exception ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         });
         System.out.println(format("Registered Commands: %d/%d", successCases.get(), commandClasses.size()));
