@@ -4,8 +4,8 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import de.kifo.JavaBot;
 import de.kifo.commands.handle.CommandBase;
-import de.kifo.common.music.AudioLoadResult;
-import de.kifo.common.music.MusicController;
+import de.kifo.common.music.GuildMusicManager;
+import de.kifo.common.music.PlayerManager;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.Member;
@@ -44,15 +44,16 @@ public class PlayListCommand extends CommandBase {
         }
 
         VoiceChannel voiceChannel = guildVoiceState.getChannel().asVoiceChannel();
-        MusicController controller = javaBot.getPlayerManager().getController(voiceChannel.getGuild().getIdLong());
-        AudioPlayer audioPlayer = controller.getPlayer();
+        PlayerManager playerManager = javaBot.getPlayerManager();
+        GuildMusicManager guildMusicManager = playerManager.getGuildMusicManager(event.getGuild());
+        AudioPlayer audioPlayer = guildMusicManager.getTrackScheduler().getAudioPlayer();
 
         if (isNull(audioPlayer.getPlayingTrack())) {
             event.reply("Es läuft im Moment kein Lied.").queue();
             return;
         }
 
-        LinkedList<AudioTrack> tracks = (LinkedList<AudioTrack>) AudioLoadResult.map.get(textChannel.getGuild());
+        LinkedList<AudioTrack> tracks = (LinkedList<AudioTrack>) guildMusicManager.getTrackScheduler().getQueue();
         EmbedBuilder builder = new EmbedBuilder();
         builder.setColor(MAGENTA);
 

@@ -3,8 +3,8 @@ package de.kifo.commands.music;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import de.kifo.JavaBot;
 import de.kifo.commands.handle.CommandBase;
-import de.kifo.common.music.AudioLoadResult;
-import de.kifo.common.music.MusicController;
+import de.kifo.common.music.GuildMusicManager;
+import de.kifo.common.music.PlayerManager;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
@@ -41,14 +41,15 @@ public class StopCommand extends CommandBase {
         }
 
         VoiceChannel voiceChannel = guildVoiceState.getChannel().asVoiceChannel();
-        MusicController controller = javaBot.getPlayerManager().getController(voiceChannel.getGuild().getIdLong());
+        PlayerManager playerManager = javaBot.getPlayerManager();
+        GuildMusicManager guildMusicManager = playerManager.getGuildMusicManager(event.getGuild());
+        AudioPlayer audioPlayer = guildMusicManager.getTrackScheduler().getAudioPlayer();
         AudioManager audioManager = voiceChannel.getGuild().getAudioManager();
-        AudioPlayer audioPlayer = controller.getPlayer();
 
         if (audioManager.isConnected()) {
             if (nonNull(audioPlayer.getPlayingTrack())) {
-                AudioLoadResult.map.get(textChannel.getGuild()).clear();
-                audioPlayer.stopTrack();
+                guildMusicManager.getTrackScheduler().getQueue().clear();
+                guildMusicManager.getTrackScheduler().getAudioPlayer().stopTrack();
             }
             audioManager.closeAudioConnection();
             event.reply("Die Musik wurde beendet.").queue(); //TODO Replace with embed (EmbedBuilder builder = new EmbedBuilder())

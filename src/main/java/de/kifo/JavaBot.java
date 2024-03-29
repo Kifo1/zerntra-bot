@@ -2,18 +2,14 @@ package de.kifo;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
-import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
-import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import de.kifo.common.music.PlayerManager;
 import de.kifo.common.registration.Registry;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.requests.GatewayIntent;
 
 import static com.google.inject.Guice.createInjector;
-import static com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers.registerRemoteSources;
 import static net.dv8tion.jda.api.JDABuilder.createDefault;
 import static net.dv8tion.jda.api.entities.Activity.playing;
 import static net.dv8tion.jda.api.requests.GatewayIntent.DIRECT_MESSAGES;
@@ -26,8 +22,7 @@ public class JavaBot {
     private Injector injector;
 
     private JDA jda;
-    private AudioPlayerManager audioPlayerManager;
-    private PlayerManager playerManager ;
+    private PlayerManager playerManager;
     private Registry registry;
 
     public JavaBot() {
@@ -47,11 +42,7 @@ public class JavaBot {
     }
 
     private void handleRegistrations() {
-        this.audioPlayerManager = new DefaultAudioPlayerManager();
-        registerRemoteSources(audioPlayerManager);
-        audioPlayerManager.getConfiguration().setFilterHotSwapEnabled(true);
-
-        this.playerManager = new PlayerManager(this);
+        this.playerManager = injector.getInstance(PlayerManager.class);
 
         this.registry = new Registry(this.jda, this.getClass().getClassLoader(), this.injector);
         this.registry.registerAllCommands();

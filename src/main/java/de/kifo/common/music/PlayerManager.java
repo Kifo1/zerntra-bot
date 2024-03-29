@@ -1,40 +1,60 @@
 package de.kifo.common.music;
 
-import de.kifo.JavaBot;
 
-import java.util.concurrent.ConcurrentHashMap;
+import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
+import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
+import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
+import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
+import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import net.dv8tion.jda.api.entities.Guild;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers.registerLocalSource;
+import static com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers.registerRemoteSources;
 
 public class PlayerManager {
 
-    private JavaBot javaBot;
+    private Map<Long, GuildMusicManager> guildMusicManagers = new HashMap<>();
+    private AudioPlayerManager audioPlayerManager = new DefaultAudioPlayerManager();
 
-    public ConcurrentHashMap<Long, MusicController> controller;
-
-    public PlayerManager(JavaBot javaBot) {
-        this.javaBot = javaBot;
-        this.controller = new ConcurrentHashMap<>();
+    public PlayerManager() {
+        registerRemoteSources(audioPlayerManager);
+        registerLocalSource(audioPlayerManager);
     }
 
-    public MusicController getController(long guildId) {
-        MusicController mc;
-
-        if(this.controller.containsKey(guildId)) {
-            mc = this.controller.get(guildId);
-        } else {
-            mc = new MusicController(javaBot.getJda().getGuildById(guildId), javaBot);
-            this.controller.put(guildId, mc);
-        }
-
-        return mc;
+    public GuildMusicManager getGuildMusicManager(Guild guild) {
+        return guildMusicManagers.computeIfAbsent(guild.getIdLong(), (guildId) -> {
+            GuildMusicManager musicManager = new GuildMusicManager(audioPlayerManager, guild);
+            guild.getAudioManager().setSendingHandler(musicManager.getAudioForwarder());
+            return musicManager;
+        });
     }
 
-    public long getGuildByPlayerHash(int hash) {
-        for(MusicController controller : this.controller.values()) {
-            if(controller.getPlayer().hashCode() == hash) {
-                return controller.getGuild().getIdLong();
+    public void play(Guild guild, String trackURL) {
+        GuildMusicManager guildMusicManager = getGuildMusicManager(guild);
+        audioPlayerManager.loadItemOrdered(guildMusicManager, trackURL, new AudioLoadResultHandler() {
+            @Override
+            public void trackLoaded(AudioTrack audioTrack) {
+                guildMusicManager.getTrackScheduler().queue(audioTrack);
             }
-        }
 
-        return -1;
+            @Override
+            public void playlistLoaded(AudioPlaylist audioPlaylist) {
+                guildMusicManager.getTrackScheduler().queue(audioPlaylist.getTracks().get(0));
+            }
+
+            @Override
+            public void noMatches() {
+
+            }
+
+            @Override
+            public void loadFailed(FriendlyException e) {
+
+            }
+        });
     }
 }
