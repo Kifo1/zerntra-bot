@@ -1,20 +1,22 @@
-package de.kifo.music;
+package de.kifo.common.music;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
+import de.kifo.JavaBot;
 import lombok.Data;
 import net.dv8tion.jda.api.entities.Guild;
-
-import static de.kifo.Main.getInstance;
 
 @Data
 public class MusicController {
 
+    private JavaBot javaBot;
+
     private final Guild guild;
     private final AudioPlayer player;
 
-    public MusicController(Guild guild) {
+    public MusicController(Guild guild, JavaBot javaBot) {
+        this.javaBot = javaBot;
         this.guild = guild;
-        this.player = getInstance().getAudioPlayerManager().createPlayer();
+        this.player = javaBot.getAudioPlayerManager().createPlayer();
 
         this.guild.getAudioManager().setSendingHandler(new AudioPlayerSendHandler(player));
         this.player.addListener(new AudioLoadResult(this.guild));
