@@ -14,6 +14,10 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import static de.kifo.commands.music.PlayCommand.map;
 import static java.awt.Color.MAGENTA;
+import static java.lang.Thread.sleep;
+import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
+import static java.util.concurrent.Executors.newSingleThreadExecutor;
 
 @Getter
 public class TrackScheduler extends AudioEventAdapter {
@@ -50,6 +54,20 @@ public class TrackScheduler extends AudioEventAdapter {
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
         audioPlayer.startTrack(queue.poll(), false);
+
+        newSingleThreadExecutor().execute(() -> {
+            try {
+                sleep(60000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
+            if(isNull(player.getPlayingTrack())) {
+                if(nonNull(guild.getAudioManager().getConnectedChannel())) {
+                    guild.getAudioManager().closeAudioConnection();
+                }
+            }
+        });
     }
 
     public void queue(AudioTrack audioTrack) {
