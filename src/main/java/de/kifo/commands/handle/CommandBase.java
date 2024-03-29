@@ -44,7 +44,6 @@ public abstract class CommandBase extends CommandDataImpl {
 
         String description() default "";
 
-        String usage() default "";
         boolean hasOptions() default false;
     }
 }

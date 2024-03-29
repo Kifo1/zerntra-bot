@@ -15,14 +15,14 @@ public class PlayerManager {
         this.controller = new ConcurrentHashMap<>();
     }
 
-    public MusicController getController(long guildid) {
-        MusicController mc = null;
+    public MusicController getController(long guildId) {
+        MusicController mc;
 
-        if(this.controller.containsKey(guildid)) {
-            mc = this.controller.get(guildid);
+        if(this.controller.containsKey(guildId)) {
+            mc = this.controller.get(guildId);
         } else {
-            mc = new MusicController(javaBot.getJda().getGuildById(guildid), javaBot);
-            this.controller.put(guildid, mc);
+            mc = new MusicController(javaBot.getJda().getGuildById(guildId), javaBot);
+            this.controller.put(guildId, mc);
         }
 
         return mc;

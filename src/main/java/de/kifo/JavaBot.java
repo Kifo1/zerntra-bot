@@ -46,7 +46,7 @@ public class JavaBot {
     }
 
     private void handleRegistrations() {
-        this.audioPlayerManager = injector.getInstance(DefaultAudioPlayerManager.class);
+        this.audioPlayerManager = new DefaultAudioPlayerManager();
         registerRemoteSources(audioPlayerManager);
         audioPlayerManager.getConfiguration().setFilterHotSwapEnabled(true);
 

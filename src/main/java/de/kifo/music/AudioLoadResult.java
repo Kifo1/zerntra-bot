@@ -75,7 +75,7 @@ public class AudioLoadResult extends AudioEventAdapter implements AudioLoadResul
 
     @Override
     public void loadFailed(FriendlyException e) {
-
+        throw e;
     }
 
     @Override
@@ -83,7 +83,7 @@ public class AudioLoadResult extends AudioEventAdapter implements AudioLoadResul
         if(!map.get(guild).isEmpty()) {
             nextSong(player);
         }
-        newSingleThreadExecutor().execute( () -> {
+        newSingleThreadExecutor().execute(() -> {
             try {
                 sleep(60000);
             } catch (InterruptedException e) {
