@@ -2,7 +2,6 @@ package de.kifo.common.registration;
 
 import com.google.common.reflect.ClassPath;
 import com.google.inject.Injector;
-import de.kifo.JavaBot;
 import de.kifo.commands.handle.CommandBase;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,7 +9,6 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -21,7 +19,6 @@ import static com.google.common.collect.ImmutableSet.of;
 import static com.google.common.reflect.ClassPath.from;
 import static java.lang.String.format;
 import static java.util.stream.Collectors.toSet;
-import static net.dv8tion.jda.api.interactions.commands.OptionType.STRING;
 
 @AllArgsConstructor
 public class Registry {

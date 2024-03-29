@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.inject.Inject;
 import java.util.List;
 
-@CommandBase.Command(name = "invite", description = "create an invite link")
+@CommandBase.Command(name = "invite", description = "Erstelle einen Invite-Link")
 public class InviteCommand extends CommandBase {
 
     @Inject
