@@ -20,6 +20,7 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.BlockingQueue;
 
 import static com.google.common.collect.ImmutableList.of;
 import static java.lang.Math.min;
@@ -47,21 +48,20 @@ public class SkipCommand extends CommandBase {
             return;
         }
 
-        VoiceChannel voiceChannel = guildVoiceState.getChannel().asVoiceChannel();
         PlayerManager playerManager = javaBot.getPlayerManager();
         GuildMusicManager guildMusicManager = playerManager.getGuildMusicManager(event.getGuild());
         AudioPlayer audioPlayer = guildMusicManager.getTrackScheduler().getAudioPlayer();
 
-        if (isNull(options.get(0))) {
+        if (options.isEmpty() || isNull(options.get(0))) {
             audioPlayer.stopTrack();
             event.reply("Das Lied wird übersprungen...").queue(); //TODO Replace with embed (EmbedBuilder builder = new EmbedBuilder())
         } else {
-            LinkedList<AudioTrack> tracks = (LinkedList<AudioTrack>) guildMusicManager.getTrackScheduler().getQueue();
+            BlockingQueue<AudioTrack> tracks = guildMusicManager.getTrackScheduler().getQueue();
             int number = options.get(0).getAsInt();
 
-            if (tracks.size() > number) {
-                AudioTrack track = tracks.get(number - 1);
-                ((LinkedList<?>) guildMusicManager.getTrackScheduler().getQueue()).remove(track);
+            if (tracks.size() >= number) {
+                AudioTrack track = (AudioTrack) tracks.toArray()[number - 1];
+                guildMusicManager.getTrackScheduler().getQueue().remove(track);
                 event.reply(track.getInfo().title + " von " + track.getInfo().author + " wurde aus der Playlist entfernt.").queue(); //TODO Replace with embed (EmbedBuilder builder = new EmbedBuilder())
             } else {
                 event.reply("Dieser Index existiert nicht.").queue(); //TODO Replace with embed (EmbedBuilder builder = new EmbedBuilder())

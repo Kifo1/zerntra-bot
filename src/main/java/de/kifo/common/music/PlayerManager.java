@@ -52,8 +52,6 @@ public class PlayerManager {
 
             @Override
             public void loadFailed(FriendlyException e) {
-                System.out.println(e.getCause());
-                System.out.println(e.getMessage());
                 System.out.println("load failed");
             }
         });

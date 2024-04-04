@@ -10,19 +10,18 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
-import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static java.awt.Color.MAGENTA;
 import static java.util.Objects.isNull;
-import static java.util.stream.IntStream.rangeClosed;
 
 @CommandBase.Command(name = "playlist", description = "Zeigt die aktuelle Playlist an.")
 public class PlayListCommand extends CommandBase {
@@ -43,7 +42,6 @@ public class PlayListCommand extends CommandBase {
             return;
         }
 
-        VoiceChannel voiceChannel = guildVoiceState.getChannel().asVoiceChannel();
         PlayerManager playerManager = javaBot.getPlayerManager();
         GuildMusicManager guildMusicManager = playerManager.getGuildMusicManager(event.getGuild());
         AudioPlayer audioPlayer = guildMusicManager.getTrackScheduler().getAudioPlayer();
@@ -53,14 +51,18 @@ public class PlayListCommand extends CommandBase {
             return;
         }
 
-        LinkedList<AudioTrack> tracks = (LinkedList<AudioTrack>) guildMusicManager.getTrackScheduler().getQueue();
+        BlockingQueue<AudioTrack> tracks = guildMusicManager.getTrackScheduler().getQueue();
         EmbedBuilder builder = new EmbedBuilder();
         builder.setColor(MAGENTA);
 
         if (!tracks.isEmpty()) {
-            rangeClosed(1, tracks.size()).forEach(trackNumber -> builder.addField(trackNumber + "- ", tracks.get(trackNumber - 1).getInfo().title, false));
+            AtomicInteger trackNumber = new AtomicInteger(1);
+            tracks.forEach(track -> {
+                builder.addField("Lied " + trackNumber + ": ", track.getInfo().title, false);
+                trackNumber.getAndIncrement();
+            });
             builder.setFooter("Verwende \"/skip <Nummer>\", um das gewünschte Lied aus der Playlist zu entfernen.");
-            event.replyEmbeds(builder.build());
+            event.replyEmbeds(builder.build()).queue();
         } else {
             event.reply("Die Playlist ist aktuell leer.").queue();
         }

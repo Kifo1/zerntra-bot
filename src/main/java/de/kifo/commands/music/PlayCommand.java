@@ -61,7 +61,7 @@ public class PlayCommand extends CommandBase {
 
     @Override
     public void autoComplete(String optionName, CommandAutoCompleteInteractionEvent event) {
-        List<String> options = of("Achterbahn wise guys", "Ich trink uso was trinkst denn du so", "for the night pop smoke"); //TODO add logic to get famous songs
+        List<String> options = of("Achterbahn wise guys", "Ich trink uso was trinkst denn du so official video", "for the night pop smoke"); //TODO add logic to get famous songs
 
         if (optionName.equalsIgnoreCase("song")) {
             List<net.dv8tion.jda.api.interactions.commands.Command.Choice> returnChoices = options.stream()
