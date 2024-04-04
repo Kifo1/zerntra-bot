@@ -48,6 +48,15 @@
             <name>m2-dv8tion</name>
             <url>https://m2.dv8tion.net/releases</url>
         </repository>
+        <repository>
+            <id>jitpack</id>
+            <url>https://jitpack.io</url>
+        </repository>
+        <repository>
+            <id>arbjergDev-snapshots</id>
+            <name>Lavalink Repository</name>
+            <url>https://maven.lavalink.dev/snapshots</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -58,11 +67,12 @@
             <version>5.0.0-beta.21</version>
         </dependency>
 
-        <!-- Music library - Lavaplayer -->
+        <!-- Music library - Lavaplayer (https://github.com/lavalink-devs/lavaplayer)-->
+        <!-- https://github.com/lavalink-devs/lavaplayer/issues/90 (fixes error)-->
         <dependency>
-            <groupId>com.sedmelluq</groupId>
+            <groupId>dev.arbjerg</groupId>
             <artifactId>lavaplayer</artifactId>
-            <version>1.3.78</version>
+            <version>0eaeee195f0315b2617587aa3537fa202df07ddc-SNAPSHOT</version>
         </dependency>
 
         <!-- Lombok -->

@@ -1,6 +1,5 @@
 package de.kifo.common.music;
 
-
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
@@ -48,12 +47,14 @@ public class PlayerManager {
 
             @Override
             public void noMatches() {
-
+                System.out.println("not matches");
             }
 
             @Override
             public void loadFailed(FriendlyException e) {
-
+                System.out.println(e.getCause());
+                System.out.println(e.getMessage());
+                System.out.println("load failed");
             }
         });
     }
