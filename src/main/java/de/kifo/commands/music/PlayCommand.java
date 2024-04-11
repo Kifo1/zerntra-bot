@@ -1,10 +1,8 @@
 package de.kifo.commands.music;
 
-import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import de.kifo.JavaBot;
 import de.kifo.commands.handle.CommandBase;
-import de.kifo.common.music.AudioLoadResult;
-import de.kifo.common.music.MusicController;
+import de.kifo.common.music.PlayerManager;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
@@ -47,8 +45,7 @@ public class PlayCommand extends CommandBase {
         }
 
         VoiceChannel voiceChannel = guildVoiceState.getChannel().asVoiceChannel();
-        MusicController controller = javaBot.getPlayerManager().getController(voiceChannel.getGuild().getIdLong());
-        AudioPlayerManager audioPlayerManager = javaBot.getAudioPlayerManager();
+        PlayerManager playerManager = javaBot.getPlayerManager();
         AudioManager manager = voiceChannel.getGuild().getAudioManager();
         manager.openAudioConnection(voiceChannel);
 
@@ -58,13 +55,13 @@ public class PlayCommand extends CommandBase {
         }
         event.reply("Suche nach dem Titel...").queue(); //TODO Replace with embed (EmbedBuilder builder = new EmbedBuilder())
 
-        audioPlayerManager.loadItem(url, new AudioLoadResult(controller, url, controller.getGuild()));
+        playerManager.play(event.getGuild(), url);
         map.put(voiceChannel.getGuild().getIdLong(), textChannel);
     }
 
     @Override
     public void autoComplete(String optionName, CommandAutoCompleteInteractionEvent event) {
-        List<String> options = of("Achterbahn wise guys", "Ich trink uso was trinkst denn du so", "for the night pop smoke"); //TODO add logic to get famous songs
+        List<String> options = of("Achterbahn wise guys", "Ich trink uso was trinkst denn du so official video", "for the night pop smoke"); //TODO add logic to get famous songs
 
         if (optionName.equalsIgnoreCase("song")) {
             List<net.dv8tion.jda.api.interactions.commands.Command.Choice> returnChoices = options.stream()

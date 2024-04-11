@@ -4,12 +4,11 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import de.kifo.JavaBot;
 import de.kifo.commands.handle.CommandBase;
-import de.kifo.common.music.AudioLoadResult;
-import de.kifo.common.music.MusicController;
+import de.kifo.common.music.GuildMusicManager;
+import de.kifo.common.music.PlayerManager;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
-import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
@@ -18,10 +17,11 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.BlockingQueue;
 
 import static com.google.common.collect.ImmutableList.of;
+import static java.lang.Math.min;
 import static java.lang.String.valueOf;
 import static java.util.Objects.isNull;
 import static java.util.stream.IntStream.rangeClosed;
@@ -46,20 +46,20 @@ public class SkipCommand extends CommandBase {
             return;
         }
 
-        VoiceChannel voiceChannel = guildVoiceState.getChannel().asVoiceChannel();
-        MusicController controller = javaBot.getPlayerManager().getController(voiceChannel.getGuild().getIdLong());
-        AudioPlayer audioPlayer = controller.getPlayer();
+        PlayerManager playerManager = javaBot.getPlayerManager();
+        GuildMusicManager guildMusicManager = playerManager.getGuildMusicManager(event.getGuild());
+        AudioPlayer audioPlayer = guildMusicManager.getTrackScheduler().getAudioPlayer();
 
-        if (isNull(options.get(0))) {
+        if (options.isEmpty() || isNull(options.get(0))) {
             audioPlayer.stopTrack();
             event.reply("Das Lied wird übersprungen...").queue(); //TODO Replace with embed (EmbedBuilder builder = new EmbedBuilder())
         } else {
-            LinkedList<AudioTrack> tracks = (LinkedList<AudioTrack>) AudioLoadResult.map.get(voiceChannel.getGuild());
+            BlockingQueue<AudioTrack> tracks = guildMusicManager.getTrackScheduler().getQueue();
             int number = options.get(0).getAsInt();
 
-            if (tracks.size() > number) {
-                AudioTrack track = tracks.get(number - 1);
-                AudioLoadResult.map.get(voiceChannel.getGuild()).remove(track);
+            if (tracks.size() >= number) {
+                AudioTrack track = (AudioTrack) tracks.toArray()[number - 1];
+                guildMusicManager.getTrackScheduler().getQueue().remove(track);
                 event.reply(track.getInfo().title + " von " + track.getInfo().author + " wurde aus der Playlist entfernt.").queue(); //TODO Replace with embed (EmbedBuilder builder = new EmbedBuilder())
             } else {
                 event.reply("Dieser Index existiert nicht.").queue(); //TODO Replace with embed (EmbedBuilder builder = new EmbedBuilder())
@@ -71,9 +71,10 @@ public class SkipCommand extends CommandBase {
     @Override
     public void autoComplete(String optionName, CommandAutoCompleteInteractionEvent event) {
         List<net.dv8tion.jda.api.interactions.commands.Command.Choice> options = new ArrayList<>();
+        GuildMusicManager guildMusicManager = javaBot.getPlayerManager().getGuildMusicManager(event.getGuild());
 
         if (optionName.equalsIgnoreCase("index")) {
-            rangeClosed(1, AudioLoadResult.map.get(event.getChannel().asGuildMessageChannel().getGuild()).size())
+            rangeClosed(1, min(guildMusicManager.getTrackScheduler().getQueue().size(), 25))
                     .forEach(number -> options.add(new net.dv8tion.jda.api.interactions.commands.Command.Choice(valueOf(number), number)));
             event.replyChoices(options).queue();
         }
