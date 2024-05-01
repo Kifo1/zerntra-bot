@@ -6,8 +6,10 @@ import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import de.kifo.JavaBot;
 import net.dv8tion.jda.api.entities.Guild;
 
+import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,6 +17,9 @@ import static com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers.regist
 import static com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers.registerRemoteSources;
 
 public class PlayerManager {
+
+    @Inject
+    private JavaBot javaBot;
 
     private Map<Long, GuildMusicManager> guildMusicManagers = new HashMap<>();
     private AudioPlayerManager audioPlayerManager = new DefaultAudioPlayerManager();
@@ -32,16 +37,18 @@ public class PlayerManager {
         });
     }
 
-    public void play(Guild guild, String trackURL) {
+    public void play(Guild guild, String trackURL, Long userId) {
         GuildMusicManager guildMusicManager = getGuildMusicManager(guild);
         audioPlayerManager.loadItemOrdered(guildMusicManager, trackURL, new AudioLoadResultHandler() {
             @Override
             public void trackLoaded(AudioTrack audioTrack) {
+                javaBot.getApi().updateSong(userId, audioTrack.getInfo().title);
                 guildMusicManager.getTrackScheduler().queue(audioTrack);
             }
 
             @Override
             public void playlistLoaded(AudioPlaylist audioPlaylist) {
+                javaBot.getApi().updateSong(userId, audioPlaylist.getTracks().get(0).getInfo().title);
                 guildMusicManager.getTrackScheduler().queue(audioPlaylist.getTracks().get(0));
             }
 

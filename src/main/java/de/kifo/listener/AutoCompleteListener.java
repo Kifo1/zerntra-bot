@@ -14,6 +14,7 @@ public class AutoCompleteListener extends ListenerAdapter {
 
     @Override
     public void onCommandAutoCompleteInteraction(@NotNull CommandAutoCompleteInteractionEvent event) {
+        javaBot.getApi().createUser(event.getUser().getIdLong());
         String optionName = event.getFocusedOption().getName();
 
         this.javaBot.getRegistry().getCommandBases().stream()

@@ -2,6 +2,7 @@ package de.kifo;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
+import de.kifo.common.api.API;
 import de.kifo.common.music.PlayerManager;
 import de.kifo.common.registration.Registry;
 import lombok.AllArgsConstructor;
@@ -21,6 +22,7 @@ public class JavaBot {
 
     private Injector injector;
 
+    private API api;
     private JDA jda;
     private PlayerManager playerManager;
     private Registry registry;
@@ -33,6 +35,7 @@ public class JavaBot {
     }
 
     private void setUpBot() {
+        api = injector.getInstance(API.class);
         jda = createDefault("MTA1OTQzMTY0NDA4MTE3MjQ4MQ.GFY5Eo.TcwNJzrB9aSYt_1fYTd6OgHb6BpWgrBFfsAqP4")
                 .enableIntents(MESSAGE_CONTENT)
                 .enableIntents(GUILD_PRESENCES)
