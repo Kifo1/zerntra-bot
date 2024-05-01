@@ -68,14 +68,15 @@ public class PlayCommand extends CommandBase {
                 .filter(song -> song.getName().length() < 100)
                 .sorted(comparing(Song::getTimesPlayed).reversed())
                 .map(Song::getName)
-                .limit(25)
                 .collect(toList());
 
         if (optionName.equalsIgnoreCase("song")) {
             List<net.dv8tion.jda.api.interactions.commands.Command.Choice> returnChoices = options.stream()
-                    .filter(option -> option.toLowerCase().startsWith(event.getFocusedOption().getValue().toLowerCase()))
+                    .filter(option -> option.toLowerCase().contains(event.getFocusedOption().getValue().toLowerCase()))
                     .map(option -> new net.dv8tion.jda.api.interactions.commands.Command.Choice(option, option))
+                    .limit(25)
                     .collect(toList());
+
             event.replyChoices(returnChoices).queue();
         }
     }
