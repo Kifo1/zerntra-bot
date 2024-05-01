@@ -2,6 +2,7 @@ package de.kifo.commands.music;
 
 import de.kifo.JavaBot;
 import de.kifo.commands.handle.CommandBase;
+import de.kifo.common.api.model.Song;
 import de.kifo.common.music.PlayerManager;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.Member;
@@ -19,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import static com.google.common.collect.ImmutableList.of;
+import static java.util.Comparator.comparing;
 import static java.util.Objects.isNull;
 import static java.util.stream.Collectors.toList;
 import static net.dv8tion.jda.api.interactions.commands.OptionType.STRING;
@@ -55,13 +57,19 @@ public class PlayCommand extends CommandBase {
         }
         event.reply("Suche nach dem Titel...").queue(); //TODO Replace with embed (EmbedBuilder builder = new EmbedBuilder())
 
-        playerManager.play(event.getGuild(), url);
+        playerManager.play(event.getGuild(), url, member.getUser().getIdLong());
         map.put(voiceChannel.getGuild().getIdLong(), textChannel);
     }
 
     @Override
     public void autoComplete(String optionName, CommandAutoCompleteInteractionEvent event) {
-        List<String> options = of("Achterbahn wise guys", "Ich trink uso was trinkst denn du so official video", "for the night pop smoke"); //TODO add logic to get famous songs
+        List<String> options = javaBot.getApi().getSongListByUserId(event.getUser().getIdLong())
+                .stream()
+                .filter(song -> song.getName().length() < 100)
+                .sorted(comparing(Song::getTimesPlayed).reversed())
+                .map(Song::getName)
+                .limit(25)
+                .collect(toList());
 
         if (optionName.equalsIgnoreCase("song")) {
             List<net.dv8tion.jda.api.interactions.commands.Command.Choice> returnChoices = options.stream()
