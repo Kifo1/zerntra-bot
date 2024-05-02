@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static de.kifo.common.util.EmbedUtils.MessageType.ERROR;
 import static java.awt.Color.MAGENTA;
 import static java.util.Objects.isNull;
 
@@ -38,7 +39,7 @@ public class PlayListCommand extends CommandBase {
         GuildVoiceState guildVoiceState = member.getVoiceState();
 
         if (isNull(guildVoiceState) || isNull(guildVoiceState.getChannel()) || isNull(guildVoiceState.getChannel().asVoiceChannel())) {
-            event.reply("Du musst in einem Sprachkanal sein.").queue(); //TODO Replace with embed (EmbedBuilder builder = new EmbedBuilder())
+            event.replyEmbeds(javaBot.getEmbedUtils().getEmbedMessageByText("Du musst in einem Sprachkanal sein.", ERROR)).queue();
             return;
         }
 

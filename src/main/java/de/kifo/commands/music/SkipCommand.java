@@ -21,6 +21,8 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
 import static com.google.common.collect.ImmutableList.of;
+import static de.kifo.common.util.EmbedUtils.MessageType.ERROR;
+import static de.kifo.common.util.EmbedUtils.MessageType.MESSAGE;
 import static java.lang.Math.min;
 import static java.lang.String.valueOf;
 import static java.util.Objects.isNull;
@@ -42,7 +44,7 @@ public class SkipCommand extends CommandBase {
         GuildVoiceState guildVoiceState = member.getVoiceState();
 
         if (isNull(guildVoiceState) || isNull(guildVoiceState.getChannel()) || isNull(guildVoiceState.getChannel().asVoiceChannel())) {
-            event.reply("Du musst in einem Sprachkanal sein.").queue(); //TODO Replace with embed (EmbedBuilder builder = new EmbedBuilder())
+            event.replyEmbeds(javaBot.getEmbedUtils().getEmbedMessageByText("Du musst in einem Sprachkanal sein.", ERROR)).queue();
             return;
         }
 
@@ -52,7 +54,7 @@ public class SkipCommand extends CommandBase {
 
         if (options.isEmpty() || isNull(options.get(0))) {
             audioPlayer.stopTrack();
-            event.reply("Das Lied wird übersprungen...").queue(); //TODO Replace with embed (EmbedBuilder builder = new EmbedBuilder())
+            event.replyEmbeds(javaBot.getEmbedUtils().getEmbedMessageByText("Das Lied wird übersprungen...", MESSAGE)).queue();
         } else {
             BlockingQueue<AudioTrack> tracks = guildMusicManager.getTrackScheduler().getQueue();
             int number = options.get(0).getAsInt();
@@ -60,9 +62,11 @@ public class SkipCommand extends CommandBase {
             if (tracks.size() >= number) {
                 AudioTrack track = (AudioTrack) tracks.toArray()[number - 1];
                 guildMusicManager.getTrackScheduler().getQueue().remove(track);
-                event.reply(track.getInfo().title + " von " + track.getInfo().author + " wurde aus der Playlist entfernt.").queue(); //TODO Replace with embed (EmbedBuilder builder = new EmbedBuilder())
+                event.replyEmbeds(javaBot.getEmbedUtils().getEmbedMessageByText(
+                        track.getInfo().title + " von " + track.getInfo().author +
+                        " wurde aus der Playlist entfernt.", MESSAGE)).queue();
             } else {
-                event.reply("Dieser Index existiert nicht.").queue(); //TODO Replace with embed (EmbedBuilder builder = new EmbedBuilder())
+                event.replyEmbeds(javaBot.getEmbedUtils().getEmbedMessageByText("Dieser Index existiert nicht.", ERROR)).queue();
                 //TODO Add footer to embed with text "Verwende !playlist, um alle Lieder mit der jeweiligen Nummer angezeigt zu bekommen."
             }
         }
