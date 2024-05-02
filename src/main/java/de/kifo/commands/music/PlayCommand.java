@@ -2,6 +2,7 @@ package de.kifo.commands.music;
 
 import de.kifo.JavaBot;
 import de.kifo.commands.handle.CommandBase;
+import de.kifo.common.api.model.Song;
 import de.kifo.common.music.PlayerManager;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.Member;
@@ -19,6 +20,9 @@ import java.util.HashMap;
 import java.util.List;
 
 import static com.google.common.collect.ImmutableList.of;
+import static de.kifo.common.util.EmbedUtils.MessageType.ERROR;
+import static de.kifo.common.util.EmbedUtils.MessageType.MESSAGE;
+import static java.util.Comparator.comparing;
 import static java.util.Objects.isNull;
 import static java.util.stream.Collectors.toList;
 import static net.dv8tion.jda.api.interactions.commands.OptionType.STRING;
@@ -40,7 +44,7 @@ public class PlayCommand extends CommandBase {
         GuildVoiceState guildVoiceState = member.getVoiceState();
 
         if (isNull(guildVoiceState) || isNull(guildVoiceState.getChannel()) || isNull(guildVoiceState.getChannel().asVoiceChannel())) {
-            event.reply("Du musst in einem Sprachkanal sein.").queue(); //TODO Replace with embed (EmbedBuilder builder = new EmbedBuilder())
+            event.replyEmbeds(javaBot.getEmbedUtils().getEmbedMessageByText("Du musst in einem Sprachkanal sein.", ERROR)).queue();
             return;
         }
 
@@ -53,21 +57,28 @@ public class PlayCommand extends CommandBase {
         if (!url.startsWith("http")) {
             url = "ytsearch:" + url + " audio";
         }
-        event.reply("Suche nach dem Titel...").queue(); //TODO Replace with embed (EmbedBuilder builder = new EmbedBuilder())
+        event.replyEmbeds(javaBot.getEmbedUtils().getEmbedMessageByText("Suche nach dem Titel...", MESSAGE)).queue();
 
-        playerManager.play(event.getGuild(), url);
+        playerManager.play(event.getGuild(), url, member.getUser().getIdLong());
         map.put(voiceChannel.getGuild().getIdLong(), textChannel);
     }
 
     @Override
     public void autoComplete(String optionName, CommandAutoCompleteInteractionEvent event) {
-        List<String> options = of("Achterbahn wise guys", "Ich trink uso was trinkst denn du so official video", "for the night pop smoke"); //TODO add logic to get famous songs
+        List<String> options = javaBot.getApi().getSongListByUserId(event.getUser().getIdLong())
+                .stream()
+                .filter(song -> song.getName().length() < 100)
+                .sorted(comparing(Song::getTimesPlayed).reversed())
+                .map(Song::getName)
+                .collect(toList());
 
         if (optionName.equalsIgnoreCase("song")) {
             List<net.dv8tion.jda.api.interactions.commands.Command.Choice> returnChoices = options.stream()
-                    .filter(option -> option.toLowerCase().startsWith(event.getFocusedOption().getValue().toLowerCase()))
+                    .filter(option -> option.toLowerCase().contains(event.getFocusedOption().getValue().toLowerCase()))
                     .map(option -> new net.dv8tion.jda.api.interactions.commands.Command.Choice(option, option))
+                    .limit(25)
                     .collect(toList());
+
             event.replyChoices(returnChoices).queue();
         }
     }

@@ -12,7 +12,7 @@ import static java.nio.ByteBuffer.allocate;
 public class AudioForwarder implements AudioSendHandler {
 
     private final AudioPlayer audioPlayer;
-    private final ByteBuffer byteBuffer = allocate(1024);
+    private final ByteBuffer byteBuffer = allocate(4096);
     private final MutableAudioFrame audioFrame = new MutableAudioFrame();
 
     public AudioForwarder(AudioPlayer audioPlayer) {

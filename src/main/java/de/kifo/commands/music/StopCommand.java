@@ -18,6 +18,8 @@ import org.jetbrains.annotations.NotNull;
 import javax.inject.Inject;
 import java.util.List;
 
+import static de.kifo.common.util.EmbedUtils.MessageType.ERROR;
+import static de.kifo.common.util.EmbedUtils.MessageType.MESSAGE;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
@@ -36,7 +38,7 @@ public class StopCommand extends CommandBase {
         GuildVoiceState guildVoiceState = member.getVoiceState();
 
         if (isNull(guildVoiceState) || isNull(guildVoiceState.getChannel()) || isNull(guildVoiceState.getChannel().asVoiceChannel())) {
-            event.reply("Du musst in einem Sprachkanal sein.").queue(); //TODO Replace with embed (EmbedBuilder builder = new EmbedBuilder())
+            event.replyEmbeds(javaBot.getEmbedUtils().getEmbedMessageByText("Du musst in einem Sprachkanal sein.", ERROR)).queue();
             return;
         }
 
@@ -52,9 +54,9 @@ public class StopCommand extends CommandBase {
                 guildMusicManager.getTrackScheduler().getAudioPlayer().stopTrack();
             }
             audioManager.closeAudioConnection();
-            event.reply("Die Musik wurde beendet.").queue(); //TODO Replace with embed (EmbedBuilder builder = new EmbedBuilder())
+            event.replyEmbeds(javaBot.getEmbedUtils().getEmbedMessageByText("Die Musik wurde beendet.", MESSAGE)).queue();
         } else {
-            event.reply("Es läuft im Moment kein Lied.").queue(); //TODO Replace with embed (EmbedBuilder builder = new EmbedBuilder())
+            event.replyEmbeds(javaBot.getEmbedUtils().getEmbedMessageByText("Es läuft im Moment kein Lied.", ERROR)).queue();
         }
     }
 
