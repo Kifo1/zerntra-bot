@@ -24,13 +24,13 @@ import static de.kifo.common.util.EmbedUtils.MessageType.ERROR;
 import static java.awt.Color.MAGENTA;
 import static java.util.Objects.isNull;
 
-@CommandBase.Command(name = "playlist", description = "Zeigt die aktuelle Playlist an.")
-public class PlayListCommand extends CommandBase {
+@CommandBase.BotCommand(name = "songlist", description = "Zeigt die aktuelle Song Liste an.")
+public class SongListCommand extends CommandBase {
 
     @Inject
     private JavaBot javaBot;
 
-    public PlayListCommand(@NotNull Command command) {
+    public SongListCommand(@NotNull BotCommand command) {
         super(command);
     }
 
@@ -62,10 +62,10 @@ public class PlayListCommand extends CommandBase {
                 builder.addField("Lied " + trackNumber + ": ", track.getInfo().title, false);
                 trackNumber.getAndIncrement();
             });
-            builder.setFooter("Verwende \"/skip <Nummer>\", um das gewünschte Lied aus der Playlist zu entfernen.");
+            builder.setFooter("Verwende \"/skip <Nummer>\", um das gewünschte Lied aus der Liste zu entfernen.");
             event.replyEmbeds(builder.build()).queue();
         } else {
-            event.reply("Die Playlist ist aktuell leer.").queue();
+            event.reply("Die Liste ist aktuell leer.").queue();
         }
     }
 

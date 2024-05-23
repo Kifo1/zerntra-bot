@@ -30,20 +30,20 @@ public class Registry {
     @Getter
     private final Collection<CommandBase> commandBases = new ArrayList<>();
     @Getter
-    private final Collection<CommandBase.Command> commands = new ArrayList<>();
+    private final Collection<CommandBase.BotCommand> commands = new ArrayList<>();
 
     public void registerAllCommands() {
         AtomicInteger successCases = new AtomicInteger();
         List<Class<?>> commandClasses = getAllClassesFromPackage("de.kifo.commands").stream()
                 .filter(CommandBase.class::isAssignableFrom)
-                .filter(commandClass -> commandClass.isAnnotationPresent(CommandBase.Command.class))
+                .filter(commandClass -> commandClass.isAnnotationPresent(CommandBase.BotCommand.class))
                 .toList();
 
         commandClasses.forEach(commandClass -> {
             try {
-                CommandBase.Command command = commandClass.getAnnotation(CommandBase.Command.class);
+                CommandBase.BotCommand command = commandClass.getAnnotation(CommandBase.BotCommand.class);
                 this.commands.add(command);
-                CommandBase commandBase = ((Class<CommandBase>) commandClass).getConstructor(CommandBase.Command.class).newInstance(command);
+                CommandBase commandBase = ((Class<CommandBase>) commandClass).getConstructor(CommandBase.BotCommand.class).newInstance(command);
                 this.injector.injectMembers(commandBase);
                 commandBases.add(commandBase);
 

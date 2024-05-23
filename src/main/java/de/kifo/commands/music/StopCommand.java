@@ -23,13 +23,13 @@ import static de.kifo.common.util.EmbedUtils.MessageType.MESSAGE;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
-@CommandBase.Command(name = "stop", description = "Beende das Abspielen von Musik.")
+@CommandBase.BotCommand(name = "stop", description = "Beende das Abspielen von Musik.")
 public class StopCommand extends CommandBase {
 
     @Inject
     private JavaBot javaBot;
 
-    public StopCommand(@NotNull Command command) {
+    public StopCommand(@NotNull BotCommand command) {
         super(command);
     }
 
