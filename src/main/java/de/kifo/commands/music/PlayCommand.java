@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.managers.AudioManager;
@@ -24,10 +25,9 @@ import static de.kifo.common.util.EmbedUtils.MessageType.ERROR;
 import static de.kifo.common.util.EmbedUtils.MessageType.MESSAGE;
 import static java.util.Comparator.comparing;
 import static java.util.Objects.isNull;
-import static java.util.stream.Collectors.toList;
 import static net.dv8tion.jda.api.interactions.commands.OptionType.STRING;
 
-@CommandBase.Command(name = "play", description = "Wähle ein Lied, das abgespielt werden soll.", hasOptions = true)
+@CommandBase.BotCommand(name = "play", description = "Wähle ein Lied, das abgespielt werden soll.", hasOptions = true)
 public class PlayCommand extends CommandBase {
 
     @Inject
@@ -35,7 +35,7 @@ public class PlayCommand extends CommandBase {
 
     public static HashMap<Long, TextChannel> map = new HashMap<>();
 
-    public PlayCommand(@NotNull Command command) {
+    public PlayCommand(@NotNull BotCommand command) {
         super(command);
     }
 
@@ -65,21 +65,20 @@ public class PlayCommand extends CommandBase {
 
     @Override
     public void autoComplete(String optionName, CommandAutoCompleteInteractionEvent event) {
-        List<String> options = javaBot.getApi().getSongListByUserId(event.getUser().getIdLong())
-                .stream()
+        List<String> options = javaBot.getApi().getSongListByUserId(event.getUser().getIdLong()).stream()
                 .filter(song -> song.getName().length() < 100)
                 .sorted(comparing(Song::getTimesPlayed).reversed())
                 .map(Song::getName)
-                .collect(toList());
+                .toList();
 
         if (optionName.equalsIgnoreCase("song")) {
-            List<net.dv8tion.jda.api.interactions.commands.Command.Choice> returnChoices = options.stream()
+            List<Command.Choice> replyChoices = options.stream()
                     .filter(option -> option.toLowerCase().contains(event.getFocusedOption().getValue().toLowerCase()))
-                    .map(option -> new net.dv8tion.jda.api.interactions.commands.Command.Choice(option, option))
+                    .map(option -> new Command.Choice(option, option))
                     .limit(25)
-                    .collect(toList());
+                    .toList();
 
-            event.replyChoices(returnChoices).queue();
+            event.replyChoices(replyChoices).queue();
         }
     }
 

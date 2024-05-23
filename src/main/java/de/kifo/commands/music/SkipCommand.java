@@ -29,13 +29,13 @@ import static java.util.Objects.isNull;
 import static java.util.stream.IntStream.rangeClosed;
 import static net.dv8tion.jda.api.interactions.commands.OptionType.INTEGER;
 
-@CommandBase.Command(name = "skip", description = "Überspringe ein Lied aus der aktuellen Playlist.", hasOptions = true)
+@CommandBase.BotCommand(name = "skip", description = "Überspringe ein Lied aus der aktuellen Playlist.", hasOptions = true)
 public class SkipCommand extends CommandBase {
 
     @Inject
     private JavaBot javaBot;
 
-    public SkipCommand(@NotNull Command command) {
+    public SkipCommand(@NotNull BotCommand command) {
         super(command);
     }
 

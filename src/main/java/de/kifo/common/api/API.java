@@ -1,6 +1,7 @@
 package de.kifo.common.api;
 
 import com.google.gson.Gson;
+import de.kifo.common.api.model.Playlist;
 import de.kifo.common.api.model.Song;
 import de.kifo.common.api.model.User;
 
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.google.gson.reflect.TypeToken.getParameterized;
+import static java.lang.Boolean.valueOf;
 import static java.lang.System.currentTimeMillis;
 import static java.net.http.HttpClient.newHttpClient;
 import static java.net.http.HttpRequest.newBuilder;
@@ -48,6 +50,21 @@ public class API {
      * {@link Song}
      */
 
+    /**
+     * Returns a list of every song that was ever used by a user.
+     *
+     * @param userId The id of the user
+     * @return The List of every song
+     */
+
+    public List<Song> getSongListByUserId(Long userId) {
+        return getObjectListByJson(sendGetRequest("http://localhost:8080/javabot/song/get-all/" + userId), Song.class);
+    }
+
+    public List<Song> getAllSongs() {
+        return getObjectListByJson(sendGetRequest("http://localhost:8080/javabot/song/get-all"), Song.class);
+    }
+
     public void updateSong(Long usedId, String name) {
         Song song = getSongListByUserId(usedId).stream()
                 .filter(s -> s.getName().equalsIgnoreCase(name))
@@ -62,18 +79,23 @@ public class API {
     }
 
     /**
-     * Returns a list of every song that was ever used by a user.
-     *
-     * @param userId The id of the user
-     * @return The List of every song
+     * {@link Playlist}
      */
 
-    public List<Song> getSongListByUserId(Long userId) {
-        return getObjectListByJson(sendGetRequest("http://localhost:8080/javabot/song/get-all/" + userId), Song.class);
+    public Playlist getPlaylistByName(String name) {
+        return getObjectByJson(sendGetRequest("http://localhost:8080/javabot/playlist/get/" + name), Playlist.class);
     }
 
-    public List<Song> getAllSongs() {
-        return getObjectListByJson(sendGetRequest("http://localhost:8080/javabot/song/get-all"), Song.class);
+    public List<Playlist> getPlaylistsListByUserId(Long userId) {
+        return getObjectListByJson(sendGetRequest("http://localhost:8080/javabot/playlist/get-all/" + userId), Playlist.class);
+    }
+
+    public boolean updatePlaylist(String name, Playlist playlist) {
+        return valueOf(sendPutRequest("http://localhost:8080/javabot/playlist/update/" + name, getJsonByObject(playlist)));
+    }
+
+    public boolean deletePlaylist(String name) {
+        return valueOf(sendDeleteRequest("http://localhost:8080/javabot/playlist/delete/" + name));
     }
 
     /**
