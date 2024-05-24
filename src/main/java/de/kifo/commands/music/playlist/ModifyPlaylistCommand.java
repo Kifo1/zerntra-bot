@@ -47,8 +47,12 @@ public class ModifyPlaylistCommand extends CommandBase {
         String songName = options.get(2).getAsString();
         Playlist playlist = javaBot.getApi().getPlaylistByName(playlistName);
 
-        if (isNull(playlist) || (!playlist.getPublicAccess() && playlist.getUserId() != event.getUser().getIdLong())) {
+        if (isNull(playlist)) {
             event.replyEmbeds(javaBot.getEmbedUtils().getEmbedMessageByText("Die Playlist konnte nicht gefunden werden.", ERROR)).queue();
+            return;
+        }
+        if (!playlist.getPublicAccess() && playlist.getUserId() != event.getUser().getIdLong()) {
+            event.replyEmbeds(javaBot.getEmbedUtils().getEmbedMessageByText("Du hast nicht die Berechtigung, um mit dieser Playlist zu interagieren.", ERROR)).queue();
             return;
         }
         int index = options.size() >= 4 ? (options.get(3).getAsInt() - 1) : playlist.getSongs().size();
