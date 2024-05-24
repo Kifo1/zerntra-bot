@@ -12,13 +12,13 @@ import org.jetbrains.annotations.NotNull;
 import javax.inject.Inject;
 import java.util.List;
 
-@CommandBase.Command(name = "invite", description = "Erstelle einen Invite-Link")
+@CommandBase.BotCommand(name = "invite", description = "Erstelle einen Invite-Link")
 public class InviteCommand extends CommandBase {
 
     @Inject
     private JavaBot javaBot;
 
-    public InviteCommand(@NotNull CommandBase.Command command) {
+    public InviteCommand(@NotNull BotCommand command) {
         super(command);
     }
 

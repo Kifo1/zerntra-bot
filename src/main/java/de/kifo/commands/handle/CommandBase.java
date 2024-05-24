@@ -24,7 +24,7 @@ public abstract class CommandBase extends CommandDataImpl {
     @Inject
     private JavaBot javaBot;
 
-    public CommandBase(@NotNull Command command) {
+    public CommandBase(@NotNull BotCommand command) {
         super(command.name(), command.description());
     }
 
@@ -38,7 +38,7 @@ public abstract class CommandBase extends CommandDataImpl {
 
     @Target(TYPE)
     @Retention(RUNTIME)
-    public @interface Command {
+    public @interface BotCommand {
 
         String name();
 
