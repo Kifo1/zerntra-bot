@@ -133,10 +133,13 @@ public class PlaylistCommand extends CommandBase {
         switch (optionName.toLowerCase()) {
             case "aktion" -> replyChoices = Arrays.stream(PlaylistAction.values())
                     .filter(action -> !action.isModificationAction())
+                    .filter(action -> action.getActionName().toLowerCase().contains(event.getFocusedOption().getValue().toLowerCase()))
                     .map(action -> new Command.Choice(action.getActionName(), action.getActionName()))
                     .toList();
             case "playlist" -> replyChoices = javaBot.getApi().getPlaylistsListByUserId(event.getUser().getIdLong()).stream()
+                    .filter(playlist -> playlist.getName().toLowerCase().contains(event.getFocusedOption().getValue().toLowerCase()))
                     .map(playlist -> new Command.Choice(playlist.getName(), playlist.getName()))
+                    .limit(25)
                     .toList();
             case "sichtbarkeit" -> replyChoices = of(new Command.Choice("Öffentlich", "Öffentlich"),
                                                      new Command.Choice("Privat", "Privat"));

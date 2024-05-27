@@ -87,10 +87,13 @@ public class ModifyPlaylistCommand extends CommandBase {
         switch (optionName.toLowerCase()) {
             case "aktion" -> replyChoices = Arrays.stream(PlaylistAction.values())
                     .filter(PlaylistAction::isModificationAction)
+                    .filter(action -> action.getActionName().toLowerCase().contains(event.getFocusedOption().getValue().toLowerCase()))
                     .map(action -> new Command.Choice(action.getActionName(), action.getActionName()))
                     .toList();
             case "playlist" -> replyChoices = javaBot.getApi().getPlaylistsListByUserId(event.getUser().getIdLong()).stream()
+                    .filter(playlist -> playlist.getName().toLowerCase().contains(event.getFocusedOption().getValue().toLowerCase()))
                     .map(playlist -> new Command.Choice(playlist.getName(), playlist.getName()))
+                    .limit(25)
                     .toList();
             case "song" -> replyChoices = javaBot.getApi().getSongListByUserId(event.getUser().getIdLong()).stream()
                     .filter(song -> song.getName().length() < 100)

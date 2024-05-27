@@ -11,6 +11,7 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import org.jetbrains.annotations.NotNull;
@@ -74,7 +75,7 @@ public class SkipCommand extends CommandBase {
 
     @Override
     public void autoComplete(String optionName, CommandAutoCompleteInteractionEvent event) {
-        List<net.dv8tion.jda.api.interactions.commands.Command.Choice> options = new ArrayList<>();
+        List<Command.Choice> options = new ArrayList<>();
         GuildMusicManager guildMusicManager = javaBot.getPlayerManager().getGuildMusicManager(event.getGuild());
 
         if (optionName.equalsIgnoreCase("index")) {
