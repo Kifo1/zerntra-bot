@@ -15,8 +15,11 @@ import static com.google.inject.Guice.createInjector;
 import static net.dv8tion.jda.api.JDABuilder.createDefault;
 import static net.dv8tion.jda.api.entities.Activity.playing;
 import static net.dv8tion.jda.api.requests.GatewayIntent.DIRECT_MESSAGES;
+import static net.dv8tion.jda.api.requests.GatewayIntent.GUILD_MEMBERS;
 import static net.dv8tion.jda.api.requests.GatewayIntent.GUILD_PRESENCES;
 import static net.dv8tion.jda.api.requests.GatewayIntent.MESSAGE_CONTENT;
+import static net.dv8tion.jda.api.utils.MemberCachePolicy.ALL;
+import static net.dv8tion.jda.api.utils.cache.CacheFlag.ONLINE_STATUS;
 
 @Getter
 public class JavaBot {
@@ -40,14 +43,17 @@ public class JavaBot {
         api = injector.getInstance(API.class);
         embedUtils = injector.getInstance(EmbedUtils.class);
         jda = createDefault("MTA1OTQzMTY0NDA4MTE3MjQ4MQ.GFY5Eo.TcwNJzrB9aSYt_1fYTd6OgHb6BpWgrBFfsAqP4")
+                .setMemberCachePolicy(ALL)
+                .enableCache(ONLINE_STATUS)
                 .enableIntents(MESSAGE_CONTENT)
                 .enableIntents(GUILD_PRESENCES)
                 .enableIntents(DIRECT_MESSAGES)
+                .enableIntents(GUILD_MEMBERS)
                 .setActivity(playing("Musik für die Rasselbande"))
                 .build();
     }
 
-    private void handleRegistrations() {
+    public void handleRegistrations() {
         this.playerManager = injector.getInstance(PlayerManager.class);
 
         this.registry = new Registry(this.jda, this.getClass().getClassLoader(), this.injector);
