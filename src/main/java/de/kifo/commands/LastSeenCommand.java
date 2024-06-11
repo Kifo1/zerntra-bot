@@ -7,7 +7,6 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import org.jetbrains.annotations.NotNull;
@@ -57,7 +56,7 @@ public class LastSeenCommand extends CommandBase {
 
     @Override
     public void autoComplete(String optionName, CommandAutoCompleteInteractionEvent event) {
-        List<Long> userIds = javaBot.getApi().getAllUsers().stream()
+        /*List<Long> userIds = javaBot.getApi().getAllUsers().stream()
                 .map(User::getId)
                 .toList();
 
@@ -68,7 +67,7 @@ public class LastSeenCommand extends CommandBase {
                 .limit(25)
                 .toList();
 
-        event.replyChoices(replyChoices).queue();
+        event.replyChoices(replyChoices).queue();*/
     }
 
     @Override
