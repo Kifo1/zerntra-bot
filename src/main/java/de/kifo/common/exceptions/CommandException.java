@@ -10,7 +10,6 @@ public class CommandException extends Exception {
 
     public CommandException(CommandExceptionType commandExceptionType, TextChannel textChannel, JavaBot javaBot) {
         super(commandExceptionType.name());
-
         textChannel.sendMessageEmbeds(javaBot.getEmbedUtils().getEmbedMessageByText(commandExceptionType.getMessage(), ERROR));
     }
 }

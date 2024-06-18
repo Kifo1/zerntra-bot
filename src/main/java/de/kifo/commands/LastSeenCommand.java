@@ -55,20 +55,7 @@ public class LastSeenCommand extends CommandBase {
     }
 
     @Override
-    public void autoComplete(String optionName, CommandAutoCompleteInteractionEvent event) {
-        /*List<Long> userIds = javaBot.getApi().getAllUsers().stream()
-                .map(User::getId)
-                .toList();
-
-        List<Command.Choice> replyChoices = event.getGuild().getMembers().stream()
-                .map(Member::getUser)
-                .filter(user -> userIds.contains(user.getIdLong()))
-                .map(user -> new Command.Choice(user.getName(), user.getId()))
-                .limit(25)
-                .toList();
-
-        event.replyChoices(replyChoices).queue();*/
-    }
+    public void autoComplete(String optionName, CommandAutoCompleteInteractionEvent event) {}
 
     @Override
     public List<OptionData> getOptions() {
