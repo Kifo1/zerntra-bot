@@ -1,6 +1,7 @@
 package de.kifo.common.util;
 
 import de.kifo.JavaBot;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -26,6 +27,7 @@ public class EmbedUtils {
     }
 
     @Getter
+    @AllArgsConstructor
     public enum MessageType {
 
         MESSAGE(MAGENTA),
@@ -33,9 +35,5 @@ public class EmbedUtils {
         ERROR(RED);
 
         public final Color embedColor;
-
-        MessageType(Color embedColor) {
-           this.embedColor = embedColor;
-        }
     }
 }
