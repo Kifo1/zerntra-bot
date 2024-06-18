@@ -5,6 +5,7 @@ import de.kifo.commands.handle.CommandBase;
 import de.kifo.common.api.model.Playlist;
 import de.kifo.common.api.model.Song;
 import de.kifo.common.enums.PlaylistAction;
+import de.kifo.common.exceptions.CommandException;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
@@ -19,7 +20,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static de.kifo.common.util.EmbedUtils.MessageType.ERROR;
+import static de.kifo.common.enums.exception.CommandExceptionType.NO_PERMISSION;
+import static de.kifo.common.enums.exception.CommandExceptionType.PLAYLIST_INDEX_NOT_FOUND;
+import static de.kifo.common.enums.exception.CommandExceptionType.PLAYLIST_NOT_FOUND;
+import static de.kifo.common.enums.exception.CommandExceptionType.PLAYLIST_SONG_NOT_FOUND;
 import static de.kifo.common.util.EmbedUtils.MessageType.MESSAGE;
 import static java.util.Comparator.comparing;
 import static java.util.List.of;
@@ -38,7 +42,7 @@ public class ModifyPlaylistCommand extends CommandBase {
     }
 
     @Override
-    public void execute(Member member, TextChannel textChannel, List<OptionMapping> options, SlashCommandInteractionEvent event) {
+    public void execute(Member member, TextChannel textChannel, List<OptionMapping> options, SlashCommandInteractionEvent event) throws CommandException {
         PlaylistAction action = Arrays.stream(PlaylistAction.values())
                 .filter(playlistAction -> playlistAction.getActionName().equalsIgnoreCase(options.get(0).getAsString()))
                 .findFirst()
@@ -48,18 +52,15 @@ public class ModifyPlaylistCommand extends CommandBase {
         Playlist playlist = javaBot.getApi().getPlaylistByName(playlistName);
 
         if (isNull(playlist)) {
-            event.replyEmbeds(javaBot.getEmbedUtils().getEmbedMessageByText("Die Playlist konnte nicht gefunden werden.", ERROR)).queue();
-            return;
+            throw new CommandException(PLAYLIST_NOT_FOUND, textChannel, javaBot);
         }
         if (!playlist.getPublicAccess() && playlist.getUserId() != event.getUser().getIdLong()) {
-            event.replyEmbeds(javaBot.getEmbedUtils().getEmbedMessageByText("Du hast nicht die Berechtigung, um mit dieser Playlist zu interagieren.", ERROR)).queue();
-            return;
+            throw new CommandException(NO_PERMISSION, textChannel, javaBot);
         }
         int index = options.size() >= 4 ? (options.get(3).getAsInt() - 1) : playlist.getSongs().size();
 
         if (index < 0 || index > playlist.getSongs().size()) {
-            event.replyEmbeds(javaBot.getEmbedUtils().getEmbedMessageByText("Der Index ist für diese Playlist nicht verfügbar.", ERROR)).queue();
-            return;
+            throw new CommandException(PLAYLIST_INDEX_NOT_FOUND, textChannel, javaBot);
         }
 
         switch (action) {
@@ -70,8 +71,7 @@ public class ModifyPlaylistCommand extends CommandBase {
             }
             case REMOVE_SONG -> {
                 if (!playlist.getSongs().stream().filter(song -> song.equalsIgnoreCase(songName)).findAny().isPresent()) {
-                    event.replyEmbeds(javaBot.getEmbedUtils().getEmbedMessageByText(songName + " konnte in der Playlist " + playlist.getName() + " nicht gefunden werden.", ERROR)).queue();
-                    return;
+                    throw new CommandException(PLAYLIST_SONG_NOT_FOUND, textChannel, javaBot);
                 }
                 playlist.getSongs().removeIf(song -> song.equalsIgnoreCase(songName));
                 javaBot.getApi().updatePlaylist(playlist.getName(), playlist);

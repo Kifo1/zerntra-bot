@@ -2,6 +2,7 @@ package de.kifo.listener.command;
 
 import de.kifo.JavaBot;
 import de.kifo.common.api.model.User;
+import de.kifo.common.exceptions.CommandException;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -29,6 +30,12 @@ public class CommandListener extends ListenerAdapter {
         this.javaBot.getRegistry().getCommandBases().stream()
                 .filter(command -> command.getName().equalsIgnoreCase(event.getFullCommandName()))
                 .findFirst()
-                .ifPresent(command -> command.execute(member, textChannel, options, event));
+                .ifPresent(command -> {
+                    try {
+                        command.execute(member, textChannel, options, event);
+                    } catch (CommandException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
     }
 }
