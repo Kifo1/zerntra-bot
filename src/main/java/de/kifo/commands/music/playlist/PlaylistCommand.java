@@ -99,6 +99,9 @@ public class PlaylistCommand extends CommandBase {
                     builder.addField("Lied " + songNumber + ": ", songName, false);
                     songNumber.getAndIncrement();
                 });
+                if (playlist.getSongs().isEmpty()) {
+                    builder.addField("Die Playlist ist leer.", "Nutze /modifyplaylist um Lieder hinzuzufügen.", false);
+                }
                 event.replyEmbeds(builder.build()).queue();
             }
             case PLAY -> {
