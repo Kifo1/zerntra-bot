@@ -5,6 +5,7 @@ import de.kifo.commands.handle.CommandBase;
 import de.kifo.commands.music.PlayCommand;
 import de.kifo.common.api.model.Playlist;
 import de.kifo.common.enums.PlaylistAction;
+import de.kifo.common.exceptions.CommandException;
 import de.kifo.common.music.PlayerManager;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
@@ -27,7 +28,11 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.google.common.collect.ImmutableList.of;
-import static de.kifo.common.util.EmbedUtils.MessageType.ERROR;
+import static de.kifo.common.enums.exception.CommandExceptionType.NOT_IN_SPEECH_CHANNEL;
+import static de.kifo.common.enums.exception.CommandExceptionType.NO_PERMISSION;
+import static de.kifo.common.enums.exception.CommandExceptionType.PLAYLIST_ACCESS_MODIFIER_NEEDED;
+import static de.kifo.common.enums.exception.CommandExceptionType.PLAYLIST_ALREADY_EXISTS;
+import static de.kifo.common.enums.exception.CommandExceptionType.PLAYLIST_NOT_FOUND;
 import static de.kifo.common.util.EmbedUtils.MessageType.MESSAGE;
 import static java.awt.Color.MAGENTA;
 import static java.util.Objects.isNull;
@@ -46,7 +51,7 @@ public class PlaylistCommand extends CommandBase {
     }
 
     @Override
-    public void execute(Member member, TextChannel textChannel, List<OptionMapping> options, SlashCommandInteractionEvent event) {
+    public void execute(Member member, TextChannel textChannel, List<OptionMapping> options, SlashCommandInteractionEvent event) throws CommandException {
         PlaylistAction action = Arrays.stream(PlaylistAction.values())
                 .filter(playlistAction -> playlistAction.getActionName().equalsIgnoreCase(options.get(0).getAsString()))
                 .findFirst()
@@ -56,39 +61,35 @@ public class PlaylistCommand extends CommandBase {
 
         Playlist playlist = javaBot.getApi().getPlaylistByName(playlistName);
         if (nonNull(playlist) && playlist.getUserId() != member.getUser().getIdLong() && !playlist.getPublicAccess()) {
-            event.replyEmbeds(javaBot.getEmbedUtils().getEmbedMessageByText("Du hast nicht die Berechtigung, um mit dieser Playlist zu interagieren.", ERROR)).queue();
-            return;
+            throw new CommandException(NO_PERMISSION, event, javaBot);
         }
 
         switch (action) {
             case CREATE_PLAYLIST -> {
                 if (isNull(javaBot.getApi().getPlaylistByName(playlistName))) {
                     if (publicAccess.isEmpty()) {
-                        event.replyEmbeds(javaBot.getEmbedUtils().getEmbedMessageByText("Bitte gib einen Zugangs-Typen für die Playlist an.", ERROR)).queue();
-                        return;
+                        throw new CommandException(PLAYLIST_ACCESS_MODIFIER_NEEDED, event, javaBot);
                     }
                     javaBot.getApi().updatePlaylist(playlistName, new Playlist(0L, event.getUser().getIdLong(), playlistName, publicAccess.get(), of()));
                     event.replyEmbeds(javaBot.getEmbedUtils().getEmbedMessageByText("Du hast die Playlist \"" + playlistName + "\" erfolgreich erstellt.", MESSAGE)).queue();
                 } else {
-                    event.replyEmbeds(javaBot.getEmbedUtils().getEmbedMessageByText("Es gibt bereits eine Playlist mit diesem Namen.", ERROR)).queue();
+                    throw new CommandException(PLAYLIST_ALREADY_EXISTS, event, javaBot);
                 }
             }
             case DELETE_PLAYLIST -> {
                 if (nonNull(playlist)) {
                     if (playlist.getUserId() != event.getUser().getIdLong()) {
-                        event.replyEmbeds(javaBot.getEmbedUtils().getEmbedMessageByText("Du hast nicht die Berechtigung, um diese Playlist zu löschen.", ERROR)).queue();
-                        return;
+                        throw new CommandException(NO_PERMISSION, event, javaBot);
                     }
                     javaBot.getApi().deletePlaylist(playlistName);
                     event.replyEmbeds(javaBot.getEmbedUtils().getEmbedMessageByText("Du hast die Playlist \"" + playlistName + "\" gelöscht.", MESSAGE)).queue();
                 } else {
-                    event.replyEmbeds(javaBot.getEmbedUtils().getEmbedMessageByText("Es gibt keine Playlist mit diesem Namen.", ERROR)).queue();
+                    throw new CommandException(PLAYLIST_NOT_FOUND, event, javaBot);
                 }
             }
             case INFO -> {
                 if (isNull(playlist)) {
-                    event.replyEmbeds(javaBot.getEmbedUtils().getEmbedMessageByText("Die Playlist konnte nicht gefunden werden.", ERROR)).queue();
-                    return;
+                    throw new CommandException(PLAYLIST_NOT_FOUND, event, javaBot);
                 }
                 EmbedBuilder builder = new EmbedBuilder();
                 builder.setColor(MAGENTA);
@@ -98,18 +99,19 @@ public class PlaylistCommand extends CommandBase {
                     builder.addField("Lied " + songNumber + ": ", songName, false);
                     songNumber.getAndIncrement();
                 });
+                if (playlist.getSongs().isEmpty()) {
+                    builder.addField("Die Playlist ist leer.", "Nutze /modifyplaylist um Lieder hinzuzufügen.", false);
+                }
                 event.replyEmbeds(builder.build()).queue();
             }
             case PLAY -> {
                 if (isNull(playlist)) {
-                    event.replyEmbeds(javaBot.getEmbedUtils().getEmbedMessageByText("Die Playlist konnte nicht gefunden werden.", ERROR)).queue();
-                    return;
+                    throw new CommandException(PLAYLIST_NOT_FOUND, event, javaBot);
                 }
                 GuildVoiceState guildVoiceState = member.getVoiceState();
 
                 if (isNull(guildVoiceState) || isNull(guildVoiceState.getChannel()) || isNull(guildVoiceState.getChannel().asVoiceChannel())) {
-                    event.replyEmbeds(javaBot.getEmbedUtils().getEmbedMessageByText("Du musst in einem Sprachkanal sein.", ERROR)).queue();
-                    return;
+                    throw new CommandException(NOT_IN_SPEECH_CHANNEL, event, javaBot);
                 }
 
                 VoiceChannel voiceChannel = guildVoiceState.getChannel().asVoiceChannel();
@@ -133,10 +135,13 @@ public class PlaylistCommand extends CommandBase {
         switch (optionName.toLowerCase()) {
             case "aktion" -> replyChoices = Arrays.stream(PlaylistAction.values())
                     .filter(action -> !action.isModificationAction())
+                    .filter(action -> action.getActionName().toLowerCase().contains(event.getFocusedOption().getValue().toLowerCase()))
                     .map(action -> new Command.Choice(action.getActionName(), action.getActionName()))
                     .toList();
             case "playlist" -> replyChoices = javaBot.getApi().getPlaylistsListByUserId(event.getUser().getIdLong()).stream()
+                    .filter(playlist -> playlist.getName().toLowerCase().contains(event.getFocusedOption().getValue().toLowerCase()))
                     .map(playlist -> new Command.Choice(playlist.getName(), playlist.getName()))
+                    .limit(25)
                     .toList();
             case "sichtbarkeit" -> replyChoices = of(new Command.Choice("Öffentlich", "Öffentlich"),
                                                      new Command.Choice("Privat", "Privat"));

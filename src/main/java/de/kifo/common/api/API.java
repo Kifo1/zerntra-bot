@@ -9,7 +9,6 @@ import java.net.URI;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.List;
-import java.util.Optional;
 
 import static com.google.gson.reflect.TypeToken.getParameterized;
 import static java.lang.Boolean.valueOf;
@@ -23,15 +22,22 @@ public class API {
      * {@link User}
      */
 
-    public void createUser(Long id) {
-        Optional<User> userOptional = getAllUsers().stream()
-                .filter(user -> user.getId().equals(id))
-                .findFirst();
+    public void createUser(User user) {
+        boolean userPresent = getAllUsers().stream()
+                .map(User::getId)
+                .filter(userId -> userId.equals(user.getId()))
+                .findFirst()
+                .isPresent();
 
-        if (!userOptional.isPresent()) {
-            String jsonRequest = getJsonByObject(new User(id));
-            sendPostRequest("http://localhost:8080/javabot/user/add/" + id, jsonRequest);
+        if (!userPresent) {
+            String jsonRequest = getJsonByObject(user);
+            sendPostRequest("http://localhost:8080/javabot/user/add", jsonRequest);
         }
+    }
+
+    public void updateUser(User user) {
+        String jsonRequest = getJsonByObject(user);
+        sendPutRequest("http://localhost:8080/javabot/user/update", jsonRequest);
     }
 
     public User getUserById(Long id) {

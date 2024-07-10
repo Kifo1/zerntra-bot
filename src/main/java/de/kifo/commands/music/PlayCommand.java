@@ -3,6 +3,7 @@ package de.kifo.commands.music;
 import de.kifo.JavaBot;
 import de.kifo.commands.handle.CommandBase;
 import de.kifo.common.api.model.Song;
+import de.kifo.common.exceptions.CommandException;
 import de.kifo.common.music.PlayerManager;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.Member;
@@ -21,7 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import static com.google.common.collect.ImmutableList.of;
-import static de.kifo.common.util.EmbedUtils.MessageType.ERROR;
+import static de.kifo.common.enums.exception.CommandExceptionType.NOT_IN_SPEECH_CHANNEL;
 import static de.kifo.common.util.EmbedUtils.MessageType.MESSAGE;
 import static java.util.Comparator.comparing;
 import static java.util.Objects.isNull;
@@ -40,12 +41,11 @@ public class PlayCommand extends CommandBase {
     }
 
     @Override
-    public void execute(Member member, TextChannel textChannel, List<OptionMapping> options, SlashCommandInteractionEvent event) {
+    public void execute(Member member, TextChannel textChannel, List<OptionMapping> options, SlashCommandInteractionEvent event) throws CommandException {
         GuildVoiceState guildVoiceState = member.getVoiceState();
 
         if (isNull(guildVoiceState) || isNull(guildVoiceState.getChannel()) || isNull(guildVoiceState.getChannel().asVoiceChannel())) {
-            event.replyEmbeds(javaBot.getEmbedUtils().getEmbedMessageByText("Du musst in einem Sprachkanal sein.", ERROR)).queue();
-            return;
+            throw new CommandException(NOT_IN_SPEECH_CHANNEL, event, javaBot);
         }
 
         VoiceChannel voiceChannel = guildVoiceState.getChannel().asVoiceChannel();

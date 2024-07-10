@@ -1,6 +1,8 @@
-package de.kifo.listener;
+package de.kifo.listener.command;
 
 import de.kifo.JavaBot;
+import de.kifo.common.api.model.User;
+import de.kifo.common.exceptions.CommandException;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -11,6 +13,8 @@ import org.jetbrains.annotations.NotNull;
 import javax.inject.Inject;
 import java.util.List;
 
+import static java.lang.System.currentTimeMillis;
+
 public class CommandListener extends ListenerAdapter {
 
     @Inject
@@ -18,7 +22,7 @@ public class CommandListener extends ListenerAdapter {
 
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
-        javaBot.getApi().createUser(event.getUser().getIdLong());
+        javaBot.getApi().updateUser(new User(event.getUser().getIdLong(), event.getUser().getName(), currentTimeMillis()));
         Member member = event.getMember();
         TextChannel textChannel = event.getChannel().asTextChannel();
         List<OptionMapping> options = event.getOptions();
@@ -26,6 +30,12 @@ public class CommandListener extends ListenerAdapter {
         this.javaBot.getRegistry().getCommandBases().stream()
                 .filter(command -> command.getName().equalsIgnoreCase(event.getFullCommandName()))
                 .findFirst()
-                .ifPresent(command -> command.execute(member, textChannel, options, event));
+                .ifPresent(command -> {
+                    try {
+                        command.execute(member, textChannel, options, event);
+                    } catch (CommandException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
     }
 }

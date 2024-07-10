@@ -1,6 +1,7 @@
 package de.kifo.commands.handle;
 
 import de.kifo.JavaBot;
+import de.kifo.common.exceptions.CommandException;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
@@ -28,7 +29,7 @@ public abstract class CommandBase extends CommandDataImpl {
         super(command.name(), command.description());
     }
 
-    public abstract void execute(Member member, TextChannel textChannel, List<OptionMapping> options, SlashCommandInteractionEvent event);
+    public abstract void execute(Member member, TextChannel textChannel, List<OptionMapping> options, SlashCommandInteractionEvent event) throws CommandException;
 
     public abstract void autoComplete(String optionName, CommandAutoCompleteInteractionEvent event);
 

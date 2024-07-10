@@ -4,6 +4,7 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import de.kifo.JavaBot;
 import de.kifo.commands.handle.CommandBase;
+import de.kifo.common.exceptions.CommandException;
 import de.kifo.common.music.GuildMusicManager;
 import de.kifo.common.music.PlayerManager;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -20,7 +21,7 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static de.kifo.common.util.EmbedUtils.MessageType.ERROR;
+import static de.kifo.common.enums.exception.CommandExceptionType.NOT_IN_SPEECH_CHANNEL;
 import static java.awt.Color.MAGENTA;
 import static java.util.Objects.isNull;
 
@@ -35,12 +36,11 @@ public class SongListCommand extends CommandBase {
     }
 
     @Override
-    public void execute(Member member, TextChannel textChannel, List<OptionMapping> options, SlashCommandInteractionEvent event) {
+    public void execute(Member member, TextChannel textChannel, List<OptionMapping> options, SlashCommandInteractionEvent event) throws CommandException {
         GuildVoiceState guildVoiceState = member.getVoiceState();
 
         if (isNull(guildVoiceState) || isNull(guildVoiceState.getChannel()) || isNull(guildVoiceState.getChannel().asVoiceChannel())) {
-            event.replyEmbeds(javaBot.getEmbedUtils().getEmbedMessageByText("Du musst in einem Sprachkanal sein.", ERROR)).queue();
-            return;
+            throw new CommandException(NOT_IN_SPEECH_CHANNEL, event, javaBot);
         }
 
         PlayerManager playerManager = javaBot.getPlayerManager();

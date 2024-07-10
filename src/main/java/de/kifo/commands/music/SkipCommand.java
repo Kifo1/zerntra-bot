@@ -4,6 +4,7 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import de.kifo.JavaBot;
 import de.kifo.commands.handle.CommandBase;
+import de.kifo.common.exceptions.CommandException;
 import de.kifo.common.music.GuildMusicManager;
 import de.kifo.common.music.PlayerManager;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
@@ -11,6 +12,7 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import org.jetbrains.annotations.NotNull;
@@ -21,7 +23,8 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
 import static com.google.common.collect.ImmutableList.of;
-import static de.kifo.common.util.EmbedUtils.MessageType.ERROR;
+import static de.kifo.common.enums.exception.CommandExceptionType.NOT_IN_SPEECH_CHANNEL;
+import static de.kifo.common.enums.exception.CommandExceptionType.SKIP_INDEX_NOT_FOUND;
 import static de.kifo.common.util.EmbedUtils.MessageType.MESSAGE;
 import static java.lang.Math.min;
 import static java.lang.String.valueOf;
@@ -40,12 +43,11 @@ public class SkipCommand extends CommandBase {
     }
 
     @Override
-    public void execute(Member member, TextChannel textChannel, List<OptionMapping> options, SlashCommandInteractionEvent event) {
+    public void execute(Member member, TextChannel textChannel, List<OptionMapping> options, SlashCommandInteractionEvent event) throws CommandException {
         GuildVoiceState guildVoiceState = member.getVoiceState();
 
         if (isNull(guildVoiceState) || isNull(guildVoiceState.getChannel()) || isNull(guildVoiceState.getChannel().asVoiceChannel())) {
-            event.replyEmbeds(javaBot.getEmbedUtils().getEmbedMessageByText("Du musst in einem Sprachkanal sein.", ERROR)).queue();
-            return;
+            throw new CommandException(NOT_IN_SPEECH_CHANNEL, event, javaBot);
         }
 
         PlayerManager playerManager = javaBot.getPlayerManager();
@@ -66,15 +68,14 @@ public class SkipCommand extends CommandBase {
                         track.getInfo().title + " von " + track.getInfo().author +
                         " wurde aus der Playlist entfernt.", MESSAGE)).queue();
             } else {
-                event.replyEmbeds(javaBot.getEmbedUtils().getEmbedMessageByText("Dieser Index existiert nicht.", ERROR)).queue();
-                //TODO Add footer to embed with text "Verwende !playlist, um alle Lieder mit der jeweiligen Nummer angezeigt zu bekommen."
+                throw new CommandException(SKIP_INDEX_NOT_FOUND, event, javaBot);
             }
         }
     }
 
     @Override
     public void autoComplete(String optionName, CommandAutoCompleteInteractionEvent event) {
-        List<net.dv8tion.jda.api.interactions.commands.Command.Choice> options = new ArrayList<>();
+        List<Command.Choice> options = new ArrayList<>();
         GuildMusicManager guildMusicManager = javaBot.getPlayerManager().getGuildMusicManager(event.getGuild());
 
         if (optionName.equalsIgnoreCase("index")) {
