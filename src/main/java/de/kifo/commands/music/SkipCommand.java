@@ -47,7 +47,7 @@ public class SkipCommand extends CommandBase {
         GuildVoiceState guildVoiceState = member.getVoiceState();
 
         if (isNull(guildVoiceState) || isNull(guildVoiceState.getChannel()) || isNull(guildVoiceState.getChannel().asVoiceChannel())) {
-            throw new CommandException(NOT_IN_SPEECH_CHANNEL, textChannel, javaBot);
+            throw new CommandException(NOT_IN_SPEECH_CHANNEL, event, javaBot);
         }
 
         PlayerManager playerManager = javaBot.getPlayerManager();
@@ -68,7 +68,7 @@ public class SkipCommand extends CommandBase {
                         track.getInfo().title + " von " + track.getInfo().author +
                         " wurde aus der Playlist entfernt.", MESSAGE)).queue();
             } else {
-                throw new CommandException(SKIP_INDEX_NOT_FOUND, textChannel, javaBot);
+                throw new CommandException(SKIP_INDEX_NOT_FOUND, event, javaBot);
             }
         }
     }

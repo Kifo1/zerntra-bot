@@ -45,7 +45,7 @@ public class PlayCommand extends CommandBase {
         GuildVoiceState guildVoiceState = member.getVoiceState();
 
         if (isNull(guildVoiceState) || isNull(guildVoiceState.getChannel()) || isNull(guildVoiceState.getChannel().asVoiceChannel())) {
-            throw new CommandException(NOT_IN_SPEECH_CHANNEL, textChannel, javaBot);
+            throw new CommandException(NOT_IN_SPEECH_CHANNEL, event, javaBot);
         }
 
         VoiceChannel voiceChannel = guildVoiceState.getChannel().asVoiceChannel();

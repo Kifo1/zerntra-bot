@@ -52,15 +52,15 @@ public class ModifyPlaylistCommand extends CommandBase {
         Playlist playlist = javaBot.getApi().getPlaylistByName(playlistName);
 
         if (isNull(playlist)) {
-            throw new CommandException(PLAYLIST_NOT_FOUND, textChannel, javaBot);
+            throw new CommandException(PLAYLIST_NOT_FOUND, event, javaBot);
         }
         if (!playlist.getPublicAccess() && playlist.getUserId() != event.getUser().getIdLong()) {
-            throw new CommandException(NO_PERMISSION, textChannel, javaBot);
+            throw new CommandException(NO_PERMISSION, event, javaBot);
         }
         int index = options.size() >= 4 ? (options.get(3).getAsInt() - 1) : playlist.getSongs().size();
 
         if (index < 0 || index > playlist.getSongs().size()) {
-            throw new CommandException(PLAYLIST_INDEX_NOT_FOUND, textChannel, javaBot);
+            throw new CommandException(PLAYLIST_INDEX_NOT_FOUND, event, javaBot);
         }
 
         switch (action) {
@@ -71,7 +71,7 @@ public class ModifyPlaylistCommand extends CommandBase {
             }
             case REMOVE_SONG -> {
                 if (!playlist.getSongs().stream().filter(song -> song.equalsIgnoreCase(songName)).findAny().isPresent()) {
-                    throw new CommandException(PLAYLIST_SONG_NOT_FOUND, textChannel, javaBot);
+                    throw new CommandException(PLAYLIST_SONG_NOT_FOUND, event, javaBot);
                 }
                 playlist.getSongs().removeIf(song -> song.equalsIgnoreCase(songName));
                 javaBot.getApi().updatePlaylist(playlist.getName(), playlist);
