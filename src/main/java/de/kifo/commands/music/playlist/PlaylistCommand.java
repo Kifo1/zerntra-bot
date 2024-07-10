@@ -61,35 +61,35 @@ public class PlaylistCommand extends CommandBase {
 
         Playlist playlist = javaBot.getApi().getPlaylistByName(playlistName);
         if (nonNull(playlist) && playlist.getUserId() != member.getUser().getIdLong() && !playlist.getPublicAccess()) {
-            throw new CommandException(NO_PERMISSION, textChannel, javaBot);
+            throw new CommandException(NO_PERMISSION, event, javaBot);
         }
 
         switch (action) {
             case CREATE_PLAYLIST -> {
                 if (isNull(javaBot.getApi().getPlaylistByName(playlistName))) {
                     if (publicAccess.isEmpty()) {
-                        throw new CommandException(PLAYLIST_ACCESS_MODIFIER_NEEDED, textChannel, javaBot);
+                        throw new CommandException(PLAYLIST_ACCESS_MODIFIER_NEEDED, event, javaBot);
                     }
                     javaBot.getApi().updatePlaylist(playlistName, new Playlist(0L, event.getUser().getIdLong(), playlistName, publicAccess.get(), of()));
                     event.replyEmbeds(javaBot.getEmbedUtils().getEmbedMessageByText("Du hast die Playlist \"" + playlistName + "\" erfolgreich erstellt.", MESSAGE)).queue();
                 } else {
-                    throw new CommandException(PLAYLIST_ALREADY_EXISTS, textChannel, javaBot);
+                    throw new CommandException(PLAYLIST_ALREADY_EXISTS, event, javaBot);
                 }
             }
             case DELETE_PLAYLIST -> {
                 if (nonNull(playlist)) {
                     if (playlist.getUserId() != event.getUser().getIdLong()) {
-                        throw new CommandException(NO_PERMISSION, textChannel, javaBot);
+                        throw new CommandException(NO_PERMISSION, event, javaBot);
                     }
                     javaBot.getApi().deletePlaylist(playlistName);
                     event.replyEmbeds(javaBot.getEmbedUtils().getEmbedMessageByText("Du hast die Playlist \"" + playlistName + "\" gelöscht.", MESSAGE)).queue();
                 } else {
-                    throw new CommandException(PLAYLIST_NOT_FOUND, textChannel, javaBot);
+                    throw new CommandException(PLAYLIST_NOT_FOUND, event, javaBot);
                 }
             }
             case INFO -> {
                 if (isNull(playlist)) {
-                    throw new CommandException(PLAYLIST_NOT_FOUND, textChannel, javaBot);
+                    throw new CommandException(PLAYLIST_NOT_FOUND, event, javaBot);
                 }
                 EmbedBuilder builder = new EmbedBuilder();
                 builder.setColor(MAGENTA);
@@ -103,12 +103,12 @@ public class PlaylistCommand extends CommandBase {
             }
             case PLAY -> {
                 if (isNull(playlist)) {
-                    throw new CommandException(PLAYLIST_NOT_FOUND, textChannel, javaBot);
+                    throw new CommandException(PLAYLIST_NOT_FOUND, event, javaBot);
                 }
                 GuildVoiceState guildVoiceState = member.getVoiceState();
 
                 if (isNull(guildVoiceState) || isNull(guildVoiceState.getChannel()) || isNull(guildVoiceState.getChannel().asVoiceChannel())) {
-                    throw new CommandException(NOT_IN_SPEECH_CHANNEL, textChannel, javaBot);
+                    throw new CommandException(NOT_IN_SPEECH_CHANNEL, event, javaBot);
                 }
 
                 VoiceChannel voiceChannel = guildVoiceState.getChannel().asVoiceChannel();

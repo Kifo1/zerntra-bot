@@ -40,7 +40,7 @@ public class StopCommand extends CommandBase {
         GuildVoiceState guildVoiceState = member.getVoiceState();
 
         if (isNull(guildVoiceState) || isNull(guildVoiceState.getChannel()) || isNull(guildVoiceState.getChannel().asVoiceChannel())) {
-            throw new CommandException(NOT_IN_SPEECH_CHANNEL, textChannel, javaBot);
+            throw new CommandException(NOT_IN_SPEECH_CHANNEL, event, javaBot);
         }
 
         VoiceChannel voiceChannel = guildVoiceState.getChannel().asVoiceChannel();
@@ -57,7 +57,7 @@ public class StopCommand extends CommandBase {
             audioManager.closeAudioConnection();
             event.replyEmbeds(javaBot.getEmbedUtils().getEmbedMessageByText("Die Musik wurde beendet.", MESSAGE)).queue();
         } else {
-            throw new CommandException(NO_SONG_RUNNING, textChannel, javaBot);
+            throw new CommandException(NO_SONG_RUNNING, event, javaBot);
         }
     }
 
