@@ -95,13 +95,15 @@ public class PlaylistCommand extends CommandBase {
                 builder.setColor(MAGENTA);
                 AtomicInteger songNumber = new AtomicInteger(1);
 
-                playlist.getSongs().forEach(songName -> {
-                    builder.addField("Lied " + songNumber + ": ", songName, false);
-                    songNumber.getAndIncrement();
-                });
                 if (playlist.getSongs().isEmpty()) {
                     builder.addField("Die Playlist ist leer.", "Nutze /modifyplaylist um Lieder hinzuzufügen.", false);
+                } else {
+                    playlist.getSongs().forEach(songName -> {
+                        builder.addField("Lied " + songNumber + ": ", songName, false);
+                        songNumber.getAndIncrement();
+                    });
                 }
+
                 event.replyEmbeds(builder.build()).queue();
             }
             case PLAY -> {
@@ -120,7 +122,7 @@ public class PlaylistCommand extends CommandBase {
                 manager.openAudioConnection(voiceChannel);
 
                 playlist.getSongs().forEach(song -> {
-                    playerManager.play(event.getGuild(), "ytsearch:" + song + " audio", event.getUser().getIdLong());
+                    playerManager.play(event.getGuild(), "scsearch:" + song + " audio", event.getUser().getIdLong());
                 });
                 event.replyEmbeds(javaBot.getEmbedUtils().getEmbedMessageByText(playlist.getName() + " wurde gestartet. Du kannst du aktuelle Liste mit /songlist ansehen.", MESSAGE)).queue();
                 PlayCommand.map.put(voiceChannel.getGuild().getIdLong(), textChannel);

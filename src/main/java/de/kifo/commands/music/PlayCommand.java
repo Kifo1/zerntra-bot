@@ -55,7 +55,7 @@ public class PlayCommand extends CommandBase {
 
         String url = options.get(0).getAsString();
         if (!url.startsWith("http")) {
-            url = "ytsearch:" + url + " audio";
+            url = "scsearch:" + url + " audio";
         }
         event.replyEmbeds(javaBot.getEmbedUtils().getEmbedMessageByText("Suche nach dem Titel...", MESSAGE)).queue();
 
