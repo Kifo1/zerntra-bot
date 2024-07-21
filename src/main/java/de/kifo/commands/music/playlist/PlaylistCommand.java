@@ -122,7 +122,7 @@ public class PlaylistCommand extends CommandBase {
                 manager.openAudioConnection(voiceChannel);
 
                 playlist.getSongs().forEach(song -> {
-                    playerManager.play(event.getGuild(), "ytsearch:" + song + " audio", event.getUser().getIdLong());
+                    playerManager.play(event.getGuild(), "scsearch:" + song + " audio", event.getUser().getIdLong());
                 });
                 event.replyEmbeds(javaBot.getEmbedUtils().getEmbedMessageByText(playlist.getName() + " wurde gestartet. Du kannst du aktuelle Liste mit /songlist ansehen.", MESSAGE)).queue();
                 PlayCommand.map.put(voiceChannel.getGuild().getIdLong(), textChannel);
