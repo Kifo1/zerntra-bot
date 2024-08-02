@@ -5,7 +5,9 @@ import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 
@@ -20,16 +22,12 @@ import static java.util.Objects.nonNull;
 import static java.util.concurrent.Executors.newSingleThreadExecutor;
 
 @Getter
+@RequiredArgsConstructor
 public class TrackScheduler extends AudioEventAdapter {
 
-    private AudioPlayer audioPlayer;
+    private final AudioPlayer audioPlayer;
+    private final Guild guild;
     private BlockingQueue<AudioTrack> queue = new LinkedBlockingQueue<>();
-    private Guild guild;
-
-    TrackScheduler(AudioPlayer audioPlayer, Guild guild) {
-        this.audioPlayer = audioPlayer;
-        this.guild = guild;
-    }
 
     @Override
     public void onTrackStart(AudioPlayer player, AudioTrack track) {
@@ -61,10 +59,8 @@ public class TrackScheduler extends AudioEventAdapter {
                 throw new RuntimeException(e);
             }
 
-            if(isNull(player.getPlayingTrack())) {
-                if(nonNull(guild.getAudioManager().getConnectedChannel())) {
-                    guild.getAudioManager().closeAudioConnection();
-                }
+            if(isNull(player.getPlayingTrack()) && nonNull(guild.getAudioManager().getConnectedChannel())) {
+                guild.getAudioManager().closeAudioConnection();
             }
         });
     }
