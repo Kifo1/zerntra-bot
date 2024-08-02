@@ -3,6 +3,7 @@ package de.kifo.commands;
 import de.kifo.JavaBot;
 import de.kifo.commands.handle.CommandBase;
 import de.kifo.common.api.model.User;
+import de.kifo.common.exceptions.CommandException;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
@@ -15,7 +16,7 @@ import javax.inject.Inject;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static de.kifo.common.util.EmbedUtils.MessageType.ERROR;
+import static de.kifo.common.enums.exception.CommandExceptionType.USER_HAS_NO_DATA;
 import static de.kifo.common.util.EmbedUtils.MessageType.MESSAGE;
 import static java.time.Instant.ofEpochMilli;
 import static java.time.LocalDateTime.now;
@@ -37,13 +38,12 @@ public class LastSeenCommand extends CommandBase {
     }
 
     @Override
-    public void execute(Member member, TextChannel textChannel, List<OptionMapping> options, SlashCommandInteractionEvent event) {
+    public void execute(Member member, TextChannel textChannel, List<OptionMapping> options, SlashCommandInteractionEvent event) throws CommandException {
         long requestedUserId = options.get(0).getAsUser().getIdLong();
         User user = javaBot.getApi().getUserById(requestedUserId);
 
         if (isNull(user.getLastOnTime())) {
-            event.replyEmbeds(javaBot.getEmbedUtils().getEmbedMessageByText("Es konnten keine Daten zu diesem User gefunden werden.", ERROR)).queue();
-            return;
+            throw new CommandException(USER_HAS_NO_DATA, event, javaBot);
         }
 
         long lastOnTime = user.getLastOnTime();
