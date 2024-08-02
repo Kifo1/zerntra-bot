@@ -71,9 +71,7 @@ public class Registry {
                 .filter(ListenerAdapter.class::isAssignableFrom)
                 .toList();
 
-        listenerClasses.stream()
-                .filter(ListenerAdapter.class::isAssignableFrom)
-                .forEach(listenerClass -> {
+        listenerClasses.forEach(listenerClass -> {
                     jda.addEventListener(this.injector.getInstance(listenerClass));
                     successCases.getAndIncrement();
                 });
