@@ -33,10 +33,8 @@ public class TrackScheduler extends AudioEventAdapter {
 
     @Override
     public void onTrackStart(AudioPlayer player, AudioTrack track) {
-        EmbedBuilder builder = new EmbedBuilder();
-        builder.setColor(MAGENTA);
         AudioTrackInfo info = track.getInfo();
-        builder.setTitle("Jetzt läuft: " + info.title);
+        String url = info.uri;
 
         long sekunden = info.length/1000;
         long minuten = sekunden/60;
@@ -44,11 +42,12 @@ public class TrackScheduler extends AudioEventAdapter {
         minuten %= 60;
         sekunden %= 60;
 
-        String url = info.uri;
-        builder.addField(info.author, "[" + info.title +"](" + url + ")", false);
-        builder.addField("Länge", info.isStream ? ":red_circle: Stream" : (stunden > 0 ? stunden + "h " : "") + minuten + "min " + sekunden + "s", true);
-
-        map.get(guild.getIdLong()).sendMessageEmbeds(builder.build()).queue();
+        map.get(guild.getIdLong()).sendMessageEmbeds(new EmbedBuilder()
+                .setColor(MAGENTA)
+                .setTitle("Jetzt läuft: " + info.title)
+                .addField(info.author, "[" + info.title +"](" + url + ")", false)
+                .addField("Länge", info.isStream ? ":red_circle: Stream" : (stunden > 0 ? stunden + "h " : "") + minuten + "min " + sekunden + "s", true)
+                .build()).queue();
     }
 
     @Override
