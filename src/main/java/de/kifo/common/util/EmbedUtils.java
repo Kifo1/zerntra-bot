@@ -20,10 +20,10 @@ public class EmbedUtils {
     private JavaBot javaBot;
 
     public MessageEmbed getEmbedMessageByText(String text, MessageType messageType) {
-        EmbedBuilder embedBuilder = new EmbedBuilder();
-        embedBuilder.setColor(messageType.embedColor);
-        embedBuilder.setDescription(text);
-        return embedBuilder.build();
+        return new EmbedBuilder()
+                .setColor(messageType.embedColor)
+                .setDescription(text)
+                .build();
     }
 
     @Getter
