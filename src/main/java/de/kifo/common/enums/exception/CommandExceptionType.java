@@ -9,6 +9,7 @@ public enum CommandExceptionType {
 
     // Arguments
     USER_NOT_FOUND("Der Nutzer konnte nicht gefunden werden."),
+    USER_HAS_NO_DATA("Es konnten keine Daten zu diesem User gefunden werden."),
     SONG_NOT_FOUND("Das Lied konnte nicht gefunden werden."),
     SKIP_INDEX_NOT_FOUND("Dieser Index existiert nicht. Verbende \"/songlist\", um die aktuelle Songlist anzuschauen."),
     PLAYLIST_NOT_FOUND("Die Playlist konnte nicht gefunden werden."),
