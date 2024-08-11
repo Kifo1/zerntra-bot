@@ -1,8 +1,8 @@
 ---
 name: Bug report
-about: JBB - <Bug>
-title: ''
-labels: ''
+about: Create an issue for a bug
+title: JBB - <Bug>
+labels: bug
 assignees: ''
 
 ---

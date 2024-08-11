@@ -1,7 +1,7 @@
 ---
 name: Feature request
-about: JBF - <Feature>
-title: ''
+about: Create an issue for a feature
+title: JBF - <Feature>
 labels: enhancement
 assignees: ''
 
