@@ -22,7 +22,7 @@ public class CommandListener extends ListenerAdapter {
 
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
-        javaBot.getApi().updateUser(new User(event.getUser().getIdLong(), event.getUser().getName(), currentTimeMillis()));
+        javaBot.getApi().updateUserOrCreate(new User(event.getUser().getIdLong(), event.getUser().getName(), null, currentTimeMillis()));
         Member member = event.getMember();
         TextChannel textChannel = event.getChannel().asTextChannel();
         List<OptionMapping> options = event.getOptions();

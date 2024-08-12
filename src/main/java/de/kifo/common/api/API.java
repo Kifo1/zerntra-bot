@@ -15,6 +15,7 @@ import static java.lang.Boolean.valueOf;
 import static java.lang.System.currentTimeMillis;
 import static java.net.http.HttpClient.newHttpClient;
 import static java.net.http.HttpRequest.newBuilder;
+import static java.util.Objects.nonNull;
 
 public class API {
 
@@ -22,22 +23,15 @@ public class API {
      * {@link User}
      */
 
-    public void createUser(User user) {
-        boolean userPresent = getAllUsers().stream()
-                .map(User::getId)
-                .filter(userId -> userId.equals(user.getId()))
-                .findFirst()
-                .isPresent();
+    public void updateUserOrCreate(User user) {
+        boolean userPresent = nonNull(getUserById(user.getId()));
 
-        if (!userPresent) {
-            String jsonRequest = getJsonByObject(user);
+        String jsonRequest = getJsonByObject(user);
+        if (userPresent) {
+            sendPutRequest("http://localhost:8080/javabot/user/update", jsonRequest);
+        } else {
             sendPostRequest("http://localhost:8080/javabot/user/add", jsonRequest);
         }
-    }
-
-    public void updateUser(User user) {
-        String jsonRequest = getJsonByObject(user);
-        sendPutRequest("http://localhost:8080/javabot/user/update", jsonRequest);
     }
 
     public User getUserById(Long id) {
