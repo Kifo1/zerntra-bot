@@ -21,7 +21,8 @@ public enum CommandExceptionType {
     NOT_IN_SPEECH_CHANNEL("Du musst in einem Sprachkanal sein."),
     NO_PERMISSION("Du hast nicht die nötige Berechtigung, um diese Aktion durchzuführen."),
     NO_SONG_RUNNING("Es läuft im Moment kein Lied."),
-    PLAYLIST_ALREADY_EXISTS("Es existiert bereits eine Playlist die diesen Namen trägt.");
+    PLAYLIST_ALREADY_EXISTS("Es existiert bereits eine Playlist die diesen Namen trägt."),
+    USER_ALREADY_REGISTERED("Dieser Discord Account ist bereits registriert.");
 
     private final String message;
 
