@@ -17,6 +17,6 @@ public class GuildVoiceUpdateListener extends ListenerAdapter {
 
     @Override
     public void onGuildVoiceUpdate(@NotNull GuildVoiceUpdateEvent event) {
-        javaBot.getApi().updateUser(new User(event.getMember().getUser().getIdLong(), event.getMember().getUser().getName(), currentTimeMillis()));
+        javaBot.getApi().updateUserOrCreate(new User(event.getMember().getIdLong(), event.getMember().getUser().getName(), null, currentTimeMillis()));
     }
 }

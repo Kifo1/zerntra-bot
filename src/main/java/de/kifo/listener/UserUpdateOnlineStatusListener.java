@@ -17,6 +17,6 @@ public class UserUpdateOnlineStatusListener extends ListenerAdapter {
 
     @Override
     public void onUserUpdateOnlineStatus(@NonNull UserUpdateOnlineStatusEvent event) {
-        javaBot.getApi().updateUser(new User(event.getUser().getIdLong(), event.getUser().getName(), currentTimeMillis()));
+        javaBot.getApi().updateUserOrCreate(new User(event.getUser().getIdLong(), event.getUser().getName(), null, currentTimeMillis()));
     }
 }
