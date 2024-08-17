@@ -11,7 +11,7 @@ import java.net.http.HttpResponse;
 import java.util.List;
 
 import static com.google.gson.reflect.TypeToken.getParameterized;
-import static java.lang.Boolean.valueOf;
+import static java.lang.Boolean.parseBoolean;
 import static java.lang.System.currentTimeMillis;
 import static java.net.http.HttpClient.newHttpClient;
 import static java.net.http.HttpRequest.newBuilder;
@@ -93,11 +93,11 @@ public class API {
     }
 
     public boolean updatePlaylist(String name, Playlist playlist) {
-        return valueOf(sendPutRequest("/javabot/playlist/update/" + name, getJsonByObject(playlist)));
+        return parseBoolean(sendPutRequest("/javabot/playlist/update/" + name, getJsonByObject(playlist)));
     }
 
     public boolean deletePlaylist(String name) {
-        return valueOf(sendDeleteRequest("/javabot/playlist/delete/" + name));
+        return parseBoolean(sendDeleteRequest("/javabot/playlist/delete/" + name));
     }
 
     /**
