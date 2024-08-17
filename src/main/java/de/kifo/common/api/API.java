@@ -19,6 +19,8 @@ import static java.util.Objects.nonNull;
 
 public class API {
 
+    private final String API_BASE_URL = "http://localhost:8080";
+
     /**
      * {@link User}
      */
@@ -28,22 +30,22 @@ public class API {
 
         String jsonRequest = getJsonByObject(user);
         if (userPresent) {
-            sendPutRequest("http://localhost:8080/javabot/user/update", jsonRequest);
+            sendPutRequest("/javabot/user/update", jsonRequest);
         } else {
-            sendPostRequest("http://localhost:8080/javabot/user/add", jsonRequest);
+            sendPostRequest("/javabot/user/add", jsonRequest);
         }
     }
 
     public User getUserById(Long id) {
-        return getObjectByJson(sendGetRequest("http://localhost:8080/javabot/user/get/" + id), User.class);
+        return getObjectByJson(sendGetRequest("/javabot/user/get/" + id), User.class);
     }
 
     public List<User> getAllUsers() {
-        return getObjectListByJson(sendGetRequest("http://localhost:8080/javabot/user/get-all"), User.class);
+        return getObjectListByJson(sendGetRequest("/javabot/user/get-all"), User.class);
     }
 
     public void deleteUser(Long id) {
-        sendDeleteRequest("http://localhost:8080/javabot/user/remove/" + id);
+        sendDeleteRequest("/javabot/user/remove/" + id);
     }
 
     /**
@@ -58,11 +60,11 @@ public class API {
      */
 
     public List<Song> getSongListByUserId(Long userId) {
-        return getObjectListByJson(sendGetRequest("http://localhost:8080/javabot/song/get-all/" + userId), Song.class);
+        return getObjectListByJson(sendGetRequest("/javabot/song/get-all/" + userId), Song.class);
     }
 
     public List<Song> getAllSongs() {
-        return getObjectListByJson(sendGetRequest("http://localhost:8080/javabot/song/get-all"), Song.class);
+        return getObjectListByJson(sendGetRequest("/javabot/song/get-all"), Song.class);
     }
 
     public void updateSong(Long usedId, String name) {
@@ -75,7 +77,7 @@ public class API {
         song.setLastPlayDate(currentTimeMillis());
 
         String jsonRequest = getJsonByObject(song);
-        sendPutRequest("http://localhost:8080/javabot/song/update/" + song.getUserId(), jsonRequest);
+        sendPutRequest("/javabot/song/update/" + song.getUserId(), jsonRequest);
     }
 
     /**
@@ -83,19 +85,19 @@ public class API {
      */
 
     public Playlist getPlaylistByName(String name) {
-        return getObjectByJson(sendGetRequest("http://localhost:8080/javabot/playlist/get/" + name), Playlist.class);
+        return getObjectByJson(sendGetRequest("/javabot/playlist/get/" + name), Playlist.class);
     }
 
     public List<Playlist> getPlaylistsListByUserId(Long userId) {
-        return getObjectListByJson(sendGetRequest("http://localhost:8080/javabot/playlist/get-all/" + userId), Playlist.class);
+        return getObjectListByJson(sendGetRequest("/javabot/playlist/get-all/" + userId), Playlist.class);
     }
 
     public boolean updatePlaylist(String name, Playlist playlist) {
-        return valueOf(sendPutRequest("http://localhost:8080/javabot/playlist/update/" + name, getJsonByObject(playlist)));
+        return valueOf(sendPutRequest("/javabot/playlist/update/" + name, getJsonByObject(playlist)));
     }
 
     public boolean deletePlaylist(String name) {
-        return valueOf(sendDeleteRequest("http://localhost:8080/javabot/playlist/delete/" + name));
+        return valueOf(sendDeleteRequest("/javabot/playlist/delete/" + name));
     }
 
     /**
@@ -119,7 +121,7 @@ public class API {
     private String sendGetRequest(String uri) {
         try {
             HttpRequest httpRequest = newBuilder()
-                    .uri(new URI(uri))
+                    .uri(new URI(API_BASE_URL + uri))
                     .GET()
                     .build();
             return newHttpClient().send(httpRequest, HttpResponse.BodyHandlers.ofString()).body();
@@ -131,7 +133,7 @@ public class API {
     private String sendPostRequest(String uri, String json) {
         try {
             HttpRequest httpRequest = newBuilder()
-                    .uri(new URI(uri))
+                    .uri(new URI(API_BASE_URL + uri))
                     .header("Content-Type", "application/json")
                     .POST(HttpRequest.BodyPublishers.ofString(json))
                     .build();
@@ -144,7 +146,7 @@ public class API {
     private String sendPutRequest(String uri, String json) {
         try {
             HttpRequest httpRequest = newBuilder()
-                    .uri(new URI(uri))
+                    .uri(new URI(API_BASE_URL + uri))
                     .header("Content-Type", "application/json")
                     .PUT(HttpRequest.BodyPublishers.ofString(json))
                     .build();
@@ -157,7 +159,7 @@ public class API {
     private String sendDeleteRequest(String uri) {
         try {
             HttpRequest httpRequest = newBuilder()
-                    .uri(new URI(uri))
+                    .uri(new URI(API_BASE_URL + uri))
                     .DELETE()
                     .build();
 
