@@ -40,6 +40,10 @@ public class API {
         return getObjectByJson(sendGetRequest("/javabot/user/get/" + id), User.class);
     }
 
+    public boolean isUserRegistered(User user) {
+        return getObjectByJson(sendPutRequest("/javabot/user/registered", getJsonByObject(user)), Boolean.class);
+    }
+
     public List<User> getAllUsers() {
         return getObjectListByJson(sendGetRequest("/javabot/user/get-all"), User.class);
     }
