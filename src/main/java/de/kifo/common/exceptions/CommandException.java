@@ -10,6 +10,6 @@ public class CommandException extends Exception {
 
     public CommandException(CommandExceptionType commandExceptionType, SlashCommandInteractionEvent event, JavaBot javaBot) {
         super(commandExceptionType.name());
-        event.replyEmbeds(javaBot.getEmbedUtils().getEmbedMessageByText(commandExceptionType.getMessage(), ERROR)).queue();
+        event.replyEmbeds(javaBot.getEmbedUtils().getEmbedMessageByText(commandExceptionType.getMessage(), ERROR)).setEphemeral(true).queue();
     }
 }
