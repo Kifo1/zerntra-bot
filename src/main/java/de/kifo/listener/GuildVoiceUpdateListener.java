@@ -9,12 +9,10 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 
-import static de.kifo.JavaBot.ZONE_ID;
 import static de.kifo.common.api.model.HistoryEntry.Type.CHANNEL_CHANGE;
 import static de.kifo.common.api.model.HistoryEntry.Type.CHANNEL_JOIN;
 import static de.kifo.common.api.model.HistoryEntry.Type.CHANNEL_QUIT;
 import static java.lang.System.currentTimeMillis;
-import static java.time.ZonedDateTime.now;
 import static java.util.Objects.nonNull;
 
 public class GuildVoiceUpdateListener extends ListenerAdapter {
@@ -37,6 +35,6 @@ public class GuildVoiceUpdateListener extends ListenerAdapter {
             type = nonNull(event.getChannelJoined()) ? CHANNEL_JOIN : CHANNEL_QUIT;
             information = nonNull(event.getChannelJoined()) ? event.getChannelJoined().getName() : event.getChannelLeft().getName();
         }
-        javaBot.getApi().createHistoryEntry(new HistoryEntry(0L, userId, type, now(ZONE_ID), information));
+        javaBot.getApi().createHistoryEntry(new HistoryEntry(0L, userId, type, currentTimeMillis(), information));
     }
 }

@@ -9,10 +9,8 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import javax.inject.Inject;
 
-import static de.kifo.JavaBot.ZONE_ID;
 import static de.kifo.common.api.model.HistoryEntry.Type.ONLINE_STATUS_CHANGE;
 import static java.lang.System.currentTimeMillis;
-import static java.time.ZonedDateTime.now;
 
 public class UserUpdateOnlineStatusListener extends ListenerAdapter {
 
@@ -24,7 +22,7 @@ public class UserUpdateOnlineStatusListener extends ListenerAdapter {
         Long userId = event.getUser().getIdLong();
 
         javaBot.getApi().updateUserOrCreate(new User(userId, event.getUser().getName(), null, currentTimeMillis()));
-        javaBot.getApi().createHistoryEntry(new HistoryEntry(0L, userId, ONLINE_STATUS_CHANGE, now(ZONE_ID),
+        javaBot.getApi().createHistoryEntry(new HistoryEntry(0L, userId, ONLINE_STATUS_CHANGE, currentTimeMillis(),
                 event.getOldOnlineStatus().name() + " -> " + event.getNewOnlineStatus().name()));
     }
 }

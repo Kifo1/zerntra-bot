@@ -35,8 +35,6 @@ public class JavaBot {
     private Registry registry;
     private EmbedUtils embedUtils;
 
-    public static final ZoneId ZONE_ID = of("Europe/Berlin");
-
     public JavaBot() {
         injector = createInjector(new RegistrationModule(this));
 

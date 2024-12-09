@@ -4,8 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 
-import java.time.ZonedDateTime;
-
 @Data
 @AllArgsConstructor
 public class HistoryEntry {
@@ -13,7 +11,7 @@ public class HistoryEntry {
     private Long id;
     private Long userId;
     private Type type;
-    private ZonedDateTime dateTime;
+    private Long dateTime;
     private String information;
 
     @Getter
