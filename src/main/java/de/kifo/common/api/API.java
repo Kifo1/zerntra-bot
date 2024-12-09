@@ -1,6 +1,7 @@
 package de.kifo.common.api;
 
 import com.google.gson.Gson;
+import de.kifo.common.api.model.HistoryEntry;
 import de.kifo.common.api.model.Playlist;
 import de.kifo.common.api.model.Song;
 import de.kifo.common.api.model.User;
@@ -8,6 +9,7 @@ import de.kifo.common.api.model.User;
 import java.net.URI;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Collection;
 import java.util.List;
 
 import static com.google.gson.reflect.TypeToken.getParameterized;
@@ -102,6 +104,18 @@ public class API {
 
     public boolean deletePlaylist(String name) {
         return parseBoolean(sendDeleteRequest("/javabot/playlist/delete/" + name));
+    }
+
+    /**
+     * {@link HistoryEntry}
+     */
+
+    public boolean createHistoryEntry(HistoryEntry historyEntry) {
+        return parseBoolean(sendPutRequest("/javabot/history/" + historyEntry.getUserId(), getJsonByObject(historyEntry)));
+    }
+
+    public Collection<HistoryEntry> getHistoryEntriesByUserId(Long userId) {
+        return getObjectListByJson("/javabot/history/" + userId, HistoryEntry.class);
     }
 
     /**
