@@ -28,12 +28,12 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.google.common.collect.ImmutableList.of;
-import static de.kifo.common.enums.exception.CommandExceptionType.NOT_IN_SPEECH_CHANNEL;
-import static de.kifo.common.enums.exception.CommandExceptionType.NO_PERMISSION;
-import static de.kifo.common.enums.exception.CommandExceptionType.PLAYLIST_ACCESS_MODIFIER_NEEDED;
-import static de.kifo.common.enums.exception.CommandExceptionType.PLAYLIST_ALREADY_EXISTS;
-import static de.kifo.common.enums.exception.CommandExceptionType.PLAYLIST_NOT_FOUND;
-import static de.kifo.common.util.EmbedUtils.MessageType.MESSAGE;
+import static de.kifo.common.enums.exception.ExceptionType.NOT_IN_SPEECH_CHANNEL;
+import static de.kifo.common.enums.exception.ExceptionType.NO_PERMISSION;
+import static de.kifo.common.enums.exception.ExceptionType.PLAYLIST_ACCESS_MODIFIER_NEEDED;
+import static de.kifo.common.enums.exception.ExceptionType.PLAYLIST_ALREADY_EXISTS;
+import static de.kifo.common.enums.exception.ExceptionType.PLAYLIST_NOT_FOUND;
+import static de.kifo.common.enums.message.Message.MessageType.MESSAGE;
 import static java.awt.Color.MAGENTA;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;

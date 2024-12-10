@@ -24,8 +24,8 @@ import java.util.List;
 
 import static com.google.common.collect.ImmutableList.of;
 import static de.kifo.common.api.model.HistoryEntry.Type.SONG_PLAY;
-import static de.kifo.common.enums.exception.CommandExceptionType.NOT_IN_SPEECH_CHANNEL;
-import static de.kifo.common.util.EmbedUtils.MessageType.MESSAGE;
+import static de.kifo.common.enums.exception.ExceptionType.NOT_IN_SPEECH_CHANNEL;
+import static de.kifo.common.enums.message.Message.MessageType.MESSAGE;
 import static java.lang.System.currentTimeMillis;
 import static java.util.Comparator.comparing;
 import static java.util.Objects.isNull;

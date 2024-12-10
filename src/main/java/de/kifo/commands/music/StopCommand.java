@@ -19,9 +19,9 @@ import org.jetbrains.annotations.NotNull;
 import javax.inject.Inject;
 import java.util.List;
 
-import static de.kifo.common.enums.exception.CommandExceptionType.NOT_IN_SPEECH_CHANNEL;
-import static de.kifo.common.enums.exception.CommandExceptionType.NO_SONG_RUNNING;
-import static de.kifo.common.util.EmbedUtils.MessageType.MESSAGE;
+import static de.kifo.common.enums.exception.ExceptionType.NOT_IN_SPEECH_CHANNEL;
+import static de.kifo.common.enums.exception.ExceptionType.NO_SONG_RUNNING;
+import static de.kifo.common.enums.message.Message.MessageType.MESSAGE;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
