@@ -16,8 +16,8 @@ import javax.inject.Inject;
 import java.util.List;
 
 import static com.google.common.collect.ImmutableList.of;
-import static de.kifo.common.enums.exception.CommandExceptionType.USER_ALREADY_REGISTERED;
-import static de.kifo.common.util.EmbedUtils.MessageType.MESSAGE;
+import static de.kifo.common.enums.exception.ExceptionType.USER_ALREADY_REGISTERED;
+import static de.kifo.common.enums.message.Message.MessageType.MESSAGE;
 import static net.dv8tion.jda.api.interactions.commands.OptionType.STRING;
 
 @CommandBase.BotCommand(name = "register", description = "Registriere deinen Account.", hasOptions = true)

@@ -23,9 +23,9 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
 import static com.google.common.collect.ImmutableList.of;
-import static de.kifo.common.enums.exception.CommandExceptionType.NOT_IN_SPEECH_CHANNEL;
-import static de.kifo.common.enums.exception.CommandExceptionType.SKIP_INDEX_NOT_FOUND;
-import static de.kifo.common.util.EmbedUtils.MessageType.MESSAGE;
+import static de.kifo.common.enums.exception.ExceptionType.NOT_IN_SPEECH_CHANNEL;
+import static de.kifo.common.enums.exception.ExceptionType.SKIP_INDEX_NOT_FOUND;
+import static de.kifo.common.enums.message.Message.MessageType.MESSAGE;
 import static java.lang.Math.min;
 import static java.lang.String.valueOf;
 import static java.util.Objects.isNull;

@@ -5,9 +5,9 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum CommandExceptionType {
+public enum ExceptionType {
 
-    // Arguments
+    // COMMAND - Arguments
     USER_NOT_FOUND("Der Nutzer konnte nicht gefunden werden."),
     USER_HAS_NO_DATA("Es konnten keine Daten zu diesem User gefunden werden."),
     SONG_NOT_FOUND("Das Lied konnte nicht gefunden werden."),
@@ -17,7 +17,7 @@ public enum CommandExceptionType {
     PLAYLIST_SONG_NOT_FOUND("Dieses Lied konnte in der angegebenen Playlist nicht gefunden werden."),
     PLAYLIST_ACCESS_MODIFIER_NEEDED("Bitte gib den Zugangs-Typen für die Playlist an."),
 
-    // Miscellaneous
+    // COMMAND - Miscellaneous
     NOT_IN_SPEECH_CHANNEL("Du musst in einem Sprachkanal sein."),
     NO_PERMISSION("Du hast nicht die nötige Berechtigung, um diese Aktion durchzuführen."),
     NO_SONG_RUNNING("Es läuft im Moment kein Lied."),
@@ -25,5 +25,4 @@ public enum CommandExceptionType {
     USER_ALREADY_REGISTERED("Dieser Discord Account ist bereits registriert.");
 
     private final String message;
-
 }

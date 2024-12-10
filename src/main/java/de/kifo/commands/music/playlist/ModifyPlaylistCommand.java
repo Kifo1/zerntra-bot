@@ -20,11 +20,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static de.kifo.common.enums.exception.CommandExceptionType.NO_PERMISSION;
-import static de.kifo.common.enums.exception.CommandExceptionType.PLAYLIST_INDEX_NOT_FOUND;
-import static de.kifo.common.enums.exception.CommandExceptionType.PLAYLIST_NOT_FOUND;
-import static de.kifo.common.enums.exception.CommandExceptionType.PLAYLIST_SONG_NOT_FOUND;
-import static de.kifo.common.util.EmbedUtils.MessageType.MESSAGE;
+import static de.kifo.common.enums.exception.ExceptionType.NO_PERMISSION;
+import static de.kifo.common.enums.exception.ExceptionType.PLAYLIST_INDEX_NOT_FOUND;
+import static de.kifo.common.enums.exception.ExceptionType.PLAYLIST_NOT_FOUND;
+import static de.kifo.common.enums.exception.ExceptionType.PLAYLIST_SONG_NOT_FOUND;
+import static de.kifo.common.enums.message.Message.MessageType.MESSAGE;
 import static java.util.Comparator.comparing;
 import static java.util.List.of;
 import static java.util.Objects.isNull;
