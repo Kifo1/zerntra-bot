@@ -16,8 +16,8 @@ import javax.inject.Inject;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static de.kifo.common.enums.exception.CommandExceptionType.USER_HAS_NO_DATA;
-import static de.kifo.common.util.EmbedUtils.MessageType.MESSAGE;
+import static de.kifo.common.enums.exception.ExceptionType.USER_HAS_NO_DATA;
+import static de.kifo.common.enums.message.Message.MessageType.MESSAGE;
 import static java.time.Instant.ofEpochMilli;
 import static java.time.LocalDateTime.now;
 import static java.time.ZoneId.systemDefault;
