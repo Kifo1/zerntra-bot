@@ -1,12 +1,11 @@
 package de.kifo.listener.command;
 
+import com.google.inject.Inject;
 import de.kifo.JavaBot;
 import de.kifo.common.api.model.User;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
-
-import javax.inject.Inject;
 
 import static java.lang.System.currentTimeMillis;
 

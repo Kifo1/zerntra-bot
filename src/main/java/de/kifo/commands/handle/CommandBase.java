@@ -1,5 +1,6 @@
 package de.kifo.commands.handle;
 
+import com.google.inject.Inject;
 import de.kifo.JavaBot;
 import de.kifo.common.exceptions.CommandException;
 import net.dv8tion.jda.api.entities.Member;
@@ -11,7 +12,6 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.internal.interactions.CommandDataImpl;
 import org.jetbrains.annotations.NotNull;
 
-import javax.inject.Inject;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 import java.util.List;

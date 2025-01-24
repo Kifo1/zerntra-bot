@@ -1,5 +1,6 @@
 package de.kifo.commands.music;
 
+import com.google.inject.Inject;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import de.kifo.JavaBot;
 import de.kifo.commands.handle.CommandBase;
@@ -16,7 +17,6 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.managers.AudioManager;
 import org.jetbrains.annotations.NotNull;
 
-import javax.inject.Inject;
 import java.util.List;
 
 import static de.kifo.common.enums.exception.ExceptionType.NOT_IN_SPEECH_CHANNEL;

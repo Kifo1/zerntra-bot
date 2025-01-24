@@ -1,5 +1,6 @@
 package de.kifo.listener.command;
 
+import com.google.inject.Inject;
 import de.kifo.JavaBot;
 import de.kifo.common.api.model.HistoryEntry;
 import de.kifo.common.api.model.User;
@@ -11,7 +12,6 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import org.jetbrains.annotations.NotNull;
 
-import javax.inject.Inject;
 import java.util.List;
 
 import static de.kifo.common.api.model.HistoryEntry.Type.COMMAND_USE;

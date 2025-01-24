@@ -1,5 +1,6 @@
 package de.kifo.commands;
 
+import com.google.inject.Inject;
 import de.kifo.JavaBot;
 import de.kifo.commands.handle.CommandBase;
 import de.kifo.common.api.model.User;
@@ -12,7 +13,6 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import org.jetbrains.annotations.NotNull;
 
-import javax.inject.Inject;
 import java.util.List;
 
 import static com.google.common.collect.ImmutableList.of;

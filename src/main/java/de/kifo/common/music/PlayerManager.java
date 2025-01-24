@@ -1,5 +1,6 @@
 package de.kifo.common.music;
 
+import com.google.inject.Inject;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
@@ -10,7 +11,6 @@ import de.kifo.JavaBot;
 import dev.lavalink.youtube.YoutubeAudioSourceManager;
 import net.dv8tion.jda.api.entities.Guild;
 
-import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
 

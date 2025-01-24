@@ -1,13 +1,12 @@
 package de.kifo.listener;
 
+import com.google.inject.Inject;
 import de.kifo.JavaBot;
 import de.kifo.common.api.model.HistoryEntry;
 import de.kifo.common.api.model.User;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
-
-import javax.inject.Inject;
 
 import static de.kifo.common.api.model.HistoryEntry.Type.CHANNEL_CHANGE;
 import static de.kifo.common.api.model.HistoryEntry.Type.CHANNEL_JOIN;

@@ -1,11 +1,10 @@
 package de.kifo.common.util;
 
+import com.google.inject.Inject;
 import de.kifo.JavaBot;
 import de.kifo.common.enums.message.Message;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-
-import javax.inject.Inject;
 
 public class EmbedUtils {
 

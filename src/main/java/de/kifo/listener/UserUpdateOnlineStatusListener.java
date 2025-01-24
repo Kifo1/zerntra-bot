@@ -1,13 +1,12 @@
 package de.kifo.listener;
 
+import com.google.inject.Inject;
 import de.kifo.JavaBot;
 import de.kifo.common.api.model.HistoryEntry;
 import de.kifo.common.api.model.User;
 import lombok.NonNull;
 import net.dv8tion.jda.api.events.user.update.UserUpdateOnlineStatusEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-
-import javax.inject.Inject;
 
 import static de.kifo.common.api.model.HistoryEntry.Type.ONLINE_STATUS_CHANGE;
 import static java.lang.System.currentTimeMillis;
