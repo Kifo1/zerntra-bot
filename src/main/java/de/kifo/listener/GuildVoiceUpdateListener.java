@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
+import static de.kifo.JavaBot.onlineTimeService;
 import static de.kifo.common.api.model.HistoryEntry.Type.CHANNEL_CHANGE;
 import static de.kifo.common.api.model.HistoryEntry.Type.CHANNEL_JOIN;
 import static de.kifo.common.api.model.HistoryEntry.Type.CHANNEL_QUIT;
@@ -33,6 +34,13 @@ public class GuildVoiceUpdateListener extends ListenerAdapter {
             type = nonNull(event.getChannelJoined()) ? CHANNEL_JOIN : CHANNEL_QUIT;
             information = nonNull(event.getChannelJoined()) ? event.getChannelJoined().getName() : event.getChannelLeft().getName();
         }
+
+        if (type == CHANNEL_JOIN) {
+            onlineTimeService.startVoiceOnlineSession(userId);
+        } else if (type == CHANNEL_QUIT) {
+            onlineTimeService.stopVoiceOnlineSession(userId);
+        }
+
         javaBot.getApi().createHistoryEntry(new HistoryEntry(0L, userId, type, currentTimeMillis(), information));
     }
 }

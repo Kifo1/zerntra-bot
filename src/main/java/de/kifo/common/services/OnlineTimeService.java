@@ -17,27 +17,34 @@ public class OnlineTimeService {
 
     private HashMap<Long, VoiceChannelOnlineSession> voiceChannelOnlineSessions = new HashMap<>();
 
-    public void startVoiceOnlineSession(User user) {
-        voiceChannelOnlineSessions.putIfAbsent(user.getId(),
-                new VoiceChannelOnlineSession(0L, user.getId(), currentTimeMillis(), 0L));
+    public void startVoiceOnlineSession(Long userId) {
+        voiceChannelOnlineSessions.putIfAbsent(userId,
+                new VoiceChannelOnlineSession(0L, userId, currentTimeMillis(), 0L));
     }
 
-    public void stopVoiceOnlineSession(User user) {
-        VoiceChannelOnlineSession session = voiceChannelOnlineSessions.getOrDefault(user.getId(), null);
+    public void stopVoiceOnlineSession(Long userId) {
+        VoiceChannelOnlineSession session = voiceChannelOnlineSessions.getOrDefault(userId, null);
 
         if (nonNull(session)) {
-            //TODO Save in API
+            User user = javaBot.getApi().getUserById(userId);
+            user.addVoiceChannelSession(session);
+
+            javaBot.getApi().updateUser(user);
         }
     }
 
-    public int getVoiceOnlineTime(User user) {
-        if (nonNull(voiceChannelOnlineSessions.get(user.getId()))) {
-            stopVoiceOnlineSession(user);
+    public boolean isInAVoiceChannelSession(Long userId) {
+        return nonNull(voiceChannelOnlineSessions.getOrDefault(userId, null));
+    }
+
+    public int getVoiceOnlineTime(Long userId) {
+        if (nonNull(voiceChannelOnlineSessions.get(userId))) {
+            stopVoiceOnlineSession(userId);
         }
 
         //TODO Receive online time from api
 
-        startVoiceOnlineSession(user);
+        startVoiceOnlineSession(userId);
 
         return 0;
     }
