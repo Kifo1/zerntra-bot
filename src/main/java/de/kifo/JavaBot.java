@@ -5,6 +5,7 @@ import com.google.inject.Injector;
 import de.kifo.common.api.API;
 import de.kifo.common.music.PlayerManager;
 import de.kifo.common.registration.Registry;
+import de.kifo.common.services.OnlineTimeService;
 import de.kifo.common.util.EmbedUtils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -32,11 +33,15 @@ public class JavaBot {
     private Registry registry;
     private EmbedUtils embedUtils;
 
+    public static OnlineTimeService onlineTimeService;
+
     public JavaBot() {
         injector = createInjector(new RegistrationModule(this));
 
         setUpBot();
         handleRegistrations();
+
+        this.onlineTimeService = new OnlineTimeService(this);
     }
 
     private void setUpBot() {
