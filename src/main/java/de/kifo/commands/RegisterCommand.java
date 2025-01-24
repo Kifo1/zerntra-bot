@@ -41,7 +41,7 @@ public class RegisterCommand extends CommandBase {
 
         String password = options.get(0).getAsString();
         user.setPassword(password);
-        javaBot.getApi().updateUserOrCreate(user);
+        javaBot.getApi().updateUser(user);
 
         event.replyEmbeds(
                 javaBot.getEmbedUtils().getEmbedMessageByText("Dein Account wurde erfolgreich registriert.", MESSAGE)).

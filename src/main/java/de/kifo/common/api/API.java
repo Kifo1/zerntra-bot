@@ -17,6 +17,7 @@ import static java.lang.Boolean.parseBoolean;
 import static java.lang.System.currentTimeMillis;
 import static java.net.http.HttpClient.newHttpClient;
 import static java.net.http.HttpRequest.newBuilder;
+import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 public class API {
@@ -27,13 +28,19 @@ public class API {
      * {@link User}
      */
 
-    public void updateUserOrCreate(User user) {
+    public void updateUser(User user) {
         boolean userPresent = nonNull(getUserById(user.getId()));
 
         String jsonRequest = getJsonByObject(user);
         if (userPresent) {
             sendPutRequest("/javabot/user/update", jsonRequest);
-        } else {
+        }
+    }
+
+    public void createUserIfNotPresent(Long userId, String name) {
+        String jsonRequest = getJsonByObject(new User(userId, name, null, currentTimeMillis(), null));
+
+        if (isNull(getUserById(userId))) {
             sendPostRequest("/javabot/user/add", jsonRequest);
         }
     }

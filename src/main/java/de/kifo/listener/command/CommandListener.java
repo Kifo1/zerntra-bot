@@ -3,7 +3,6 @@ package de.kifo.listener.command;
 import com.google.inject.Inject;
 import de.kifo.JavaBot;
 import de.kifo.common.api.model.HistoryEntry;
-import de.kifo.common.api.model.User;
 import de.kifo.common.exceptions.CommandException;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
@@ -24,7 +23,7 @@ public class CommandListener extends ListenerAdapter {
 
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
-        javaBot.getApi().updateUserOrCreate(new User(event.getUser().getIdLong(), event.getUser().getName(), null, currentTimeMillis()));
+        javaBot.getApi().createUserIfNotPresent(event.getUser().getIdLong(), event.getUser().getName());
         Member member = event.getMember();
         TextChannel textChannel = event.getChannel().asTextChannel();
         List<OptionMapping> options = event.getOptions();
