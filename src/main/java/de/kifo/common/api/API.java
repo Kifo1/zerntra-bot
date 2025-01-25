@@ -15,11 +15,13 @@ import java.util.List;
 
 import static com.google.gson.reflect.TypeToken.getParameterized;
 import static java.lang.Boolean.parseBoolean;
+import static java.lang.String.format;
 import static java.lang.System.currentTimeMillis;
 import static java.net.http.HttpClient.newHttpClient;
 import static java.net.http.HttpRequest.newBuilder;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
+import static java.util.Optional.ofNullable;
 
 public class API {
 
@@ -133,6 +135,13 @@ public class API {
     public void addVoiceChannelOnlineSessionToUser(Long userId, VoiceChannelOnlineSession session) {
         String jsonRequest = getJsonByObject(session);
         sendPutRequest("/javabot/user/voice-session/" + userId, jsonRequest);
+    }
+
+    public long getVoiceSessionSecondsForTimePeriod(Long userId, VoiceChannelOnlineSession.TimePeriod timePeriod) {
+        String uri = format("/javabot/user/voice-session/%d?timePeriod=%s", userId, timePeriod.name());
+        String response = sendGetRequest(uri);
+
+        return ofNullable(getObjectByJson(response, Long.class)).orElse(-1L);
     }
 
     /**

@@ -34,15 +34,12 @@ public class OnlineTimeService {
         return nonNull(voiceChannelOnlineSessions.getOrDefault(userId, null));
     }
 
-    public int getVoiceOnlineTime(Long userId) {
+    public long getVoiceOnlineTime(Long userId, VoiceChannelOnlineSession.TimePeriod timePeriod) {
         if (nonNull(voiceChannelOnlineSessions.get(userId))) {
             stopVoiceOnlineSession(userId);
+            startVoiceOnlineSession(userId);
         }
 
-        //TODO Receive online time from api
-
-        startVoiceOnlineSession(userId);
-
-        return 0;
+        return javaBot.getApi().getVoiceSessionSecondsForTimePeriod(userId, timePeriod);
     }
 }
