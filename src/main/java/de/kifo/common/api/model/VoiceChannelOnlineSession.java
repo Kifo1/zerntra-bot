@@ -8,7 +8,7 @@ import lombok.Data;
 public class VoiceChannelOnlineSession {
 
     private Long id;
-    private Long userId;
+    private User user;
     private Long startMillis;
     private Long endMillis;
 
