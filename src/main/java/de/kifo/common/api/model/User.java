@@ -14,8 +14,4 @@ public class User {
     private String password;
     private Long lastOnTime;
     private List<VoiceChannelOnlineSession> voiceChannelOnlineSessions;
-
-    public void addVoiceChannelSession(VoiceChannelOnlineSession voiceChannelOnlineSession) {
-        voiceChannelOnlineSessions.add(voiceChannelOnlineSession);
-    }
 }
