@@ -1,7 +1,6 @@
 package de.kifo.common.services;
 
 import de.kifo.JavaBot;
-import de.kifo.common.api.model.User;
 import de.kifo.common.api.model.VoiceChannelOnlineSession;
 import lombok.Data;
 
@@ -26,12 +25,8 @@ public class OnlineTimeService {
         VoiceChannelOnlineSession session = voiceChannelOnlineSessions.getOrDefault(userId, null);
 
         if (nonNull(session)) {
-            User user = javaBot.getApi().getUserById(userId);
-
             session.setEndMillis(currentTimeMillis());
-            user.addVoiceChannelSession(session);
-
-            javaBot.getApi().updateUser(user);
+            javaBot.getApi().addVoiceChannelOnlineSessionToUser(userId, session);
         }
     }
 

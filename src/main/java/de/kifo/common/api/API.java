@@ -5,6 +5,7 @@ import de.kifo.common.api.model.HistoryEntry;
 import de.kifo.common.api.model.Playlist;
 import de.kifo.common.api.model.Song;
 import de.kifo.common.api.model.User;
+import de.kifo.common.api.model.VoiceChannelOnlineSession;
 
 import java.net.URI;
 import java.net.http.HttpRequest;
@@ -123,6 +124,15 @@ public class API {
 
     public Collection<HistoryEntry> getHistoryEntriesByUserId(Long userId) {
         return getObjectListByJson("/javabot/history/" + userId, HistoryEntry.class);
+    }
+
+    /**
+     *  {@link VoiceChannelOnlineSession}
+     */
+
+    public void addVoiceChannelOnlineSessionToUser(Long userId, VoiceChannelOnlineSession session) {
+        String jsonRequest = getJsonByObject(session);
+        sendPutRequest("/javabot/user/voice-session/" + userId, jsonRequest);
     }
 
     /**
