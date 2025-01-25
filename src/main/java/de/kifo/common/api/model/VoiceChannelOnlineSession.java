@@ -19,11 +19,12 @@ public class VoiceChannelOnlineSession {
     @AllArgsConstructor
     public enum TimePeriod {
 
-        WEEK(7),
-        MONTH(30),
-        YEAR(365),
-        LIFETIME(MAX_VALUE);
+        WEEK("Woche", 7),
+        MONTH("Monat", 30),
+        YEAR("Jahr", 365),
+        LIFETIME("Insgesamt", MAX_VALUE);
 
+        private final String displayName;
         private final int days;
     }
 }
