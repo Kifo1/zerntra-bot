@@ -5,6 +5,7 @@ import de.kifo.common.api.model.HistoryEntry;
 import de.kifo.common.api.model.Playlist;
 import de.kifo.common.api.model.Song;
 import de.kifo.common.api.model.User;
+import de.kifo.common.api.model.VoiceChannelOnlineSession;
 
 import java.net.URI;
 import java.net.http.HttpRequest;
@@ -14,10 +15,13 @@ import java.util.List;
 
 import static com.google.gson.reflect.TypeToken.getParameterized;
 import static java.lang.Boolean.parseBoolean;
+import static java.lang.String.format;
 import static java.lang.System.currentTimeMillis;
 import static java.net.http.HttpClient.newHttpClient;
 import static java.net.http.HttpRequest.newBuilder;
+import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
+import static java.util.Optional.ofNullable;
 
 public class API {
 
@@ -27,13 +31,19 @@ public class API {
      * {@link User}
      */
 
-    public void updateUserOrCreate(User user) {
+    public void updateUser(User user) {
         boolean userPresent = nonNull(getUserById(user.getId()));
 
         String jsonRequest = getJsonByObject(user);
         if (userPresent) {
             sendPutRequest("/javabot/user/update", jsonRequest);
-        } else {
+        }
+    }
+
+    public void createUserIfNotPresent(Long userId, String name) {
+        String jsonRequest = getJsonByObject(new User(userId, name, null, currentTimeMillis(), null));
+
+        if (isNull(getUserById(userId))) {
             sendPostRequest("/javabot/user/add", jsonRequest);
         }
     }
@@ -116,6 +126,22 @@ public class API {
 
     public Collection<HistoryEntry> getHistoryEntriesByUserId(Long userId) {
         return getObjectListByJson("/javabot/history/" + userId, HistoryEntry.class);
+    }
+
+    /**
+     *  {@link VoiceChannelOnlineSession}
+     */
+
+    public void addVoiceChannelOnlineSessionToUser(Long userId, VoiceChannelOnlineSession session) {
+        String jsonRequest = getJsonByObject(session);
+        sendPutRequest("/javabot/user/voice-session/" + userId, jsonRequest);
+    }
+
+    public long getVoiceSessionSecondsForTimePeriod(Long userId, VoiceChannelOnlineSession.TimePeriod timePeriod) {
+        String uri = format("/javabot/user/voice-session/%d?timePeriod=%s", userId, timePeriod.name());
+        String response = sendGetRequest(uri);
+
+        return ofNullable(getObjectByJson(response, Long.class)).orElse(-1L);
     }
 
     /**

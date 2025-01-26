@@ -12,6 +12,7 @@ public enum ExceptionType {
     USER_HAS_NO_DATA("Es konnten keine Daten zu diesem User gefunden werden."),
     SONG_NOT_FOUND("Das Lied konnte nicht gefunden werden."),
     SKIP_INDEX_NOT_FOUND("Dieser Index existiert nicht. Verbende \"/songlist\", um die aktuelle Songlist anzuschauen."),
+    ONLINE_TIME_WRONG_TIME_PERIOD("Bitte gib einen gültigen Wert für den Zeitraum an."),
     PLAYLIST_NOT_FOUND("Die Playlist konnte nicht gefunden werden."),
     PLAYLIST_INDEX_NOT_FOUND("Dieser Index existiert nicht. Verwende \"/playlist info\", um die Playlist anzuschauen."),
     PLAYLIST_SONG_NOT_FOUND("Dieses Lied konnte in der angegebenen Playlist nicht gefunden werden."),

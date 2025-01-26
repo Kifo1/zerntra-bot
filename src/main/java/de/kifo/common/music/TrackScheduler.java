@@ -14,6 +14,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import static de.kifo.commands.music.PlayCommand.map;
+import static de.kifo.common.util.StringUtils.getTimeStringBySeconds;
 import static java.awt.Color.MAGENTA;
 import static java.lang.Thread.sleep;
 import static java.util.Objects.isNull;
@@ -32,18 +33,13 @@ public class TrackScheduler extends AudioEventAdapter {
     public void onTrackStart(AudioPlayer player, AudioTrack track) {
         AudioTrackInfo info = track.getInfo();
         String url = info.uri;
-
-        long sekunden = info.length/1000;
-        long minuten = sekunden/60;
-        long stunden = minuten/60;
-        minuten %= 60;
-        sekunden %= 60;
+        long seconds = info.length/1000;
 
         map.get(guild.getIdLong()).sendMessageEmbeds(new EmbedBuilder()
                 .setColor(MAGENTA)
                 .setTitle("Jetzt läuft: " + info.title)
                 .addField(info.author, "[" + info.title +"](" + url + ")", false)
-                .addField("Länge", info.isStream ? ":red_circle: Stream" : (stunden > 0 ? stunden + "h " : "") + minuten + "min " + sekunden + "s", true)
+                .addField("Länge", info.isStream ? ":red_circle: Stream" : getTimeStringBySeconds(seconds), true)
                 .build()).queue();
     }
 

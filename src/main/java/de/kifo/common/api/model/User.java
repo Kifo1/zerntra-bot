@@ -3,6 +3,8 @@ package de.kifo.common.api.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 public class User {
@@ -11,5 +13,5 @@ public class User {
     private String userName;
     private String password;
     private Long lastOnTime;
-
+    private List<VoiceChannelOnlineSession> voiceChannelOnlineSessions;
 }
