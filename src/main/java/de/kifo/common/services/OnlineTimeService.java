@@ -27,6 +27,7 @@ public class OnlineTimeService {
         if (nonNull(session)) {
             session.setEndMillis(currentTimeMillis());
             javaBot.getApi().addVoiceChannelOnlineSessionToUser(userId, session);
+            voiceChannelOnlineSessions.remove(userId);
         }
     }
 
@@ -35,7 +36,7 @@ public class OnlineTimeService {
     }
 
     public long getVoiceOnlineTime(Long userId, VoiceChannelOnlineSession.TimePeriod timePeriod) {
-        if (nonNull(voiceChannelOnlineSessions.get(userId))) {
+        if (voiceChannelOnlineSessions.containsKey(userId)) {
             stopVoiceOnlineSession(userId);
             startVoiceOnlineSession(userId);
         }
