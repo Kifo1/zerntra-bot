@@ -34,6 +34,7 @@ import static de.kifo.common.enums.exception.ExceptionType.PLAYLIST_ACCESS_MODIF
 import static de.kifo.common.enums.exception.ExceptionType.PLAYLIST_ALREADY_EXISTS;
 import static de.kifo.common.enums.exception.ExceptionType.PLAYLIST_NOT_FOUND;
 import static de.kifo.common.enums.message.Message.MessageType.MESSAGE;
+import static de.kifo.common.util.EmbedUtils.getEmbedMessageByText;
 import static java.awt.Color.MAGENTA;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -61,35 +62,35 @@ public class PlaylistCommand extends CommandBase {
 
         Playlist playlist = javaBot.getApi().getPlaylistByName(playlistName);
         if (nonNull(playlist) && playlist.getUserId() != member.getUser().getIdLong() && !playlist.getPublicAccess()) {
-            throw new CommandException(NO_PERMISSION, event, javaBot);
+            throw new CommandException(NO_PERMISSION, event);
         }
 
         switch (action) {
             case CREATE_PLAYLIST -> {
                 if (isNull(javaBot.getApi().getPlaylistByName(playlistName))) {
                     if (publicAccess.isEmpty()) {
-                        throw new CommandException(PLAYLIST_ACCESS_MODIFIER_NEEDED, event, javaBot);
+                        throw new CommandException(PLAYLIST_ACCESS_MODIFIER_NEEDED, event);
                     }
                     javaBot.getApi().updatePlaylist(playlistName, new Playlist(0L, event.getUser().getIdLong(), playlistName, publicAccess.get(), of()));
-                    event.replyEmbeds(javaBot.getEmbedUtils().getEmbedMessageByText("Du hast die Playlist \"" + playlistName + "\" erfolgreich erstellt.", MESSAGE)).queue();
+                    event.replyEmbeds(getEmbedMessageByText("Du hast die Playlist \"" + playlistName + "\" erfolgreich erstellt.", MESSAGE)).queue();
                 } else {
-                    throw new CommandException(PLAYLIST_ALREADY_EXISTS, event, javaBot);
+                    throw new CommandException(PLAYLIST_ALREADY_EXISTS, event);
                 }
             }
             case DELETE_PLAYLIST -> {
                 if (nonNull(playlist)) {
                     if (playlist.getUserId() != event.getUser().getIdLong()) {
-                        throw new CommandException(NO_PERMISSION, event, javaBot);
+                        throw new CommandException(NO_PERMISSION, event);
                     }
                     javaBot.getApi().deletePlaylist(playlistName);
-                    event.replyEmbeds(javaBot.getEmbedUtils().getEmbedMessageByText("Du hast die Playlist \"" + playlistName + "\" gelöscht.", MESSAGE)).queue();
+                    event.replyEmbeds(getEmbedMessageByText("Du hast die Playlist \"" + playlistName + "\" gelöscht.", MESSAGE)).queue();
                 } else {
-                    throw new CommandException(PLAYLIST_NOT_FOUND, event, javaBot);
+                    throw new CommandException(PLAYLIST_NOT_FOUND, event);
                 }
             }
             case INFO -> {
                 if (isNull(playlist)) {
-                    throw new CommandException(PLAYLIST_NOT_FOUND, event, javaBot);
+                    throw new CommandException(PLAYLIST_NOT_FOUND, event);
                 }
                 EmbedBuilder builder = new EmbedBuilder();
                 builder.setColor(MAGENTA);
@@ -108,12 +109,12 @@ public class PlaylistCommand extends CommandBase {
             }
             case PLAY -> {
                 if (isNull(playlist)) {
-                    throw new CommandException(PLAYLIST_NOT_FOUND, event, javaBot);
+                    throw new CommandException(PLAYLIST_NOT_FOUND, event);
                 }
                 GuildVoiceState guildVoiceState = member.getVoiceState();
 
                 if (isNull(guildVoiceState) || isNull(guildVoiceState.getChannel()) || isNull(guildVoiceState.getChannel().asVoiceChannel())) {
-                    throw new CommandException(NOT_IN_SPEECH_CHANNEL, event, javaBot);
+                    throw new CommandException(NOT_IN_SPEECH_CHANNEL, event);
                 }
 
                 VoiceChannel voiceChannel = guildVoiceState.getChannel().asVoiceChannel();
@@ -124,7 +125,7 @@ public class PlaylistCommand extends CommandBase {
                 playlist.getSongs().forEach(song -> {
                     playerManager.play(event.getGuild(), "scsearch:" + song + " audio", event.getUser().getIdLong());
                 });
-                event.replyEmbeds(javaBot.getEmbedUtils().getEmbedMessageByText(playlist.getName() + " wurde gestartet. Du kannst du aktuelle Liste mit /songlist ansehen.", MESSAGE)).queue();
+                event.replyEmbeds(getEmbedMessageByText(playlist.getName() + " wurde gestartet. Du kannst du aktuelle Liste mit /songlist ansehen.", MESSAGE)).queue();
                 PlayCommand.map.put(voiceChannel.getGuild().getIdLong(), textChannel);
             }
         }

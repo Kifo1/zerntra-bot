@@ -18,6 +18,7 @@ import java.util.List;
 import static com.google.common.collect.ImmutableList.of;
 import static de.kifo.common.enums.exception.ExceptionType.USER_ALREADY_REGISTERED;
 import static de.kifo.common.enums.message.Message.MessageType.MESSAGE;
+import static de.kifo.common.util.EmbedUtils.getEmbedMessageByText;
 import static net.dv8tion.jda.api.interactions.commands.OptionType.STRING;
 
 @CommandBase.BotCommand(name = "register", description = "Registriere deinen Account.", hasOptions = true)
@@ -36,7 +37,7 @@ public class RegisterCommand extends CommandBase {
         User user = javaBot.getApi().getUserById(userId);
 
         if (javaBot.getApi().isUserRegistered(user)) {
-            throw new CommandException(USER_ALREADY_REGISTERED, event, javaBot);
+            throw new CommandException(USER_ALREADY_REGISTERED, event);
         }
 
         String password = options.get(0).getAsString();
@@ -44,7 +45,7 @@ public class RegisterCommand extends CommandBase {
         javaBot.getApi().updateUser(user);
 
         event.replyEmbeds(
-                javaBot.getEmbedUtils().getEmbedMessageByText("Dein Account wurde erfolgreich registriert.", MESSAGE)).
+                getEmbedMessageByText("Dein Account wurde erfolgreich registriert.", MESSAGE)).
                 setEphemeral(true)
                 .queue();
     }

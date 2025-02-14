@@ -19,6 +19,7 @@ import java.util.List;
 import static de.kifo.JavaBot.onlineTimeService;
 import static de.kifo.common.enums.exception.ExceptionType.USER_HAS_NO_DATA;
 import static de.kifo.common.enums.message.Message.MessageType.MESSAGE;
+import static de.kifo.common.util.EmbedUtils.getEmbedMessageByText;
 import static java.time.Instant.ofEpochMilli;
 import static java.time.LocalDateTime.now;
 import static java.time.ZoneId.systemDefault;
@@ -44,7 +45,7 @@ public class LastSeenCommand extends CommandBase {
         User user = javaBot.getApi().getUserById(requestedUserId);
 
         if (isNull(user.getLastOnTime())) {
-            throw new CommandException(USER_HAS_NO_DATA, event, javaBot);
+            throw new CommandException(USER_HAS_NO_DATA, event);
         }
 
         long lastOnTime = user.getLastOnTime();
@@ -52,10 +53,10 @@ public class LastSeenCommand extends CommandBase {
         long pastDays = DAYS.between(lastSeenDate, now());
 
         if (!onlineTimeService.isInAVoiceChannelSession(user.getId())) {
-            event.replyEmbeds(javaBot.getEmbedUtils().getEmbedMessageByText(
+            event.replyEmbeds(getEmbedMessageByText(
                     user.getUserName() + " war zuletzt am " + lastSeenDate.format(ofPattern("dd.MM.yyyy")) + " um " + lastSeenDate.format(ofPattern("HH:mm:ss")) + " Uhr online. Das ist " + pastDays + " Tage her.", MESSAGE)).queue();
         } else {
-            event.replyEmbeds(javaBot.getEmbedUtils().getEmbedMessageByText(
+            event.replyEmbeds(getEmbedMessageByText(
                     user.getUserName() + " ist im Moment in einem Voice-Channel online.", MESSAGE)).queue();
         }
     }

@@ -26,6 +26,7 @@ import static com.google.common.collect.ImmutableList.of;
 import static de.kifo.common.api.model.HistoryEntry.Type.SONG_PLAY;
 import static de.kifo.common.enums.exception.ExceptionType.NOT_IN_SPEECH_CHANNEL;
 import static de.kifo.common.enums.message.Message.MessageType.MESSAGE;
+import static de.kifo.common.util.EmbedUtils.getEmbedMessageByText;
 import static java.lang.System.currentTimeMillis;
 import static java.util.Comparator.comparing;
 import static java.util.Objects.isNull;
@@ -48,7 +49,7 @@ public class PlayCommand extends CommandBase {
         GuildVoiceState guildVoiceState = member.getVoiceState();
 
         if (isNull(guildVoiceState) || isNull(guildVoiceState.getChannel()) || isNull(guildVoiceState.getChannel().asVoiceChannel())) {
-            throw new CommandException(NOT_IN_SPEECH_CHANNEL, event, javaBot);
+            throw new CommandException(NOT_IN_SPEECH_CHANNEL, event);
         }
 
         VoiceChannel voiceChannel = guildVoiceState.getChannel().asVoiceChannel();
@@ -60,7 +61,7 @@ public class PlayCommand extends CommandBase {
         if (!url.startsWith("http")) {
             url = "ytsearch:" + url + " audio";
         }
-        event.replyEmbeds(javaBot.getEmbedUtils().getEmbedMessageByText("Suche nach dem Titel...", MESSAGE)).queue();
+        event.replyEmbeds(getEmbedMessageByText("Suche nach dem Titel...", MESSAGE)).queue();
 
         playerManager.play(event.getGuild(), url, member.getUser().getIdLong());
         map.put(voiceChannel.getGuild().getIdLong(), textChannel);

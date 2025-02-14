@@ -40,7 +40,7 @@ public class SongListCommand extends CommandBase {
         GuildVoiceState guildVoiceState = member.getVoiceState();
 
         if (isNull(guildVoiceState) || isNull(guildVoiceState.getChannel()) || isNull(guildVoiceState.getChannel().asVoiceChannel())) {
-            throw new CommandException(NOT_IN_SPEECH_CHANNEL, event, javaBot);
+            throw new CommandException(NOT_IN_SPEECH_CHANNEL, event);
         }
 
         PlayerManager playerManager = javaBot.getPlayerManager();

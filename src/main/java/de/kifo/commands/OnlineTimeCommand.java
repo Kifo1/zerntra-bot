@@ -21,6 +21,7 @@ import static de.kifo.JavaBot.onlineTimeService;
 import static de.kifo.common.api.model.VoiceChannelOnlineSession.TimePeriod.LIFETIME;
 import static de.kifo.common.enums.exception.ExceptionType.ONLINE_TIME_WRONG_TIME_PERIOD;
 import static de.kifo.common.enums.message.Message.MessageType.MESSAGE;
+import static de.kifo.common.util.EmbedUtils.getEmbedMessageByText;
 import static de.kifo.common.util.StringUtils.getTimeStringBySeconds;
 import static java.util.Arrays.stream;
 import static java.util.Objects.isNull;
@@ -44,13 +45,13 @@ public class OnlineTimeCommand extends CommandBase {
                 .findFirst().orElse(null);
 
         if (isNull(timePeriod)) {
-            throw new CommandException(ONLINE_TIME_WRONG_TIME_PERIOD, event, javaBot);
+            throw new CommandException(ONLINE_TIME_WRONG_TIME_PERIOD, event);
         }
 
         long onlineSeconds = onlineTimeService.getVoiceOnlineTime(userId, timePeriod);
         String timeString = getTimeStringBySeconds(onlineSeconds);
 
-        event.replyEmbeds(javaBot.getEmbedUtils().getEmbedMessageByText(
+        event.replyEmbeds(getEmbedMessageByText(
                 "Du warst " + (timePeriod == LIFETIME ? "insgesamt " : "in den letzten " + timePeriod.getDays() + " Tagen ") +
                         timeString + " auf dem Rasselbande Discord online.", MESSAGE)).queue();
     }

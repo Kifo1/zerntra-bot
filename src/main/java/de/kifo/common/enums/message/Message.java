@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import java.awt.Color;
 
 import static de.kifo.common.enums.message.Message.MessageType.ERROR;
+import static de.kifo.common.util.EmbedUtils.getEmbedMessageByText;
 import static java.awt.Color.MAGENTA;
 import static java.awt.Color.ORANGE;
 import static java.awt.Color.RED;
@@ -22,7 +23,7 @@ public enum Message {
     private final String message;
 
     public void sendToTextChannel(TextChannel textChannel, JavaBot javaBot) {
-        textChannel.sendMessageEmbeds(javaBot.getEmbedUtils().getEmbedMessageByText(this.message, this.messageType)).queue();
+        textChannel.sendMessageEmbeds(getEmbedMessageByText(this.message, this.messageType)).queue();
     }
 
     @Getter

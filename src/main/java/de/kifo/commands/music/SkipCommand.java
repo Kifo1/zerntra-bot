@@ -26,6 +26,7 @@ import static com.google.common.collect.ImmutableList.of;
 import static de.kifo.common.enums.exception.ExceptionType.NOT_IN_SPEECH_CHANNEL;
 import static de.kifo.common.enums.exception.ExceptionType.SKIP_INDEX_NOT_FOUND;
 import static de.kifo.common.enums.message.Message.MessageType.MESSAGE;
+import static de.kifo.common.util.EmbedUtils.getEmbedMessageByText;
 import static java.lang.Math.min;
 import static java.lang.String.valueOf;
 import static java.util.Objects.isNull;
@@ -47,7 +48,7 @@ public class SkipCommand extends CommandBase {
         GuildVoiceState guildVoiceState = member.getVoiceState();
 
         if (isNull(guildVoiceState) || isNull(guildVoiceState.getChannel()) || isNull(guildVoiceState.getChannel().asVoiceChannel())) {
-            throw new CommandException(NOT_IN_SPEECH_CHANNEL, event, javaBot);
+            throw new CommandException(NOT_IN_SPEECH_CHANNEL, event);
         }
 
         PlayerManager playerManager = javaBot.getPlayerManager();
@@ -56,7 +57,7 @@ public class SkipCommand extends CommandBase {
 
         if (options.isEmpty() || isNull(options.get(0))) {
             audioPlayer.stopTrack();
-            event.replyEmbeds(javaBot.getEmbedUtils().getEmbedMessageByText("Das Lied wird übersprungen...", MESSAGE)).queue();
+            event.replyEmbeds(getEmbedMessageByText("Das Lied wird übersprungen...", MESSAGE)).queue();
         } else {
             BlockingQueue<AudioTrack> tracks = guildMusicManager.getTrackScheduler().getQueue();
             int number = options.get(0).getAsInt();
@@ -64,11 +65,11 @@ public class SkipCommand extends CommandBase {
             if (tracks.size() >= number) {
                 AudioTrack track = (AudioTrack) tracks.toArray()[number - 1];
                 guildMusicManager.getTrackScheduler().getQueue().remove(track);
-                event.replyEmbeds(javaBot.getEmbedUtils().getEmbedMessageByText(
+                event.replyEmbeds(getEmbedMessageByText(
                         track.getInfo().title + " von " + track.getInfo().author +
                         " wurde aus der Playlist entfernt.", MESSAGE)).queue();
             } else {
-                throw new CommandException(SKIP_INDEX_NOT_FOUND, event, javaBot);
+                throw new CommandException(SKIP_INDEX_NOT_FOUND, event);
             }
         }
     }
