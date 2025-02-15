@@ -1,6 +1,5 @@
 package de.kifo.common.enums.message;
 
-import de.kifo.JavaBot;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
@@ -22,7 +21,7 @@ public enum Message {
     private final MessageType messageType;
     private final String message;
 
-    public void sendToTextChannel(TextChannel textChannel, JavaBot javaBot) {
+    public void sendToTextChannel(TextChannel textChannel) {
         textChannel.sendMessageEmbeds(getEmbedMessageByText(this.message, this.messageType)).queue();
     }
 

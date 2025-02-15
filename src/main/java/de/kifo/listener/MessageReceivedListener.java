@@ -21,7 +21,7 @@ public class MessageReceivedListener extends ListenerAdapter {
         MessageChannelUnion messageChannel = event.getChannel();
 
         if (messageChannel.getType().equals(TEXT) && isWrongCommandSyntax(message)) {
-            WRONG_COMMAND_SYNTAX_HELP.sendToTextChannel(messageChannel.asTextChannel(), javaBot);
+            WRONG_COMMAND_SYNTAX_HELP.sendToTextChannel(messageChannel.asTextChannel());
         }
     }
 
