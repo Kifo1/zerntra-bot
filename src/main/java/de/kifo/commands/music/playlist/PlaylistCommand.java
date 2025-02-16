@@ -94,11 +94,11 @@ public class PlaylistCommand extends CommandBase {
                 }
                 EmbedBuilder builder = new EmbedBuilder();
                 builder.setColor(MAGENTA);
-                AtomicInteger songNumber = new AtomicInteger(1);
 
                 if (playlist.getSongs().isEmpty()) {
                     builder.addField("Die Playlist ist leer.", "Nutze /modifyplaylist um Lieder hinzuzufügen.", false);
                 } else {
+                    AtomicInteger songNumber = new AtomicInteger(1);
                     playlist.getSongs().forEach(songName -> {
                         builder.addField("Lied " + songNumber + ": ", songName, false);
                         songNumber.getAndIncrement();
