@@ -55,11 +55,7 @@ public class Registry {
                 successCases.getAndIncrement();
             } catch (Exception e) {
                 System.out.println("Failed to register command: " + commandClass.getSimpleName());
-                try {
-                    throw e;
-                } catch (Exception ex) {
-                    throw new RuntimeException(ex);
-                }
+                e.printStackTrace();
             }
         });
         System.out.println(format("Registered Commands: %d/%d", successCases.get(), commandClasses.size()));
