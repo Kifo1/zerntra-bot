@@ -31,6 +31,7 @@ public class JavaBot {
     private PlayerManager playerManager;
     private Registry registry;
 
+    public static final String BOT_API_KEY = "MTA1OTQzMTY0NDA4MTE3MjQ4MQ.GFY5Eo.TcwNJzrB9aSYt_1fYTd6OgHb6BpWgrBFfsAqP4";
     public static OnlineTimeService onlineTimeService;
 
     public JavaBot() {
@@ -44,7 +45,7 @@ public class JavaBot {
 
     private void setUpBot() {
         api = injector.getInstance(API.class);
-        jda = createDefault("MTA1OTQzMTY0NDA4MTE3MjQ4MQ.GFY5Eo.TcwNJzrB9aSYt_1fYTd6OgHb6BpWgrBFfsAqP4")
+        jda = createDefault(BOT_API_KEY)
                 .setMemberCachePolicy(ALL)
                 .enableCache(ONLINE_STATUS)
                 .enableIntents(MESSAGE_CONTENT)

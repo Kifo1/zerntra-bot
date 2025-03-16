@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.List;
 
 import static com.google.gson.reflect.TypeToken.getParameterized;
+import static de.kifo.JavaBot.BOT_API_KEY;
 import static java.lang.Boolean.parseBoolean;
 import static java.lang.String.format;
 import static java.lang.System.currentTimeMillis;
@@ -87,7 +88,7 @@ public class API {
         Song song = getSongListByUserId(usedId).stream()
                 .filter(s -> s.getName().equalsIgnoreCase(name))
                 .findFirst()
-                .orElseGet(() -> new Song(1L, usedId, 0L, currentTimeMillis(), name));
+                .orElseGet(() -> new Song(null, usedId, 0L, currentTimeMillis(), name));
 
         song.setTimesPlayed(song.getTimesPlayed() + 1);
         song.setLastPlayDate(currentTimeMillis());
@@ -166,10 +167,12 @@ public class API {
         try {
             HttpRequest httpRequest = newBuilder()
                     .uri(new URI(API_BASE_URL + uri))
+                    .header("X-API-KEY", BOT_API_KEY)
                     .GET()
                     .build();
             return newHttpClient().send(httpRequest, HttpResponse.BodyHandlers.ofString()).body();
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return "";
         }
     }
@@ -179,10 +182,12 @@ public class API {
             HttpRequest httpRequest = newBuilder()
                     .uri(new URI(API_BASE_URL + uri))
                     .header("Content-Type", "application/json")
+                    .header("X-API-KEY", BOT_API_KEY)
                     .POST(HttpRequest.BodyPublishers.ofString(json))
                     .build();
             return newHttpClient().send(httpRequest, HttpResponse.BodyHandlers.ofString()).body();
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return "";
         }
     }
@@ -192,10 +197,12 @@ public class API {
             HttpRequest httpRequest = newBuilder()
                     .uri(new URI(API_BASE_URL + uri))
                     .header("Content-Type", "application/json")
+                    .header("X-API-KEY", BOT_API_KEY)
                     .PUT(HttpRequest.BodyPublishers.ofString(json))
                     .build();
             return newHttpClient().send(httpRequest, HttpResponse.BodyHandlers.ofString()).body();
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return "";
         }
     }
@@ -204,11 +211,12 @@ public class API {
         try {
             HttpRequest httpRequest = newBuilder()
                     .uri(new URI(API_BASE_URL + uri))
+                    .header("X-API-KEY", BOT_API_KEY)
                     .DELETE()
                     .build();
-
             return newHttpClient().send(httpRequest, HttpResponse.BodyHandlers.ofString()).body();
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return "";
         }
     }

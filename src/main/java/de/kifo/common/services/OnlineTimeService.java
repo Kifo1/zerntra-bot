@@ -18,7 +18,7 @@ public class OnlineTimeService {
 
     public void startVoiceOnlineSession(Long userId) {
         voiceChannelOnlineSessions.putIfAbsent(userId,
-                new VoiceChannelOnlineSession(0L, javaBot.getApi().getUserById(userId), currentTimeMillis(), 0L));
+                new VoiceChannelOnlineSession(null, javaBot.getApi().getUserById(userId), currentTimeMillis(), 0L));
     }
 
     public void stopVoiceOnlineSession(Long userId) {

@@ -71,7 +71,7 @@ public class PlaylistCommand extends CommandBase {
                     if (publicAccess.isEmpty()) {
                         throw new CommandException(PLAYLIST_ACCESS_MODIFIER_NEEDED, event);
                     }
-                    javaBot.getApi().updatePlaylist(playlistName, new Playlist(0L, event.getUser().getIdLong(), playlistName, publicAccess.get(), of()));
+                    javaBot.getApi().updatePlaylist(playlistName, new Playlist(null, event.getUser().getIdLong(), playlistName, publicAccess.get(), of()));
                     event.replyEmbeds(getEmbedMessageByText("Du hast die Playlist \"" + playlistName + "\" erfolgreich erstellt.", MESSAGE)).queue();
                 } else {
                     throw new CommandException(PLAYLIST_ALREADY_EXISTS, event);

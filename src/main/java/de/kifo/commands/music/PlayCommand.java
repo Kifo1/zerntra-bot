@@ -66,7 +66,7 @@ public class PlayCommand extends CommandBase {
         playerManager.play(event.getGuild(), url, member.getUser().getIdLong());
         map.put(voiceChannel.getGuild().getIdLong(), textChannel);
 
-        javaBot.getApi().createHistoryEntry(new HistoryEntry(0L, member.getIdLong(), SONG_PLAY, currentTimeMillis(),
+        javaBot.getApi().createHistoryEntry(new HistoryEntry(null, member.getIdLong(), SONG_PLAY, currentTimeMillis(),
                 "Query " + url + ", " + textChannel.getName()));
     }
 
