@@ -10,4 +10,5 @@ public class PlaylistSong {
     private Long id;
     private String name;
     private String url;
+    private Playlist playlist;
 }
