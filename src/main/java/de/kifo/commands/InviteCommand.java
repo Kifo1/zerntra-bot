@@ -1,5 +1,6 @@
 package de.kifo.commands;
 
+import com.google.inject.Inject;
 import de.kifo.JavaBot;
 import de.kifo.commands.handle.CommandBase;
 import net.dv8tion.jda.api.entities.Member;
@@ -9,7 +10,6 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import org.jetbrains.annotations.NotNull;
 
-import javax.inject.Inject;
 import java.util.List;
 
 @CommandBase.BotCommand(name = "invite", description = "Erstelle einen Invite-Link")

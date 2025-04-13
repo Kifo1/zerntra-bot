@@ -1,55 +1,68 @@
 package de.kifo.common.api;
 
 import com.google.gson.Gson;
+import de.kifo.common.api.model.HistoryEntry;
 import de.kifo.common.api.model.Playlist;
 import de.kifo.common.api.model.Song;
 import de.kifo.common.api.model.User;
+import de.kifo.common.api.model.VoiceChannelOnlineSession;
 
 import java.net.URI;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Collection;
 import java.util.List;
 
 import static com.google.gson.reflect.TypeToken.getParameterized;
-import static java.lang.Boolean.valueOf;
+import static de.kifo.JavaBot.BOT_API_KEY;
+import static java.lang.Boolean.parseBoolean;
+import static java.lang.String.format;
 import static java.lang.System.currentTimeMillis;
 import static java.net.http.HttpClient.newHttpClient;
 import static java.net.http.HttpRequest.newBuilder;
+import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
+import static java.util.Optional.ofNullable;
 
 public class API {
+
+    private final String API_BASE_URL = "http://91.99.27.95:8080";
 
     /**
      * {@link User}
      */
 
-    public void createUser(User user) {
-        boolean userPresent = getAllUsers().stream()
-                .map(User::getId)
-                .filter(userId -> userId.equals(user.getId()))
-                .findFirst()
-                .isPresent();
+    public void updateUser(User user) {
+        boolean userPresent = nonNull(getUserById(user.getId()));
 
-        if (!userPresent) {
-            String jsonRequest = getJsonByObject(user);
-            sendPostRequest("http://localhost:8080/javabot/user/add", jsonRequest);
+        String jsonRequest = getJsonByObject(user);
+        if (userPresent) {
+            sendPutRequest("/javabot/user/update", jsonRequest);
         }
     }
 
-    public void updateUser(User user) {
-        String jsonRequest = getJsonByObject(user);
-        sendPutRequest("http://localhost:8080/javabot/user/update", jsonRequest);
+    public void createUserIfNotPresent(Long userId, String name) {
+        String jsonRequest = getJsonByObject(new User(userId, name, null, currentTimeMillis(), null));
+
+        if (isNull(getUserById(userId))) {
+            sendPostRequest("/javabot/user/add", jsonRequest);
+        }
     }
 
     public User getUserById(Long id) {
-        return getObjectByJson(sendGetRequest("http://localhost:8080/javabot/user/get/" + id), User.class);
+        return getObjectByJson(sendGetRequest("/javabot/user/get/" + id), User.class);
+    }
+
+    public boolean isUserRegistered(User user) {
+        return getObjectByJson(sendPutRequest("/javabot/user/registered", getJsonByObject(user)), Boolean.class);
     }
 
     public List<User> getAllUsers() {
-        return getObjectListByJson(sendGetRequest("http://localhost:8080/javabot/user/get-all"), User.class);
+        return getObjectListByJson(sendGetRequest("/javabot/user/get-all"), User.class);
     }
 
     public void deleteUser(Long id) {
-        sendDeleteRequest("http://localhost:8080/javabot/user/remove/" + id);
+        sendDeleteRequest("/javabot/user/remove/" + id);
     }
 
     /**
@@ -64,24 +77,24 @@ public class API {
      */
 
     public List<Song> getSongListByUserId(Long userId) {
-        return getObjectListByJson(sendGetRequest("http://localhost:8080/javabot/song/get-all/" + userId), Song.class);
+        return getObjectListByJson(sendGetRequest("/javabot/song/get-all/" + userId), Song.class);
     }
 
     public List<Song> getAllSongs() {
-        return getObjectListByJson(sendGetRequest("http://localhost:8080/javabot/song/get-all"), Song.class);
+        return getObjectListByJson(sendGetRequest("/javabot/song/get-all"), Song.class);
     }
 
     public void updateSong(Long usedId, String name) {
         Song song = getSongListByUserId(usedId).stream()
                 .filter(s -> s.getName().equalsIgnoreCase(name))
                 .findFirst()
-                .orElseGet(() -> new Song(1L, usedId, 0L, currentTimeMillis(), name));
+                .orElseGet(() -> new Song(null, usedId, 0L, currentTimeMillis(), name));
 
         song.setTimesPlayed(song.getTimesPlayed() + 1);
         song.setLastPlayDate(currentTimeMillis());
 
         String jsonRequest = getJsonByObject(song);
-        sendPutRequest("http://localhost:8080/javabot/song/update/" + song.getUserId(), jsonRequest);
+        sendPutRequest("/javabot/song/update/" + song.getUserId(), jsonRequest);
     }
 
     /**
@@ -89,19 +102,47 @@ public class API {
      */
 
     public Playlist getPlaylistByName(String name) {
-        return getObjectByJson(sendGetRequest("http://localhost:8080/javabot/playlist/get/" + name), Playlist.class);
+        return getObjectByJson(sendGetRequest("/javabot/playlist/get/" + name), Playlist.class);
     }
 
     public List<Playlist> getPlaylistsListByUserId(Long userId) {
-        return getObjectListByJson(sendGetRequest("http://localhost:8080/javabot/playlist/get-all/" + userId), Playlist.class);
+        return getObjectListByJson(sendGetRequest("/javabot/playlist/get-all/" + userId), Playlist.class);
     }
 
     public boolean updatePlaylist(String name, Playlist playlist) {
-        return valueOf(sendPutRequest("http://localhost:8080/javabot/playlist/update/" + name, getJsonByObject(playlist)));
+        return parseBoolean(sendPutRequest("/javabot/playlist/update/" + name, getJsonByObject(playlist)));
     }
 
     public boolean deletePlaylist(String name) {
-        return valueOf(sendDeleteRequest("http://localhost:8080/javabot/playlist/delete/" + name));
+        return parseBoolean(sendDeleteRequest("/javabot/playlist/delete/" + name));
+    }
+
+    /**
+     * {@link HistoryEntry}
+     */
+
+    public boolean createHistoryEntry(HistoryEntry historyEntry) {
+        return parseBoolean(sendPutRequest("/javabot/history/" + historyEntry.getUserId(), getJsonByObject(historyEntry)));
+    }
+
+    public Collection<HistoryEntry> getHistoryEntriesByUserId(Long userId) {
+        return getObjectListByJson("/javabot/history/" + userId, HistoryEntry.class);
+    }
+
+    /**
+     *  {@link VoiceChannelOnlineSession}
+     */
+
+    public void addVoiceChannelOnlineSessionToUser(Long userId, VoiceChannelOnlineSession session) {
+        String jsonRequest = getJsonByObject(session);
+        sendPutRequest("/javabot/user/voice-session/" + userId, jsonRequest);
+    }
+
+    public long getVoiceSessionSecondsForTimePeriod(Long userId, VoiceChannelOnlineSession.TimePeriod timePeriod) {
+        String uri = format("/javabot/user/voice-session/%d?timePeriod=%s", userId, timePeriod.name());
+        String response = sendGetRequest(uri);
+
+        return ofNullable(getObjectByJson(response, Long.class)).orElse(-1L);
     }
 
     /**
@@ -125,11 +166,13 @@ public class API {
     private String sendGetRequest(String uri) {
         try {
             HttpRequest httpRequest = newBuilder()
-                    .uri(new URI(uri))
+                    .uri(new URI(API_BASE_URL + uri))
+                    .header("X-API-KEY", BOT_API_KEY)
                     .GET()
                     .build();
             return newHttpClient().send(httpRequest, HttpResponse.BodyHandlers.ofString()).body();
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return "";
         }
     }
@@ -137,12 +180,14 @@ public class API {
     private String sendPostRequest(String uri, String json) {
         try {
             HttpRequest httpRequest = newBuilder()
-                    .uri(new URI(uri))
+                    .uri(new URI(API_BASE_URL + uri))
                     .header("Content-Type", "application/json")
+                    .header("X-API-KEY", BOT_API_KEY)
                     .POST(HttpRequest.BodyPublishers.ofString(json))
                     .build();
             return newHttpClient().send(httpRequest, HttpResponse.BodyHandlers.ofString()).body();
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return "";
         }
     }
@@ -150,12 +195,14 @@ public class API {
     private String sendPutRequest(String uri, String json) {
         try {
             HttpRequest httpRequest = newBuilder()
-                    .uri(new URI(uri))
+                    .uri(new URI(API_BASE_URL + uri))
                     .header("Content-Type", "application/json")
+                    .header("X-API-KEY", BOT_API_KEY)
                     .PUT(HttpRequest.BodyPublishers.ofString(json))
                     .build();
             return newHttpClient().send(httpRequest, HttpResponse.BodyHandlers.ofString()).body();
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return "";
         }
     }
@@ -163,12 +210,13 @@ public class API {
     private String sendDeleteRequest(String uri) {
         try {
             HttpRequest httpRequest = newBuilder()
-                    .uri(new URI(uri))
+                    .uri(new URI(API_BASE_URL + uri))
+                    .header("X-API-KEY", BOT_API_KEY)
                     .DELETE()
                     .build();
-
             return newHttpClient().send(httpRequest, HttpResponse.BodyHandlers.ofString()).body();
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return "";
         }
     }

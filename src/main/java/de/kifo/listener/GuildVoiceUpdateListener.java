@@ -1,14 +1,18 @@
 package de.kifo.listener;
 
+import com.google.inject.Inject;
 import de.kifo.JavaBot;
-import de.kifo.common.api.model.User;
+import de.kifo.common.api.model.HistoryEntry;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
-import javax.inject.Inject;
-
+import static de.kifo.JavaBot.onlineTimeService;
+import static de.kifo.common.api.model.HistoryEntry.Type.CHANNEL_CHANGE;
+import static de.kifo.common.api.model.HistoryEntry.Type.CHANNEL_JOIN;
+import static de.kifo.common.api.model.HistoryEntry.Type.CHANNEL_QUIT;
 import static java.lang.System.currentTimeMillis;
+import static java.util.Objects.nonNull;
 
 public class GuildVoiceUpdateListener extends ListenerAdapter {
 
@@ -17,6 +21,26 @@ public class GuildVoiceUpdateListener extends ListenerAdapter {
 
     @Override
     public void onGuildVoiceUpdate(@NotNull GuildVoiceUpdateEvent event) {
-        javaBot.getApi().updateUser(new User(event.getMember().getUser().getIdLong(), event.getMember().getUser().getName(), currentTimeMillis()));
+        Long userId = event.getMember().getIdLong();
+
+        javaBot.getApi().createUserIfNotPresent(userId, event.getMember().getUser().getName());
+
+        HistoryEntry.Type type;
+        String information;
+        if (nonNull(event.getChannelJoined()) && nonNull(event.getChannelLeft())) {
+            type = CHANNEL_CHANGE;
+            information = event.getChannelLeft().getName() + " -> " + event.getChannelJoined().getName();
+        } else {
+            type = nonNull(event.getChannelJoined()) ? CHANNEL_JOIN : CHANNEL_QUIT;
+            information = nonNull(event.getChannelJoined()) ? event.getChannelJoined().getName() : event.getChannelLeft().getName();
+        }
+
+        if (type == CHANNEL_JOIN) {
+            onlineTimeService.startVoiceOnlineSession(userId);
+        } else if (type == CHANNEL_QUIT) {
+            onlineTimeService.stopVoiceOnlineSession(userId);
+        }
+
+        javaBot.getApi().createHistoryEntry(new HistoryEntry(null, userId, type, currentTimeMillis(), information));
     }
 }

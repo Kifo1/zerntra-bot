@@ -1,8 +1,10 @@
 package de.kifo.commands;
 
+import com.google.inject.Inject;
 import de.kifo.JavaBot;
 import de.kifo.commands.handle.CommandBase;
 import de.kifo.common.api.model.User;
+import de.kifo.common.exceptions.CommandException;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
@@ -11,12 +13,13 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import org.jetbrains.annotations.NotNull;
 
-import javax.inject.Inject;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static de.kifo.common.util.EmbedUtils.MessageType.ERROR;
-import static de.kifo.common.util.EmbedUtils.MessageType.MESSAGE;
+import static de.kifo.JavaBot.onlineTimeService;
+import static de.kifo.common.enums.exception.ExceptionType.USER_HAS_NO_DATA;
+import static de.kifo.common.enums.message.Message.MessageType.MESSAGE;
+import static de.kifo.common.util.EmbedUtils.getEmbedMessageByText;
 import static java.time.Instant.ofEpochMilli;
 import static java.time.LocalDateTime.now;
 import static java.time.ZoneId.systemDefault;
@@ -37,21 +40,25 @@ public class LastSeenCommand extends CommandBase {
     }
 
     @Override
-    public void execute(Member member, TextChannel textChannel, List<OptionMapping> options, SlashCommandInteractionEvent event) {
+    public void execute(Member member, TextChannel textChannel, List<OptionMapping> options, SlashCommandInteractionEvent event) throws CommandException {
         long requestedUserId = options.get(0).getAsUser().getIdLong();
         User user = javaBot.getApi().getUserById(requestedUserId);
 
         if (isNull(user.getLastOnTime())) {
-            event.replyEmbeds(javaBot.getEmbedUtils().getEmbedMessageByText("Es konnten keine Daten zu diesem User gefunden werden.", ERROR)).queue();
-            return;
+            throw new CommandException(USER_HAS_NO_DATA, event);
         }
 
         long lastOnTime = user.getLastOnTime();
         LocalDateTime lastSeenDate = ofEpochMilli(lastOnTime).atZone(systemDefault()).toLocalDateTime();
         long pastDays = DAYS.between(lastSeenDate, now());
 
-        event.replyEmbeds(javaBot.getEmbedUtils().getEmbedMessageByText(
-                user.getUserName() + " war zuletzt am " + lastSeenDate.format(ofPattern("dd.MM.yyyy")) + " um " + lastSeenDate.format(ofPattern("HH:mm:ss")) + " Uhr online. Das ist " + pastDays + " Tage her.", MESSAGE)).queue();
+        if (!onlineTimeService.isInAVoiceChannelSession(user.getId())) {
+            event.replyEmbeds(getEmbedMessageByText(
+                    user.getUserName() + " war zuletzt am " + lastSeenDate.format(ofPattern("dd.MM.yyyy")) + " um " + lastSeenDate.format(ofPattern("HH:mm:ss")) + " Uhr online. Das ist " + pastDays + " Tage her.", MESSAGE)).queue();
+        } else {
+            event.replyEmbeds(getEmbedMessageByText(
+                    user.getUserName() + " ist im Moment in einem Voice-Channel online.", MESSAGE)).queue();
+        }
     }
 
     @Override

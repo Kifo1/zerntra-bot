@@ -1,7 +1,9 @@
 package de.kifo.commands.music;
 
+import com.google.inject.Inject;
 import de.kifo.JavaBot;
 import de.kifo.commands.handle.CommandBase;
+import de.kifo.common.api.model.HistoryEntry;
 import de.kifo.common.api.model.Song;
 import de.kifo.common.exceptions.CommandException;
 import de.kifo.common.music.PlayerManager;
@@ -17,13 +19,15 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.managers.AudioManager;
 import org.jetbrains.annotations.NotNull;
 
-import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.List;
 
 import static com.google.common.collect.ImmutableList.of;
-import static de.kifo.common.enums.exception.CommandExceptionType.NOT_IN_SPEECH_CHANNEL;
-import static de.kifo.common.util.EmbedUtils.MessageType.MESSAGE;
+import static de.kifo.common.api.model.HistoryEntry.Type.SONG_PLAY;
+import static de.kifo.common.enums.exception.ExceptionType.NOT_IN_SPEECH_CHANNEL;
+import static de.kifo.common.enums.message.Message.MessageType.MESSAGE;
+import static de.kifo.common.util.EmbedUtils.getEmbedMessageByText;
+import static java.lang.System.currentTimeMillis;
 import static java.util.Comparator.comparing;
 import static java.util.Objects.isNull;
 import static net.dv8tion.jda.api.interactions.commands.OptionType.STRING;
@@ -45,7 +49,7 @@ public class PlayCommand extends CommandBase {
         GuildVoiceState guildVoiceState = member.getVoiceState();
 
         if (isNull(guildVoiceState) || isNull(guildVoiceState.getChannel()) || isNull(guildVoiceState.getChannel().asVoiceChannel())) {
-            throw new CommandException(NOT_IN_SPEECH_CHANNEL, event, javaBot);
+            throw new CommandException(NOT_IN_SPEECH_CHANNEL, event);
         }
 
         VoiceChannel voiceChannel = guildVoiceState.getChannel().asVoiceChannel();
@@ -55,12 +59,15 @@ public class PlayCommand extends CommandBase {
 
         String url = options.get(0).getAsString();
         if (!url.startsWith("http")) {
-            url = "scsearch:" + url + " audio";
+            url = "ytsearch:" + url + " audio";
         }
-        event.replyEmbeds(javaBot.getEmbedUtils().getEmbedMessageByText("Suche nach dem Titel...", MESSAGE)).queue();
+        event.replyEmbeds(getEmbedMessageByText("Suche nach dem Titel...", MESSAGE)).queue();
 
         playerManager.play(event.getGuild(), url, member.getUser().getIdLong());
         map.put(voiceChannel.getGuild().getIdLong(), textChannel);
+
+        javaBot.getApi().createHistoryEntry(new HistoryEntry(null, member.getIdLong(), SONG_PLAY, currentTimeMillis(),
+                "Query " + url + ", " + textChannel.getName()));
     }
 
     @Override

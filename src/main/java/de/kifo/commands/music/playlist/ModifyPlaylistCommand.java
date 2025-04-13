@@ -1,5 +1,6 @@
 package de.kifo.commands.music.playlist;
 
+import com.google.inject.Inject;
 import de.kifo.JavaBot;
 import de.kifo.commands.handle.CommandBase;
 import de.kifo.common.api.model.Playlist;
@@ -15,16 +16,16 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import org.jetbrains.annotations.NotNull;
 
-import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static de.kifo.common.enums.exception.CommandExceptionType.NO_PERMISSION;
-import static de.kifo.common.enums.exception.CommandExceptionType.PLAYLIST_INDEX_NOT_FOUND;
-import static de.kifo.common.enums.exception.CommandExceptionType.PLAYLIST_NOT_FOUND;
-import static de.kifo.common.enums.exception.CommandExceptionType.PLAYLIST_SONG_NOT_FOUND;
-import static de.kifo.common.util.EmbedUtils.MessageType.MESSAGE;
+import static de.kifo.common.enums.exception.ExceptionType.NO_PERMISSION;
+import static de.kifo.common.enums.exception.ExceptionType.PLAYLIST_INDEX_NOT_FOUND;
+import static de.kifo.common.enums.exception.ExceptionType.PLAYLIST_NOT_FOUND;
+import static de.kifo.common.enums.exception.ExceptionType.PLAYLIST_SONG_NOT_FOUND;
+import static de.kifo.common.enums.message.Message.MessageType.MESSAGE;
+import static de.kifo.common.util.EmbedUtils.getEmbedMessageByText;
 import static java.util.Comparator.comparing;
 import static java.util.List.of;
 import static java.util.Objects.isNull;
@@ -52,30 +53,30 @@ public class ModifyPlaylistCommand extends CommandBase {
         Playlist playlist = javaBot.getApi().getPlaylistByName(playlistName);
 
         if (isNull(playlist)) {
-            throw new CommandException(PLAYLIST_NOT_FOUND, event, javaBot);
+            throw new CommandException(PLAYLIST_NOT_FOUND, event);
         }
         if (!playlist.getPublicAccess() && playlist.getUserId() != event.getUser().getIdLong()) {
-            throw new CommandException(NO_PERMISSION, event, javaBot);
+            throw new CommandException(NO_PERMISSION, event);
         }
         int index = options.size() >= 4 ? (options.get(3).getAsInt() - 1) : playlist.getSongs().size();
 
         if (index < 0 || index > playlist.getSongs().size()) {
-            throw new CommandException(PLAYLIST_INDEX_NOT_FOUND, event, javaBot);
+            throw new CommandException(PLAYLIST_INDEX_NOT_FOUND, event);
         }
 
         switch (action) {
             case ADD_SONG -> {
                 ((List<String>) playlist.getSongs()).add(index, songName);
                 javaBot.getApi().updatePlaylist(playlist.getName(), playlist);
-                event.replyEmbeds(javaBot.getEmbedUtils().getEmbedMessageByText("Du hast " + songName + " zu der Playlist " + playlist.getName() +  " an " + (index + 1) + ". Stelle hinzugefügt.", MESSAGE)).queue();
+                event.replyEmbeds(getEmbedMessageByText("Du hast " + songName + " zu der Playlist " + playlist.getName() +  " an " + (index + 1) + ". Stelle hinzugefügt.", MESSAGE)).queue();
             }
             case REMOVE_SONG -> {
                 if (!playlist.getSongs().stream().filter(song -> song.equalsIgnoreCase(songName)).findAny().isPresent()) {
-                    throw new CommandException(PLAYLIST_SONG_NOT_FOUND, event, javaBot);
+                    throw new CommandException(PLAYLIST_SONG_NOT_FOUND, event);
                 }
                 playlist.getSongs().removeIf(song -> song.equalsIgnoreCase(songName));
                 javaBot.getApi().updatePlaylist(playlist.getName(), playlist);
-                event.replyEmbeds(javaBot.getEmbedUtils().getEmbedMessageByText("Du hast " + songName + " aus der Playlist " + playlist.getName() +  " entfernt.", MESSAGE)).queue();
+                event.replyEmbeds(getEmbedMessageByText("Du hast " + songName + " aus der Playlist " + playlist.getName() +  " entfernt.", MESSAGE)).queue();
             }
         }
     }

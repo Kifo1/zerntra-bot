@@ -1,5 +1,6 @@
 package de.kifo.commands.music;
 
+import com.google.inject.Inject;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import de.kifo.JavaBot;
@@ -16,12 +17,11 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import org.jetbrains.annotations.NotNull;
 
-import javax.inject.Inject;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static de.kifo.common.enums.exception.CommandExceptionType.NOT_IN_SPEECH_CHANNEL;
+import static de.kifo.common.enums.exception.ExceptionType.NOT_IN_SPEECH_CHANNEL;
 import static java.awt.Color.MAGENTA;
 import static java.util.Objects.isNull;
 
@@ -40,7 +40,7 @@ public class SongListCommand extends CommandBase {
         GuildVoiceState guildVoiceState = member.getVoiceState();
 
         if (isNull(guildVoiceState) || isNull(guildVoiceState.getChannel()) || isNull(guildVoiceState.getChannel().asVoiceChannel())) {
-            throw new CommandException(NOT_IN_SPEECH_CHANNEL, event, javaBot);
+            throw new CommandException(NOT_IN_SPEECH_CHANNEL, event);
         }
 
         PlayerManager playerManager = javaBot.getPlayerManager();

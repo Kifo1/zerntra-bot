@@ -55,11 +55,7 @@ public class Registry {
                 successCases.getAndIncrement();
             } catch (Exception e) {
                 System.out.println("Failed to register command: " + commandClass.getSimpleName());
-                try {
-                    throw e;
-                } catch (Exception ex) {
-                    throw new RuntimeException(ex);
-                }
+                e.printStackTrace();
             }
         });
         System.out.println(format("Registered Commands: %d/%d", successCases.get(), commandClasses.size()));
@@ -71,9 +67,7 @@ public class Registry {
                 .filter(ListenerAdapter.class::isAssignableFrom)
                 .toList();
 
-        listenerClasses.stream()
-                .filter(ListenerAdapter.class::isAssignableFrom)
-                .forEach(listenerClass -> {
+        listenerClasses.forEach(listenerClass -> {
                     jda.addEventListener(this.injector.getInstance(listenerClass));
                     successCases.getAndIncrement();
                 });

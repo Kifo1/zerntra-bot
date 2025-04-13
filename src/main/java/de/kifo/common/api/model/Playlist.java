@@ -9,10 +9,10 @@ import java.util.Collection;
 @AllArgsConstructor
 public class Playlist {
 
-    Long id;
-    Long userId;
-    String name;
-    Boolean publicAccess;
-    Collection<String> songs;
+    private Long id;
+    private Long userId;
+    private String name;
+    private Boolean publicAccess;
+    private Collection<String> songs;
 
 }
