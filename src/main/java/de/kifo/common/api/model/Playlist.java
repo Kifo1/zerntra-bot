@@ -10,9 +10,11 @@ import java.util.Collection;
 public class Playlist {
 
     private Long id;
-    private Long userId;
+    private User owner;
     private String name;
-    private Boolean publicAccess;
-    private Collection<String> songs;
+    private Boolean isPublic;
+    private Collection<User> members;
+    private Collection<User> editAllowedMembers;
+    private Collection<PlaylistSong> playlistSongs;
 
 }
