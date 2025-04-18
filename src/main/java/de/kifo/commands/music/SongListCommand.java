@@ -59,8 +59,10 @@ public class SongListCommand extends CommandBase {
         if (!tracks.isEmpty()) {
             AtomicInteger trackNumber = new AtomicInteger(1);
             tracks.forEach(track -> {
-                builder.addField("Lied " + trackNumber + ": ", track.getInfo().title, false);
-                trackNumber.getAndIncrement();
+                if (trackNumber.get() <= 25) {
+                    builder.addField("Lied " + trackNumber + ": ", track.getInfo().title, false);
+                    trackNumber.getAndIncrement();
+                }
             });
             builder.setFooter("Verwende \"/skip <Nummer>\", um das gewünschte Lied aus der Liste zu entfernen.");
             event.replyEmbeds(builder.build()).queue();

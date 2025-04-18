@@ -40,7 +40,7 @@ public class JavaBot {
         setUpBot();
         handleRegistrations();
 
-        this.onlineTimeService = new OnlineTimeService(this);
+        onlineTimeService = new OnlineTimeService(this);
     }
 
     private void setUpBot() {
