@@ -101,20 +101,12 @@ public class API {
      * {@link Playlist}
      */
 
-    public Playlist getPlaylistByName(String name) {
-        return getObjectByJson(sendGetRequest("/javabot/playlist/get/" + name), Playlist.class);
+    public List<Playlist> getAllPlaylistsByUser(Long userId) {
+        return getObjectListByJson(sendGetRequest("/javabot/playlist/get-by-user/" + userId), Playlist.class);
     }
 
-    public List<Playlist> getPlaylistsListByUserId(Long userId) {
-        return getObjectListByJson(sendGetRequest("/javabot/playlist/get-all/" + userId), Playlist.class);
-    }
-
-    public boolean updatePlaylist(String name, Playlist playlist) {
-        return parseBoolean(sendPutRequest("/javabot/playlist/update/" + name, getJsonByObject(playlist)));
-    }
-
-    public boolean deletePlaylist(String name) {
-        return parseBoolean(sendDeleteRequest("/javabot/playlist/delete/" + name));
+    public Playlist getPlaylist(Long playlistId) {
+        return getObjectByJson(sendGetRequest("/javabot/playlist/get-by-id/" + playlistId), Playlist.class);
     }
 
     /**

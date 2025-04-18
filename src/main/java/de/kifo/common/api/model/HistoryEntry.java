@@ -19,6 +19,7 @@ public class HistoryEntry {
     public enum Type {
 
         SONG_PLAY,
+        PLAYLIST_PLAY,
         COMMAND_USE,
         ONLINE_STATUS_CHANGE,
         CHANNEL_JOIN,

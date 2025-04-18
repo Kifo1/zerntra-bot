@@ -9,11 +9,12 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 
+import java.util.HashMap;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import static de.kifo.commands.music.PlayCommand.map;
 import static de.kifo.common.util.StringUtils.getTimeStringBySeconds;
 import static java.awt.Color.MAGENTA;
 import static java.lang.Thread.sleep;
@@ -28,6 +29,8 @@ public class TrackScheduler extends AudioEventAdapter {
     private final AudioPlayer audioPlayer;
     private final Guild guild;
     private BlockingQueue<AudioTrack> queue = new LinkedBlockingQueue<>();
+
+    public static HashMap<Long, TextChannel> map = new HashMap<>();
 
     @Override
     public void onTrackStart(AudioPlayer player, AudioTrack track) {
