@@ -17,7 +17,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.google.common.collect.ImmutableSet.of;
 import static com.google.common.reflect.ClassPath.from;
-import static java.lang.String.format;
 import static java.util.stream.Collectors.toSet;
 
 @AllArgsConstructor
@@ -58,7 +57,7 @@ public class Registry {
                 e.printStackTrace();
             }
         });
-        System.out.println(format("Registered Commands: %d/%d", successCases.get(), commandClasses.size()));
+        System.out.printf("Registered Commands: %d/%d%n", successCases.get(), commandClasses.size());
     }
 
     public void registerAllListeners() {
@@ -71,7 +70,7 @@ public class Registry {
                     jda.addEventListener(this.injector.getInstance(listenerClass));
                     successCases.getAndIncrement();
                 });
-        System.out.println(format("Registered Listeners: %d/%d", successCases.get(), listenerClasses.size()));
+        System.out.printf("Registered Listeners: %d/%d", successCases.get(), listenerClasses.size());
     }
 
     private Set<Class<?>> getAllClassesFromPackage(String packageName) {

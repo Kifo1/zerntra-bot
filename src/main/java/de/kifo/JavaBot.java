@@ -7,7 +7,6 @@ import de.kifo.common.music.PlayerManager;
 import de.kifo.common.registration.Registry;
 import de.kifo.common.services.OnlineTimeService;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import net.dv8tion.jda.api.JDA;
 
@@ -24,7 +23,7 @@ import static net.dv8tion.jda.api.utils.cache.CacheFlag.ONLINE_STATUS;
 @Getter
 public class JavaBot {
 
-    private Injector injector;
+    private final Injector injector;
 
     private API api;
     private JDA jda;
@@ -64,9 +63,8 @@ public class JavaBot {
         this.registry.registerAllListeners();
     }
 
-    @Data
     @AllArgsConstructor
-    private class RegistrationModule extends AbstractModule {
+    private static class RegistrationModule extends AbstractModule {
 
         private JavaBot javaBot;
 

@@ -34,7 +34,7 @@ public abstract class CommandBase extends CommandDataImpl {
     public abstract void autoComplete(String optionName, CommandAutoCompleteInteractionEvent event);
 
     public List<OptionData> getOptions() {
-        return of(null);
+        return of();
     }
 
     @Target(TYPE)
