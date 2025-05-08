@@ -83,7 +83,7 @@
         <dependency>
             <groupId>dev.lavalink.youtube</groupId>
             <artifactId>youtube-plugin</artifactId>
-            <version>1.13.0</version>
+            <version>316adb400bc24864345e070be7e209f5024cdf19</version>
         </dependency>
 
         <!-- Lombok -->
