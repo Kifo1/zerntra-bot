@@ -51,7 +51,7 @@ public class JavaBot {
                 .enableIntents(GUILD_PRESENCES)
                 .enableIntents(DIRECT_MESSAGES)
                 .enableIntents(GUILD_MEMBERS)
-                .setActivity(playing("Musik für die Rasselbande"))
+                .setActivity(playing("Musik ab."))
                 .build();
     }
 
