@@ -1,5 +1,6 @@
 package de.kifo.commands;
 
+import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 import de.kifo.JavaBot;
 import de.kifo.commands.handle.CommandBase;
@@ -69,6 +70,6 @@ public class OnlineTimeCommand extends CommandBase {
 
     @Override
     public List<OptionData> getOptions() {
-        return of(new OptionData(STRING, "zeitraum", "Der Zeitraum, für den du deine Online Zeit wissen willst", true, true));
+        return ImmutableList.of(new OptionData(STRING, "zeitraum", "Der Zeitraum, für den du deine Online Zeit wissen willst", true, true));
     }
 }

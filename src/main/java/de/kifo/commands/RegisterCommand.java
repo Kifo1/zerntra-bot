@@ -1,5 +1,6 @@
 package de.kifo.commands;
 
+import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 import de.kifo.JavaBot;
 import de.kifo.commands.handle.CommandBase;
@@ -55,6 +56,6 @@ public class RegisterCommand extends CommandBase {
 
     @Override
     public List<OptionData> getOptions() {
-        return of(new OptionData(STRING, "passwort", "Wähle ein Passwort für deinen Account.", true, false));
+        return ImmutableList.of(new OptionData(STRING, "passwort", "Wähle ein Passwort für deinen Account.", true, false));
     }
 }

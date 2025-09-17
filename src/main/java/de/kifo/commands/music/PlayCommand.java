@@ -1,5 +1,6 @@
 package de.kifo.commands.music;
 
+import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 import de.kifo.JavaBot;
 import de.kifo.commands.handle.CommandBase;
@@ -22,7 +23,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.List;
 
-import static com.google.common.collect.ImmutableList.of;
 import static de.kifo.common.api.model.HistoryEntry.Type.SONG_PLAY;
 import static de.kifo.common.enums.exception.ExceptionType.NOT_IN_SPEECH_CHANNEL;
 import static de.kifo.common.enums.message.Message.MessageType.MESSAGE;
@@ -91,6 +91,6 @@ public class PlayCommand extends CommandBase {
 
     @Override
     public List<OptionData> getOptions() {
-        return of(new OptionData(STRING, "song", "Titel oder URL vom Lied", true, true));
+        return ImmutableList.of(new OptionData(STRING, "song", "Titel oder URL vom Lied", true, true));
     }
 }

@@ -1,5 +1,6 @@
 package de.kifo.commands;
 
+import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 import de.kifo.JavaBot;
 import de.kifo.commands.handle.CommandBase;
@@ -66,6 +67,6 @@ public class LastSeenCommand extends CommandBase {
 
     @Override
     public List<OptionData> getOptions() {
-        return of(new OptionData(USER, "user", "User, von dem du wissen willst, wann er zuletzt online war.", true, false));
+        return ImmutableList.of(new OptionData(USER, "user", "User, von dem du wissen willst, wann er zuletzt online war.", true, false));
     }
 }
