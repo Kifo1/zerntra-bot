@@ -6,7 +6,7 @@
 
     <groupId>de.kifo</groupId>
     <artifactId>DiscordBot</artifactId>
-    <version>2.4.0-develop</version>
+    <version>3.0.0-develop</version>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -98,7 +98,7 @@
         <dependency>
             <groupId>com.google.inject</groupId>
             <artifactId>guice</artifactId>
-            <version>7.0.0</version>
+            <version></version>
         </dependency>
 
         <!-- Json files - Gson-->
