@@ -1,5 +1,6 @@
 package de.kifo.commands.music;
 
+import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
@@ -88,6 +89,6 @@ public class SkipCommand extends CommandBase {
 
     @Override
     public List<OptionData> getOptions() {
-        return of(new OptionData(INTEGER, "index", "Index des Liedes, welches übersprungen werden soll", false, true));
+        return ImmutableList.of(new OptionData(INTEGER, "index", "Index des Liedes, welches übersprungen werden soll", false, true));
     }
 }
