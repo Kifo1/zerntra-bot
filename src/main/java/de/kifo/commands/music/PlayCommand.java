@@ -8,6 +8,7 @@ import de.kifo.common.api.model.HistoryEntry;
 import de.kifo.common.api.model.Song;
 import de.kifo.common.exceptions.CommandException;
 import de.kifo.common.music.PlayerManager;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
@@ -47,6 +48,7 @@ public class PlayCommand extends CommandBase {
     @Override
     public void execute(Member member, TextChannel textChannel, List<OptionMapping> options, SlashCommandInteractionEvent event) throws CommandException {
         GuildVoiceState guildVoiceState = member.getVoiceState();
+        Guild guild = event.getGuild();
 
         if (isNull(guildVoiceState) || isNull(guildVoiceState.getChannel()) || isNull(guildVoiceState.getChannel().asVoiceChannel())) {
             throw new CommandException(NOT_IN_SPEECH_CHANNEL, event);
@@ -66,7 +68,7 @@ public class PlayCommand extends CommandBase {
         playerManager.play(event.getGuild(), url, member.getUser().getIdLong());
         map.put(voiceChannel.getGuild().getIdLong(), textChannel);
 
-        javaBot.getApi().createHistoryEntry(new HistoryEntry(null, event.getGuild().getId(), member.getIdLong(),
+        javaBot.getApi().createHistoryEntry(new HistoryEntry(null, guild.getIdLong(), member.getIdLong(),
                 SONG_PLAY, currentTimeMillis(),"Query " + url + ", " + textChannel.getName()));
     }
 

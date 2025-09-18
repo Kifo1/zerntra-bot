@@ -17,7 +17,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-import static com.google.common.collect.ImmutableList.of;
 import static de.kifo.JavaBot.onlineTimeService;
 import static de.kifo.common.api.model.VoiceChannelOnlineSession.TimePeriod.LIFETIME;
 import static de.kifo.common.enums.exception.ExceptionType.ONLINE_TIME_WRONG_TIME_PERIOD;
@@ -49,7 +48,7 @@ public class OnlineTimeCommand extends CommandBase {
             throw new CommandException(ONLINE_TIME_WRONG_TIME_PERIOD, event);
         }
 
-        long onlineSeconds = onlineTimeService.getVoiceOnlineTime(userId, timePeriod);
+        long onlineSeconds = onlineTimeService.getVoiceOnlineTime(userId, event.getGuild().getIdLong(), userId, timePeriod);
         String timeString = getTimeStringBySeconds(onlineSeconds);
 
         event.replyEmbeds(getEmbedMessageByText(

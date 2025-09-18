@@ -22,7 +22,7 @@ public class UserUpdateOnlineStatusListener extends ListenerAdapter {
         Guild guild = event.getGuild();
 
         javaBot.getApi().createUserIfNotPresent(userId, event.getUser().getName());
-        javaBot.getApi().createHistoryEntry(new HistoryEntry(null, guild.getId(), userId, ONLINE_STATUS_CHANGE,
+        javaBot.getApi().createHistoryEntry(new HistoryEntry(null, guild.getIdLong(), userId, ONLINE_STATUS_CHANGE,
                 currentTimeMillis(), event.getOldOnlineStatus().name() + " -> " + event.getNewOnlineStatus().name()));
     }
 }

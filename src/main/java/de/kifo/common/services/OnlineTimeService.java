@@ -16,9 +16,10 @@ public class OnlineTimeService {
 
     private HashMap<Long, VoiceChannelOnlineSession> voiceChannelOnlineSessions = new HashMap<>();
 
-    public void startVoiceOnlineSession(Long userId) {
+    public void startVoiceOnlineSession(Long userId, Long guildId, Long channelId) {
         voiceChannelOnlineSessions.putIfAbsent(userId,
-                new VoiceChannelOnlineSession(null, javaBot.getApi().getUserById(userId), currentTimeMillis(), 0L));
+                new VoiceChannelOnlineSession(null, guildId, channelId,
+                        javaBot.getApi().getUserById(userId), currentTimeMillis(), 0L));
     }
 
     public void stopVoiceOnlineSession(Long userId) {
@@ -35,10 +36,10 @@ public class OnlineTimeService {
         return nonNull(voiceChannelOnlineSessions.getOrDefault(userId, null));
     }
 
-    public long getVoiceOnlineTime(Long userId, VoiceChannelOnlineSession.TimePeriod timePeriod) {
+    public long getVoiceOnlineTime(Long userId, Long guildId, Long channelId, VoiceChannelOnlineSession.TimePeriod timePeriod) {
         if (voiceChannelOnlineSessions.containsKey(userId)) {
             stopVoiceOnlineSession(userId);
-            startVoiceOnlineSession(userId);
+            startVoiceOnlineSession(userId, guildId, channelId);
         }
 
         return javaBot.getApi().getVoiceSessionSecondsForTimePeriod(userId, timePeriod);

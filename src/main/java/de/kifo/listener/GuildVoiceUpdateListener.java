@@ -3,6 +3,8 @@ package de.kifo.listener;
 import com.google.inject.Inject;
 import de.kifo.JavaBot;
 import de.kifo.common.api.model.HistoryEntry;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.channel.unions.AudioChannelUnion;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
@@ -22,26 +24,30 @@ public class GuildVoiceUpdateListener extends ListenerAdapter {
     @Override
     public void onGuildVoiceUpdate(@NotNull GuildVoiceUpdateEvent event) {
         Long userId = event.getMember().getIdLong();
+        Guild guild = event.getGuild();
+        AudioChannelUnion channelJoined = event.getChannelJoined();
+        AudioChannelUnion channelLeft = event.getChannelLeft();
 
         javaBot.getApi().createUserIfNotPresent(userId, event.getMember().getUser().getName());
 
         HistoryEntry.Type type;
         String information;
-        if (nonNull(event.getChannelJoined()) && nonNull(event.getChannelLeft())) {
+        if (nonNull(channelJoined) && nonNull(channelLeft)) {
             type = CHANNEL_CHANGE;
-            information = event.getChannelLeft().getName() + " -> " + event.getChannelJoined().getName();
+            information = channelLeft.getName() + " -> " + channelJoined.getName();
         } else {
-            type = nonNull(event.getChannelJoined()) ? CHANNEL_JOIN : CHANNEL_QUIT;
-            information = nonNull(event.getChannelJoined()) ? event.getChannelJoined().getName() : event.getChannelLeft().getName();
+            type = nonNull(channelJoined) ? CHANNEL_JOIN : CHANNEL_QUIT;
+            information = nonNull(channelJoined) ? channelJoined.getName() : channelLeft.getName();
         }
 
         if (type == CHANNEL_JOIN) {
-            onlineTimeService.startVoiceOnlineSession(userId);
+            onlineTimeService.startVoiceOnlineSession(userId, guild.getIdLong(),
+                    nonNull(channelJoined) ? channelJoined.getIdLong() : channelLeft.getIdLong());
         } else if (type == CHANNEL_QUIT) {
             onlineTimeService.stopVoiceOnlineSession(userId);
         }
 
-        javaBot.getApi().createHistoryEntry(new HistoryEntry(null, event.getGuild().getId(),
+        javaBot.getApi().createHistoryEntry(new HistoryEntry(null, guild.getIdLong(),
                 userId, type, currentTimeMillis(), information));
     }
 }

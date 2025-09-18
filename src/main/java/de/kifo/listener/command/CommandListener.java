@@ -36,7 +36,7 @@ public class CommandListener extends ListenerAdapter {
                 .ifPresent(command -> {
                     try {
                         command.execute(member, textChannel, options, event);
-                        javaBot.getApi().createHistoryEntry(new HistoryEntry(null, guild.getId(), member.getIdLong(),
+                        javaBot.getApi().createHistoryEntry(new HistoryEntry(null, guild.getIdLong(), member.getIdLong(),
                                 COMMAND_USE, currentTimeMillis(), command.getName() + " in channel " + textChannel.getName()));
                     } catch (CommandException e) {
                         throw new RuntimeException(e);
