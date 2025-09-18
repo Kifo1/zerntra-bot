@@ -145,6 +145,24 @@ public class API {
         return ofNullable(getObjectByJson(response, Long.class)).orElse(-1L);
     }
 
+    public long getVoiceSessionSecondsForTimePeriodAndGuild(Long userId, VoiceChannelOnlineSession.TimePeriod timePeriod,
+                                                            Long guildId) {
+        String uri = format("/javabot/user/voice-session-for-guild/%d?timePeriod=%s?guildId=%d",
+                userId, timePeriod, guildId);
+        String response = sendGetRequest(uri);
+
+        return ofNullable(getObjectByJson(response, Long.class)).orElse(-1L);
+    }
+
+    public long getVoiceSessionSecondsForTimePeriodAndChannelInGuild(Long userId, VoiceChannelOnlineSession.TimePeriod timePeriod,
+                                                                     Long guildId, Long channelId) {
+        String uri = format("/javabot/user/voice-session-for-channel-in-guild/%d?timePeriod=%s?guildId=%d?channelId=%d",
+                userId, timePeriod, guildId, channelId);
+        String response = sendGetRequest(uri);
+
+        return ofNullable(getObjectByJson(response, Long.class)).orElse(-1L);
+    }
+
     /**
      *
      Requests
