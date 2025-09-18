@@ -41,6 +41,7 @@ public class GuildVoiceUpdateListener extends ListenerAdapter {
             onlineTimeService.stopVoiceOnlineSession(userId);
         }
 
-        javaBot.getApi().createHistoryEntry(new HistoryEntry(null, userId, type, currentTimeMillis(), information));
+        javaBot.getApi().createHistoryEntry(new HistoryEntry(null, event.getGuild().getId(),
+                userId, type, currentTimeMillis(), information));
     }
 }

@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import de.kifo.JavaBot;
 import de.kifo.common.api.model.HistoryEntry;
 import lombok.NonNull;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.user.update.UserUpdateOnlineStatusEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
@@ -18,9 +19,10 @@ public class UserUpdateOnlineStatusListener extends ListenerAdapter {
     @Override
     public void onUserUpdateOnlineStatus(@NonNull UserUpdateOnlineStatusEvent event) {
         Long userId = event.getUser().getIdLong();
+        Guild guild = event.getGuild();
 
         javaBot.getApi().createUserIfNotPresent(userId, event.getUser().getName());
-        javaBot.getApi().createHistoryEntry(new HistoryEntry(null, userId, ONLINE_STATUS_CHANGE, currentTimeMillis(),
-                event.getOldOnlineStatus().name() + " -> " + event.getNewOnlineStatus().name()));
+        javaBot.getApi().createHistoryEntry(new HistoryEntry(null, guild.getId(), userId, ONLINE_STATUS_CHANGE,
+                currentTimeMillis(), event.getOldOnlineStatus().name() + " -> " + event.getNewOnlineStatus().name()));
     }
 }
