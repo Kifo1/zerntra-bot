@@ -26,7 +26,7 @@ import static java.util.Optional.ofNullable;
 
 public class API {
 
-    private final String API_BASE_URL = "http://91.99.27.95:8080";
+    private final String API_BASE_URL = "http://localhost:8080";
 
     /**
      * {@link User}
