@@ -53,7 +53,7 @@ public class OnlineTimeCommand extends CommandBase {
 
         event.replyEmbeds(getEmbedMessageByText(
                 "Du warst " + (timePeriod == LIFETIME ? "insgesamt " : "in den letzten " + timePeriod.getDays() + " Tagen ") +
-                        timeString + " auf dem Rasselbande Discord online.", MESSAGE)).queue();
+                        timeString + " in Sprachkanälen online.", MESSAGE)).queue();
     }
 
     @Override
