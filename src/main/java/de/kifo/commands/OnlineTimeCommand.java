@@ -27,7 +27,7 @@ import static java.util.Arrays.stream;
 import static java.util.Objects.isNull;
 import static net.dv8tion.jda.api.interactions.commands.OptionType.STRING;
 
-@CommandBase.BotCommand(name = "onlinetime", description = "Zeigt an, wie viel Zeit du in einem bestimmten Zeitraum im Rasselbande Discord verbracht hast.", hasOptions = true)
+@CommandBase.BotCommand(name = "onlinetime", description = "Zeigt an, wie viel Zeit du in einem bestimmten Zeitraum in Discord Sprachkanälen verbracht hast.", hasOptions = true)
 public class OnlineTimeCommand extends CommandBase {
 
     @Inject
