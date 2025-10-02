@@ -75,9 +75,15 @@ public class API {
      * @param userId The id of the user
      * @return The List of every song
      */
-
     public List<Song> getSongListByUserId(Long userId) {
         return getObjectListByJson(sendGetRequest("/javabot/song/get-all/" + userId), Song.class);
+    }
+
+    /**
+     * This methode can be used to receive a users favourite songs (25 most liked)
+     */
+    public List<Song> getRecommendedSongsByUserId(Long userId) {
+        return getObjectListByJson(sendGetRequest("/javabot/song/get-recommended/" + userId), Song.class);
     }
 
     public List<Song> getAllSongs() {

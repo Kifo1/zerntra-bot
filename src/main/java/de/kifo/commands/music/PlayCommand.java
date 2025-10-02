@@ -29,7 +29,6 @@ import static de.kifo.common.enums.exception.ExceptionType.NOT_IN_SPEECH_CHANNEL
 import static de.kifo.common.enums.message.Message.MessageType.MESSAGE;
 import static de.kifo.common.util.EmbedUtils.getEmbedMessageByText;
 import static java.lang.System.currentTimeMillis;
-import static java.util.Comparator.comparing;
 import static java.util.Objects.isNull;
 import static net.dv8tion.jda.api.interactions.commands.OptionType.STRING;
 
@@ -74,17 +73,11 @@ public class PlayCommand extends CommandBase {
 
     @Override
     public void autoComplete(String optionName, CommandAutoCompleteInteractionEvent event) {
-        List<String> options = javaBot.getApi().getSongListByUserId(event.getUser().getIdLong()).stream()
-                .filter(song -> song.getName().length() < 100)
-                .sorted(comparing(Song::getTimesPlayed).reversed())
-                .map(Song::getName)
-                .toList();
-
         if (optionName.equalsIgnoreCase("song")) {
-            List<Command.Choice> replyChoices = options.stream()
-                    .filter(option -> option.toLowerCase().contains(event.getFocusedOption().getValue().toLowerCase()))
-                    .map(option -> new Command.Choice(option, option))
-                    .limit(25)
+            List<Command.Choice> replyChoices = javaBot.getApi().getRecommendedSongsByUserId(event.getUser().getIdLong()).stream()
+                    .map(Song::getName)
+                    .filter(songName -> songName.toLowerCase().contains(event.getFocusedOption().getValue().toLowerCase()))
+                    .map(songName -> new Command.Choice(songName, songName))
                     .toList();
 
             event.replyChoices(replyChoices).queue();
