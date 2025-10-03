@@ -23,9 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
-import static com.google.common.collect.ImmutableList.of;
-import static de.kifo.common.enums.exception.ExceptionType.NOT_IN_SPEECH_CHANNEL;
-import static de.kifo.common.enums.exception.ExceptionType.SKIP_INDEX_NOT_FOUND;
+import static de.kifo.common.enums.exception.ExceptionType.*;
 import static de.kifo.common.enums.message.Message.MessageType.MESSAGE;
 import static de.kifo.common.util.EmbedUtils.getEmbedMessageByText;
 import static java.lang.Math.min;
@@ -55,6 +53,10 @@ public class SkipCommand extends CommandBase {
         PlayerManager playerManager = javaBot.getPlayerManager();
         GuildMusicManager guildMusicManager = playerManager.getGuildMusicManager(event.getGuild());
         AudioPlayer audioPlayer = guildMusicManager.getTrackScheduler().getAudioPlayer();
+
+        if (isNull(audioPlayer.getPlayingTrack())) {
+            throw new CommandException(NO_SONG_RUNNING, event);
+        }
 
         if (options.isEmpty() || isNull(options.get(0))) {
             audioPlayer.stopTrack();
