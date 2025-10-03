@@ -23,6 +23,8 @@ import static net.dv8tion.jda.api.utils.cache.CacheFlag.ONLINE_STATUS;
 @Getter
 public class JavaBot {
 
+    public static final String VERSION = "3.0.0-Develop";
+
     private final Injector injector;
 
     private API api;
