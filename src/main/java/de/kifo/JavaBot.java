@@ -33,6 +33,8 @@ public class JavaBot {
     private Registry registry;
 
     public static final String BOT_API_KEY = "MTA1OTQzMTY0NDA4MTE3MjQ4MQ.GFY5Eo.TcwNJzrB9aSYt_1fYTd6OgHb6BpWgrBFfsAqP4";
+    public static final String BOT_DC_KEY = //"MTA1OTQzMTY0NDA4MTE3MjQ4MQ.GFY5Eo.TcwNJzrB9aSYt_1fYTd6OgHb6BpWgrBFfsAqP4"; //Real key
+                                            "MTQyNDM3NzEzMDgzNzQ3OTU4NA.GF9dAP.lDRqhmpFJKfuCn-BxzpkxiNO0U81sQh3ZGjm_k"; //Test
     public static OnlineTimeService onlineTimeService;
 
     public JavaBot() {
@@ -46,14 +48,14 @@ public class JavaBot {
 
     private void setUpBot() {
         api = injector.getInstance(API.class);
-        jda = createDefault(BOT_API_KEY)
+        jda = createDefault(BOT_DC_KEY)
                 .setMemberCachePolicy(ALL)
                 .enableCache(ONLINE_STATUS)
                 .enableIntents(MESSAGE_CONTENT)
                 .enableIntents(GUILD_PRESENCES)
                 .enableIntents(DIRECT_MESSAGES)
                 .enableIntents(GUILD_MEMBERS)
-                .setActivity(playing("Musik für die Rasselbande"))
+                .setActivity(playing("Musik ab."))
                 .build();
     }
 

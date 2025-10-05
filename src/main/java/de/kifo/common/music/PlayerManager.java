@@ -50,8 +50,9 @@ public class PlayerManager {
 
             @Override
             public void playlistLoaded(AudioPlaylist audioPlaylist) {
-                javaBot.getApi().updateSong(userId, audioPlaylist.getName());
-                audioPlaylist.getTracks().forEach(audioTrack -> guildMusicManager.getTrackScheduler().queue(audioTrack));
+                AudioTrack audioTrack = audioPlaylist.getTracks().get(0);
+                javaBot.getApi().updateSong(userId, audioTrack.getInfo().title);
+                guildMusicManager.getTrackScheduler().queue(audioTrack);
             }
 
             @Override

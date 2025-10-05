@@ -26,7 +26,7 @@ import static java.util.Optional.ofNullable;
 
 public class API {
 
-    private final String API_BASE_URL = "http://91.99.27.95:8080";
+    private final String API_BASE_URL = "http://localhost:8080/api/v1";
 
     /**
      * {@link User}
@@ -37,7 +37,7 @@ public class API {
 
         String jsonRequest = getJsonByObject(user);
         if (userPresent) {
-            sendPutRequest("/javabot/user/update", jsonRequest);
+            sendPutRequest("/users/update", jsonRequest);
         }
     }
 
@@ -45,24 +45,24 @@ public class API {
         String jsonRequest = getJsonByObject(new User(userId, name, null, currentTimeMillis(), null));
 
         if (isNull(getUserById(userId))) {
-            sendPostRequest("/javabot/user/add", jsonRequest);
+            sendPostRequest("/users/add", jsonRequest);
         }
     }
 
     public User getUserById(Long id) {
-        return getObjectByJson(sendGetRequest("/javabot/user/get/" + id), User.class);
+        return getObjectByJson(sendGetRequest("/users/get/" + id), User.class);
     }
 
     public boolean isUserRegistered(User user) {
-        return getObjectByJson(sendPutRequest("/javabot/user/registered", getJsonByObject(user)), Boolean.class);
+        return getObjectByJson(sendPutRequest("/users/registered", getJsonByObject(user)), Boolean.class);
     }
 
     public List<User> getAllUsers() {
-        return getObjectListByJson(sendGetRequest("/javabot/user/get-all"), User.class);
+        return getObjectListByJson(sendGetRequest("/users/get-all"), User.class);
     }
 
     public void deleteUser(Long id) {
-        sendDeleteRequest("/javabot/user/remove/" + id);
+        sendDeleteRequest("/users/remove/" + id);
     }
 
     /**
@@ -75,13 +75,19 @@ public class API {
      * @param userId The id of the user
      * @return The List of every song
      */
-
     public List<Song> getSongListByUserId(Long userId) {
-        return getObjectListByJson(sendGetRequest("/javabot/song/get-all/" + userId), Song.class);
+        return getObjectListByJson(sendGetRequest("/songs/get-all/" + userId), Song.class);
+    }
+
+    /**
+     * This methode can be used to receive a users favourite songs (25 most liked)
+     */
+    public List<Song> getRecommendedSongsByUserId(Long userId) {
+        return getObjectListByJson(sendGetRequest("/songs/get-recommended/" + userId), Song.class);
     }
 
     public List<Song> getAllSongs() {
-        return getObjectListByJson(sendGetRequest("/javabot/song/get-all"), Song.class);
+        return getObjectListByJson(sendGetRequest("/songs/get-all"), Song.class);
     }
 
     public void updateSong(Long usedId, String name) {
@@ -94,7 +100,7 @@ public class API {
         song.setLastPlayDate(currentTimeMillis());
 
         String jsonRequest = getJsonByObject(song);
-        sendPutRequest("/javabot/song/update/" + song.getUserId(), jsonRequest);
+        sendPutRequest("/songs/update/" + song.getUserId(), jsonRequest);
     }
 
     /**
@@ -122,11 +128,11 @@ public class API {
      */
 
     public boolean createHistoryEntry(HistoryEntry historyEntry) {
-        return parseBoolean(sendPutRequest("/javabot/history/" + historyEntry.getUserId(), getJsonByObject(historyEntry)));
+        return parseBoolean(sendPutRequest("/history/" + historyEntry.getUserId(), getJsonByObject(historyEntry)));
     }
 
     public Collection<HistoryEntry> getHistoryEntriesByUserId(Long userId) {
-        return getObjectListByJson("/javabot/history/" + userId, HistoryEntry.class);
+        return getObjectListByJson("/history/" + userId, HistoryEntry.class);
     }
 
     /**
@@ -135,11 +141,29 @@ public class API {
 
     public void addVoiceChannelOnlineSessionToUser(Long userId, VoiceChannelOnlineSession session) {
         String jsonRequest = getJsonByObject(session);
-        sendPutRequest("/javabot/user/voice-session/" + userId, jsonRequest);
+        sendPutRequest("/users/voice-session/" + userId, jsonRequest);
     }
 
     public long getVoiceSessionSecondsForTimePeriod(Long userId, VoiceChannelOnlineSession.TimePeriod timePeriod) {
-        String uri = format("/javabot/user/voice-session/%d?timePeriod=%s", userId, timePeriod.name());
+        String uri = format("/users/voice-session/%d?timePeriod=%s", userId, timePeriod.name());
+        String response = sendGetRequest(uri);
+
+        return ofNullable(getObjectByJson(response, Long.class)).orElse(-1L);
+    }
+
+    public long getVoiceSessionSecondsForTimePeriodAndGuild(Long userId, VoiceChannelOnlineSession.TimePeriod timePeriod,
+                                                            Long guildId) {
+        String uri = format("/users/voice-session-for-guild/%d?timePeriod=%s?guildId=%d",
+                userId, timePeriod, guildId);
+        String response = sendGetRequest(uri);
+
+        return ofNullable(getObjectByJson(response, Long.class)).orElse(-1L);
+    }
+
+    public long getVoiceSessionSecondsForTimePeriodAndChannelInGuild(Long userId, VoiceChannelOnlineSession.TimePeriod timePeriod,
+                                                                     Long guildId, Long channelId) {
+        String uri = format("/users/voice-session-for-channel-in-guild/%d?timePeriod=%s?guildId=%d?channelId=%d",
+                userId, timePeriod, guildId, channelId);
         String response = sendGetRequest(uri);
 
         return ofNullable(getObjectByJson(response, Long.class)).orElse(-1L);
