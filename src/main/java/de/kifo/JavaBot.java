@@ -7,7 +7,6 @@ import de.kifo.common.music.PlayerManager;
 import de.kifo.common.registration.Registry;
 import de.kifo.common.services.OnlineTimeService;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import net.dv8tion.jda.api.JDA;
 
@@ -24,7 +23,9 @@ import static net.dv8tion.jda.api.utils.cache.CacheFlag.ONLINE_STATUS;
 @Getter
 public class JavaBot {
 
-    private Injector injector;
+    public static final String VERSION = "3.0.0";
+
+    private final Injector injector;
 
     private API api;
     private JDA jda;
@@ -32,6 +33,8 @@ public class JavaBot {
     private Registry registry;
 
     public static final String BOT_API_KEY = "MTA1OTQzMTY0NDA4MTE3MjQ4MQ.GFY5Eo.TcwNJzrB9aSYt_1fYTd6OgHb6BpWgrBFfsAqP4";
+    public static final String BOT_DC_KEY = //"MTA1OTQzMTY0NDA4MTE3MjQ4MQ.GFY5Eo.TcwNJzrB9aSYt_1fYTd6OgHb6BpWgrBFfsAqP4"; //Real key
+                                            "MTQyNDM3NzEzMDgzNzQ3OTU4NA.GF9dAP.lDRqhmpFJKfuCn-BxzpkxiNO0U81sQh3ZGjm_k"; //Test
     public static OnlineTimeService onlineTimeService;
 
     public JavaBot() {
@@ -40,19 +43,19 @@ public class JavaBot {
         setUpBot();
         handleRegistrations();
 
-        this.onlineTimeService = new OnlineTimeService(this);
+        onlineTimeService = new OnlineTimeService(this);
     }
 
     private void setUpBot() {
         api = injector.getInstance(API.class);
-        jda = createDefault(BOT_API_KEY)
+        jda = createDefault(BOT_DC_KEY)
                 .setMemberCachePolicy(ALL)
                 .enableCache(ONLINE_STATUS)
                 .enableIntents(MESSAGE_CONTENT)
                 .enableIntents(GUILD_PRESENCES)
                 .enableIntents(DIRECT_MESSAGES)
                 .enableIntents(GUILD_MEMBERS)
-                .setActivity(playing("Musik für die Rasselbande"))
+                .setActivity(playing("Musik ab."))
                 .build();
     }
 
@@ -64,9 +67,8 @@ public class JavaBot {
         this.registry.registerAllListeners();
     }
 
-    @Data
     @AllArgsConstructor
-    private class RegistrationModule extends AbstractModule {
+    private static class RegistrationModule extends AbstractModule {
 
         private JavaBot javaBot;
 

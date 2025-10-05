@@ -1,5 +1,6 @@
 package de.kifo.commands.handle;
 
+import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 import de.kifo.JavaBot;
 import de.kifo.common.exceptions.CommandException;
@@ -18,7 +19,6 @@ import java.util.List;
 
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
-import static java.util.List.of;
 
 public abstract class CommandBase extends CommandDataImpl {
 
@@ -34,7 +34,7 @@ public abstract class CommandBase extends CommandDataImpl {
     public abstract void autoComplete(String optionName, CommandAutoCompleteInteractionEvent event);
 
     public List<OptionData> getOptions() {
-        return of(null);
+        return ImmutableList.of();
     }
 
     @Target(TYPE)
