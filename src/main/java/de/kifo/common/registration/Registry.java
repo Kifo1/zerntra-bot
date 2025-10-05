@@ -70,7 +70,7 @@ public class Registry {
                     jda.addEventListener(this.injector.getInstance(listenerClass));
                     successCases.getAndIncrement();
                 });
-        System.out.printf("Registered Listeners: %d/%d", successCases.get(), listenerClasses.size());
+        System.out.printf("Registered Listeners: %d/%d%n", successCases.get(), listenerClasses.size());
     }
 
     private Set<Class<?>> getAllClassesFromPackage(String packageName) {
