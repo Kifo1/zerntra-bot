@@ -30,7 +30,7 @@ public class WebsiteCommand extends CommandBase {
     public void execute(Member member, TextChannel textChannel, List<OptionMapping> options, SlashCommandInteractionEvent event) throws CommandException {
         EmbedBuilder builder = new EmbedBuilder()
                 .setColor(MAGENTA)
-                .addField("Website:", "Besuche http://91.99.27.95 um deine Statistiken zu sehen.", false)
+                .addField("Website:", "Besuche https://zerntra.org um deine Statistiken zu sehen.", false)
                 .setFooter("Nutze /register <Passwort>, um ein Passwort für deinen Account festzulegen.");
 
         event.replyEmbeds(builder.build()).queue();

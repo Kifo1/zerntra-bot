@@ -11,6 +11,8 @@ import static java.lang.Integer.MAX_VALUE;
 public class VoiceChannelOnlineSession {
 
     private Long id;
+    private Long guildId;
+    private Long channelId;
     private User user;
     private Long startMillis;
     private Long endMillis;

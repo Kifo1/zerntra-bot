@@ -16,7 +16,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-import static com.google.common.collect.ImmutableList.of;
 import static de.kifo.common.enums.exception.ExceptionType.USER_ALREADY_REGISTERED;
 import static de.kifo.common.enums.message.Message.MessageType.MESSAGE;
 import static de.kifo.common.util.EmbedUtils.getEmbedMessageByText;
