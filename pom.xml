@@ -95,6 +95,16 @@
             <groupId>com.github.topi314.lavasrc</groupId>
             <artifactId>lavasrc-plugin</artifactId>
             <version>4.8.1</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.github.topi314.lavalyrics</groupId>
+                    <artifactId>lavalyrics</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.github.topi314.lavalyrics</groupId>
+                    <artifactId>lavalyrics-plugin-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- Lombok -->
