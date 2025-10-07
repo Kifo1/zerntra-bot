@@ -1,6 +1,5 @@
 package de.kifo.commands;
 
-import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 import de.kifo.JavaBot;
 import de.kifo.commands.handle.CommandBase;
@@ -77,7 +76,7 @@ public class OnlineTimeCommand extends CommandBase {
     public void autoComplete(String optionName, CommandAutoCompleteInteractionEvent event) {
         List<Command.Choice> choices = List.of();
 
-        if (optionName.equalsIgnoreCase("zeitraun")) {
+        if (optionName.equalsIgnoreCase("zeitraum")) {
             choices = stream(VoiceChannelOnlineSession.TimePeriod.values())
                     .map(VoiceChannelOnlineSession.TimePeriod::getDisplayName)
                     .filter(timePeriodName -> timePeriodName.toLowerCase().startsWith(event.getFocusedOption().getValue().toLowerCase()))
@@ -96,7 +95,7 @@ public class OnlineTimeCommand extends CommandBase {
 
     @Override
     public List<OptionData> getOptions() {
-        return ImmutableList.of(
+        return List.of(
                 new OptionData(STRING, "zeitraum", "Der Zeitraum, für den du deine Online-Zeit wissen willst", true, true),
                 new OptionData(STRING, "bereich", "Der Discord Bereich, in dem du online warst.", false, true));
     }
