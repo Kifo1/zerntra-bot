@@ -57,7 +57,7 @@ public class OnlineTimeCommand extends CommandBase {
         }
 
         long voiceChannelId = -1;
-        if (discordScope == CHANNEL && (isNull(guildVoiceState) || isNull(guildVoiceState.getChannel()))) {
+        if (discordScope == CHANNEL) {
             if (isNull(guildVoiceState) || isNull(guildVoiceState.getChannel())) {
                 throw new CommandException(NOT_IN_SPEECH_CHANNEL, event);
             }
