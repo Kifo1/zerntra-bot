@@ -8,6 +8,7 @@ import de.kifo.common.api.model.HistoryEntry;
 import de.kifo.common.api.model.Song;
 import de.kifo.common.exceptions.CommandException;
 import de.kifo.common.music.PlayerManager;
+import de.kifo.common.music.TrackScheduler;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.Member;
@@ -25,6 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import static de.kifo.common.api.model.HistoryEntry.Type.SONG_PLAY;
+import static de.kifo.common.enums.exception.ExceptionType.BOT_ALREADY_PLAYING_FOR_GUILD;
 import static de.kifo.common.enums.exception.ExceptionType.NOT_IN_SPEECH_CHANNEL;
 import static de.kifo.common.enums.message.Message.MessageType.MESSAGE;
 import static de.kifo.common.util.EmbedUtils.getEmbedMessageByText;
@@ -48,9 +50,12 @@ public class PlayCommand extends CommandBase {
     public void execute(Member member, TextChannel textChannel, List<OptionMapping> options, SlashCommandInteractionEvent event) throws CommandException {
         GuildVoiceState guildVoiceState = member.getVoiceState();
         Guild guild = event.getGuild();
+        TrackScheduler trackScheduler = javaBot.getPlayerManager().getGuildMusicManager(guild).getTrackScheduler();
 
         if (isNull(guildVoiceState) || isNull(guildVoiceState.getChannel())) {
             throw new CommandException(NOT_IN_SPEECH_CHANNEL, event);
+        } else if (trackScheduler.isPlaying()) {
+            throw new CommandException(BOT_ALREADY_PLAYING_FOR_GUILD, event);
         }
 
         VoiceChannel voiceChannel = guildVoiceState.getChannel().asVoiceChannel();
