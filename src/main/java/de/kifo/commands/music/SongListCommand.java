@@ -75,9 +75,11 @@ public class SongListCommand extends CommandBase {
 
         builder.setTitle("Seite " + page + ":");
         rangeClosed(((page - 1) * 10), (9 + (page - 1) * 10)).forEach(index -> {
-            int trackNumber = index + 1;
-            AudioTrack song = queuedSongList.get(index);
-            builder.addField("Lied " + trackNumber + ": ", song.getInfo().title, false);
+            if (index <= queuedSongList.size() - 1) {
+                int trackNumber = index + 1;
+                AudioTrack song = queuedSongList.get(index);
+                builder.addField("Lied " + trackNumber + ": ", song.getInfo().title, false);
+            }
         });
         builder.setFooter("Verwende \"/skip <Nummer>\", um das gewünschte Lied aus der Liste zu entfernen.");
         event.replyEmbeds(builder.build()).queue();

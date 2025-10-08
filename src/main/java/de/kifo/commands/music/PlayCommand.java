@@ -32,6 +32,7 @@ import static de.kifo.common.enums.message.Message.MessageType.MESSAGE;
 import static de.kifo.common.util.EmbedUtils.getEmbedMessageByText;
 import static java.lang.System.currentTimeMillis;
 import static java.util.Objects.isNull;
+import static java.util.Objects.requireNonNull;
 import static net.dv8tion.jda.api.interactions.commands.OptionType.STRING;
 
 @CommandBase.BotCommand(name = "play", description = "Wähle ein Lied, das abgespielt werden soll.", hasOptions = true)
@@ -54,13 +55,16 @@ public class PlayCommand extends CommandBase {
 
         if (isNull(guildVoiceState) || isNull(guildVoiceState.getChannel())) {
             throw new CommandException(NOT_IN_SPEECH_CHANNEL, event);
-        } else if (trackScheduler.isPlaying()) {
-            throw new CommandException(BOT_ALREADY_PLAYING_FOR_GUILD, event);
         }
 
         VoiceChannel voiceChannel = guildVoiceState.getChannel().asVoiceChannel();
         PlayerManager playerManager = javaBot.getPlayerManager();
         AudioManager manager = voiceChannel.getGuild().getAudioManager();
+
+        if (trackScheduler.isPlaying() && !manager.getConnectedChannel().equals(guildVoiceState.getChannel())) {
+            throw new CommandException(BOT_ALREADY_PLAYING_FOR_GUILD, event);
+        }
+
         manager.openAudioConnection(voiceChannel);
 
         String url = options.get(0).getAsString();
