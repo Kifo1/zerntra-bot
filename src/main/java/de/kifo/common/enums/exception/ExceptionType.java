@@ -15,6 +15,7 @@ public enum ExceptionType {
     // COMMAND - Miscellaneous
     NOT_IN_SPEECH_CHANNEL("Du musst in einem Sprachkanal sein."),
     NO_SONG_RUNNING("Es läuft im Moment kein Lied."),
+    NO_SONG_IN_QUEUE("Es ist kein Lied in der Songlist."),
     USER_ALREADY_REGISTERED("Dieser Discord Account ist bereits registriert.");
 
     private final String message;
