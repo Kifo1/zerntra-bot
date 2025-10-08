@@ -59,9 +59,18 @@ public class PlayerManager {
 
             @Override
             public void playlistLoaded(AudioPlaylist audioPlaylist) {
-                AudioTrack audioTrack = audioPlaylist.getTracks().get(0);
-                javaBot.getApi().updateSong(userId, audioTrack.getInfo().title);
-                guildMusicManager.getTrackScheduler().queue(audioTrack);
+                //AudioTrack audioTrack = audioPlaylist.getTracks().get(0);
+                //javaBot.getApi().updateSong(userId, audioTrack.getInfo().title);
+                //guildMusicManager.getTrackScheduler().queue(audioTrack);
+                if (audioPlaylist.isSearchResult()) {
+                    AudioTrack firstTrack = audioPlaylist.getTracks().get(0);
+                    javaBot.getApi().updateSong(userId, firstTrack.getInfo().title);
+                    guildMusicManager.getTrackScheduler().queue(firstTrack);
+                } else {
+                    audioPlaylist.getTracks().forEach(track -> {
+                        guildMusicManager.getTrackScheduler().queue(track);
+                    });
+                }
             }
 
             @Override
