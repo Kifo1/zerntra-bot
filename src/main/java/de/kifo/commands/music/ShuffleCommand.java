@@ -2,14 +2,12 @@ package de.kifo.commands.music;
 
 import com.google.inject.Inject;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import de.kifo.JavaBot;
 import de.kifo.commands.handle.CommandBase;
 import de.kifo.common.exceptions.CommandException;
 import de.kifo.common.music.GuildMusicManager;
 import de.kifo.common.music.PlayerManager;
 import de.kifo.common.music.TrackScheduler;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
@@ -19,20 +17,18 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static de.kifo.common.enums.exception.ExceptionType.*;
-import static java.awt.Color.MAGENTA;
+import static de.kifo.common.enums.message.Message.SONGLIST_SHUFFLED;
 import static java.util.Objects.isNull;
 
-@CommandBase.BotCommand(name = "songlist", description = "Zeigt die aktuelle Song Liste an.")
-public class SongListCommand extends CommandBase {
+@CommandBase.BotCommand(name = "shuffle", description = "Ändert die Reihenfolge der aktuellen songlist.")
+public class ShuffleCommand extends CommandBase {
 
     @Inject
     private JavaBot javaBot;
 
-    public SongListCommand(@NotNull BotCommand command) {
+    public ShuffleCommand(@NotNull BotCommand command) {
         super(command);
     }
 
@@ -55,19 +51,8 @@ public class SongListCommand extends CommandBase {
             throw new CommandException(NO_SONG_IN_QUEUE, event);
         }
 
-        BlockingQueue<AudioTrack> queuedSongs = trackScheduler.getQueue();
-        EmbedBuilder builder = new EmbedBuilder();
-        builder.setColor(MAGENTA);
-
-        AtomicInteger trackNumber = new AtomicInteger(1);
-        queuedSongs.forEach(track -> {
-            if (trackNumber.get() <= 25) {
-                builder.addField("Lied " + trackNumber + ": ", track.getInfo().title, false);
-                trackNumber.getAndIncrement();
-            }
-        });
-        builder.setFooter("Verwende \"/skip <Nummer>\", um das gewünschte Lied aus der Liste zu entfernen.");
-        event.replyEmbeds(builder.build()).queue();
+        trackScheduler.shuffleQueue();
+        SONGLIST_SHUFFLED.sendToTextChannel(event.getChannel().asTextChannel());
     }
 
     @Override

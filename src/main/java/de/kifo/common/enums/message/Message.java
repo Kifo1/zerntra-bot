@@ -6,7 +6,7 @@ import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 
 import java.awt.Color;
 
-import static de.kifo.common.enums.message.Message.MessageType.ERROR;
+import static de.kifo.common.enums.message.Message.MessageType.*;
 import static de.kifo.common.util.EmbedUtils.getEmbedMessageByText;
 import static java.awt.Color.MAGENTA;
 import static java.awt.Color.ORANGE;
@@ -16,13 +16,14 @@ import static java.awt.Color.RED;
 @AllArgsConstructor
 public enum Message {
 
-    WRONG_COMMAND_SYNTAX_HELP(ERROR, "Nutze \"/\" anstelle von \"!\", um Befehle auszuführen.");
+    WRONG_COMMAND_SYNTAX_HELP(ERROR, "Nutze \"/\" anstelle von \"!\", um Befehle auszuführen."),
+    SONGLIST_SHUFFLED(MESSAGE, "Die Songlist wurde geshuffled.");
 
     private final MessageType messageType;
-    private final String message;
+    private final String messageText;
 
     public void sendToTextChannel(TextChannel textChannel) {
-        textChannel.sendMessageEmbeds(getEmbedMessageByText(this.message, this.messageType)).queue();
+        textChannel.sendMessageEmbeds(getEmbedMessageByText(this.messageText, this.messageType)).queue();
     }
 
     @Getter
