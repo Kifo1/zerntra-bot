@@ -36,7 +36,7 @@ public class TrackScheduler extends AudioEventAdapter {
     public void onTrackStart(AudioPlayer player, AudioTrack track) {
         AudioTrackInfo info = track.getInfo();
         String url = info.uri;
-        long seconds = info.length / 1000;
+        long seconds = info.length/1000;
 
         map.get(guild.getIdLong()).sendMessageEmbeds(new EmbedBuilder()
                 .setColor(MAGENTA)
@@ -65,6 +65,10 @@ public class TrackScheduler extends AudioEventAdapter {
 
     public boolean isQueueEmpty() {
         return queue.isEmpty();
+    }
+
+    public boolean isPlaying() {
+        return isNull(audioPlayer.getPlayingTrack());
     }
 
     public void queue(AudioTrack audioTrack) {
