@@ -68,7 +68,7 @@ public class TrackScheduler extends AudioEventAdapter {
     }
 
     public boolean isPlaying() {
-        return isNull(audioPlayer.getPlayingTrack());
+        return nonNull(audioPlayer.getPlayingTrack());
     }
 
     public void queue(AudioTrack audioTrack) {
