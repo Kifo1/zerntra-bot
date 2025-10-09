@@ -18,7 +18,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 import java.util.List;
 
-import static java.awt.Color.MAGENTA;
+import static de.kifo.common.enums.message.Message.MessageType.ERROR;
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static java.util.Objects.nonNull;
@@ -40,7 +40,7 @@ public abstract class CommandBase extends CommandDataImpl {
                 String reason = nonNull(e.getMessage()) ? e.getMessage() : "Unbekannter Fehler";
 
                 event.replyEmbeds(new EmbedBuilder()
-                        .setColor(MAGENTA)
+                        .setColor(ERROR.getEmbedColor())
                         .setTitle("Beim Ausführen des Commands kam es zu einem unerwarteten Fehler.")
                         .addField("Fehler:", reason, false)
                         .build()).queue();

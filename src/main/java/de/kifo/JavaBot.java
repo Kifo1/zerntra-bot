@@ -23,7 +23,7 @@ import static net.dv8tion.jda.api.utils.cache.CacheFlag.ONLINE_STATUS;
 @Getter
 public class JavaBot {
 
-    public static final String VERSION = "3.0.1";
+    public static final String VERSION = "3.0.0";
 
     private final Injector injector;
 
@@ -33,8 +33,8 @@ public class JavaBot {
     private Registry registry;
 
     public static final String BOT_API_KEY = "MTA1OTQzMTY0NDA4MTE3MjQ4MQ.GFY5Eo.TcwNJzrB9aSYt_1fYTd6OgHb6BpWgrBFfsAqP4";
-    public static final String BOT_DC_KEY = "MTA1OTQzMTY0NDA4MTE3MjQ4MQ.GRGHhx.JjZKAwIt2PkflD1iF10M5zPuN75rRpd_-fYJUE"; //Real key
-                                            //"MTQyNDM3NzEzMDgzNzQ3OTU4NA.GF9dAP.lDRqhmpFJKfuCn-BxzpkxiNO0U81sQh3ZGjm_k"; //Test
+    public static final String BOT_DC_KEY = //"MTA1OTQzMTY0NDA4MTE3MjQ4MQ.GRGHhx.JjZKAwIt2PkflD1iF10M5zPuN75rRpd_-fYJUE"; //Real key
+                                            "MTQyNDM3NzEzMDgzNzQ3OTU4NA.GF9dAP.lDRqhmpFJKfuCn-BxzpkxiNO0U81sQh3ZGjm_k"; //Test
     public static OnlineTimeService onlineTimeService;
 
     public JavaBot() {
