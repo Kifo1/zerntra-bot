@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -17,6 +19,7 @@ import static de.kifo.commands.music.PlayCommand.map;
 import static de.kifo.common.util.StringUtils.getTimeStringBySeconds;
 import static java.awt.Color.MAGENTA;
 import static java.lang.Thread.sleep;
+import static java.util.Collections.shuffle;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static java.util.concurrent.Executors.newSingleThreadExecutor;
@@ -27,7 +30,7 @@ public class TrackScheduler extends AudioEventAdapter {
 
     private final AudioPlayer audioPlayer;
     private final Guild guild;
-    private BlockingQueue<AudioTrack> queue = new LinkedBlockingQueue<>();
+    private final BlockingQueue<AudioTrack> queue = new LinkedBlockingQueue<>();
 
     @Override
     public void onTrackStart(AudioPlayer player, AudioTrack track) {
@@ -38,7 +41,7 @@ public class TrackScheduler extends AudioEventAdapter {
         map.get(guild.getIdLong()).sendMessageEmbeds(new EmbedBuilder()
                 .setColor(MAGENTA)
                 .setTitle("Jetzt läuft: " + info.title)
-                .addField(info.author, "[" + info.title +"](" + url + ")", false)
+                .addField(info.author, "[" + info.title + "](" + url + ")", false)
                 .addField("Länge", info.isStream ? ":red_circle: Stream" : getTimeStringBySeconds(seconds), true)
                 .build()).queue();
     }
@@ -60,9 +63,24 @@ public class TrackScheduler extends AudioEventAdapter {
         });
     }
 
+    public boolean isQueueEmpty() {
+        return queue.isEmpty();
+    }
+
+    public boolean isPlaying() {
+        return nonNull(audioPlayer.getPlayingTrack());
+    }
+
     public void queue(AudioTrack audioTrack) {
         if (!audioPlayer.startTrack(audioTrack, true)) {
             queue.offer(audioTrack);
         }
+    }
+
+    public void shuffleQueue() {
+        List<AudioTrack> songList = new ArrayList<>(queue);
+        shuffle(songList);
+        queue.clear();
+        queue.addAll(songList);
     }
 }

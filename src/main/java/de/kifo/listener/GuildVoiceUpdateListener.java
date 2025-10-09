@@ -41,8 +41,7 @@ public class GuildVoiceUpdateListener extends ListenerAdapter {
         }
 
         if (type == CHANNEL_JOIN) {
-            onlineTimeService.startVoiceOnlineSession(userId, guild.getIdLong(),
-                    nonNull(channelJoined) ? channelJoined.getIdLong() : channelLeft.getIdLong());
+            onlineTimeService.startVoiceOnlineSession(userId, guild.getIdLong(), channelJoined.asVoiceChannel().getIdLong());
         } else if (type == CHANNEL_QUIT) {
             onlineTimeService.stopVoiceOnlineSession(userId);
         }

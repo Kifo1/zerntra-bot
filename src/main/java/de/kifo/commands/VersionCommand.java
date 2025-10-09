@@ -24,7 +24,7 @@ public class VersionCommand extends CommandBase {
 
     @Override
     public void execute(Member member, TextChannel textChannel, List<OptionMapping> options, SlashCommandInteractionEvent event) throws CommandException {
-        event.replyEmbeds(getEmbedMessageByText("Die aktuelle Version ist: " + VERSION, MESSAGE));
+        event.replyEmbeds(getEmbedMessageByText("Die aktuelle Version ist: " + VERSION, MESSAGE)).queue();
     }
 
     @Override

@@ -5,10 +5,10 @@ import de.kifo.common.api.model.VoiceChannelOnlineSession;
 import de.kifo.common.enums.utils.DiscordScope;
 import lombok.Data;
 
-import javax.annotation.Nullable;
 import java.util.HashMap;
 
 import static java.lang.System.currentTimeMillis;
+import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 @Data
@@ -24,7 +24,7 @@ public class OnlineTimeService {
                         javaBot.getApi().getUserById(userId), currentTimeMillis(), 0L));
     }
 
-    public void stopVoiceOnlineSession(Long userId) {
+    public VoiceChannelOnlineSession stopVoiceOnlineSession(Long userId) {
         VoiceChannelOnlineSession session = voiceChannelOnlineSessions.getOrDefault(userId, null);
 
         if (nonNull(session)) {
@@ -32,6 +32,8 @@ public class OnlineTimeService {
             javaBot.getApi().addVoiceChannelOnlineSessionToUser(userId, session);
             voiceChannelOnlineSessions.remove(userId);
         }
+
+        return session;
     }
 
     public boolean isInAVoiceChannelSession(Long userId) {
@@ -40,8 +42,8 @@ public class OnlineTimeService {
 
     public long getVoiceOnlineTime(Long userId, Long guildId, Long voiceChannelId, VoiceChannelOnlineSession.TimePeriod timePeriod, DiscordScope discordScope) {
         if (voiceChannelOnlineSessions.containsKey(userId)) {
-            stopVoiceOnlineSession(userId);
-            startVoiceOnlineSession(userId, guildId, voiceChannelId);
+            VoiceChannelOnlineSession session = stopVoiceOnlineSession(userId);
+            startVoiceOnlineSession(userId, guildId, voiceChannelId == -1 ? session.getChannelId() : voiceChannelId);
         }
 
         return switch (discordScope) {

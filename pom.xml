@@ -6,7 +6,7 @@
 
     <groupId>de.kifo</groupId>
     <artifactId>DiscordBot</artifactId>
-    <version>3.0.0</version>
+    <version>3.0.1</version>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -62,6 +62,10 @@
             <name>Lavalink Repository</name>
             <url>https://maven.lavalink.dev/releases</url>
         </repository>
+        <repository>
+            <id>lavalink-maven</id>
+            <url>https://maven.lavalink.dev/releases</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -84,6 +88,23 @@
             <groupId>dev.lavalink.youtube</groupId>
             <artifactId>youtube-plugin</artifactId>
             <version>1.14.0</version>
+        </dependency>
+
+        <!-- Spotify Plugin - Additional src plugins -->
+        <dependency>
+            <groupId>com.github.topi314.lavasrc</groupId>
+            <artifactId>lavasrc-plugin</artifactId>
+            <version>4.8.1</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.github.topi314.lavalyrics</groupId>
+                    <artifactId>lavalyrics</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.github.topi314.lavalyrics</groupId>
+                    <artifactId>lavalyrics-plugin-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- Lombok -->
