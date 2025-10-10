@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers.registerRemoteSources;
+import static java.lang.System.getenv;
 
 public class PlayerManager {
 
@@ -30,9 +31,9 @@ public class PlayerManager {
         YoutubeAudioSourceManager youtubeAudioSourceManager = new YoutubeAudioSourceManager();
         audioPlayerManager.registerSourceManager(youtubeAudioSourceManager);
 
-        final String clientId = "e4f0b179b75443f2a782699b2547b7cd"; //Spotify client iD //TODO Safe is securely
-        final String clientSecret = "d7fcdeb28f6b492599ee0073159788a1"; //Spotify client secret //TODO secure the secret
-        final String spDc = "AQCc8j8H8Kjoth-pEYrNZNHlK5BDyWjM9_xI2e6dBqnB0LIWrathboI6izK28wtp96i8MhGrV10Vm81oMuKMBRp73UUG7J4AohEh8HKAC-2EK5S12Z4Dxa5XqgxRS4HoelEGz9ZOAxeNObdkPf-fpkoHTL7BfPSZSXdkKKanO71AqBxikyLPMisZSUw_uhueoGyblp8ZgIdgp38n-g";
+        final String clientId = getenv("SPOTIFY_CLIENT_ID");
+        final String clientSecret = getenv("SPOTIFY_CLIENT_SECRET");
+        final String spDc = getenv("SPOTIFY_SPCD");
         SpotifySourceManager spotifySourceManager = new SpotifySourceManager(clientId, clientSecret, spDc, "DE", ignored -> audioPlayerManager, new DefaultMirroringAudioTrackResolver(null));
         audioPlayerManager.registerSourceManager(spotifySourceManager);
 
