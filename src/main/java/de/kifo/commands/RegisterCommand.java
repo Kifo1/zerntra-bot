@@ -36,9 +36,9 @@ public class RegisterCommand extends CommandBase {
         long userId = member.getIdLong();
         User user = javaBot.getApi().getUserById(userId);
 
-        if (javaBot.getApi().isUserRegistered(user)) {
+        /*if (javaBot.getApi().isUserRegistered(user)) {
             throw new CommandException(USER_ALREADY_REGISTERED, event);
-        }
+        }*/
 
         String password = options.get(0).getAsString();
         user.setPassword(password);

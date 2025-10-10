@@ -8,7 +8,6 @@ import lombok.Data;
 import java.util.HashMap;
 
 import static java.lang.System.currentTimeMillis;
-import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 @Data

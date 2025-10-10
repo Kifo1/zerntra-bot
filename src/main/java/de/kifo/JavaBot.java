@@ -11,6 +11,7 @@ import lombok.Getter;
 import net.dv8tion.jda.api.JDA;
 
 import static com.google.inject.Guice.createInjector;
+import static java.lang.System.getenv;
 import static net.dv8tion.jda.api.JDABuilder.createDefault;
 import static net.dv8tion.jda.api.entities.Activity.playing;
 import static net.dv8tion.jda.api.requests.GatewayIntent.DIRECT_MESSAGES;
@@ -32,12 +33,13 @@ public class JavaBot {
     private PlayerManager playerManager;
     private Registry registry;
 
-    public static final String BOT_API_KEY = "MTA1OTQzMTY0NDA4MTE3MjQ4MQ.GFY5Eo.TcwNJzrB9aSYt_1fYTd6OgHb6BpWgrBFfsAqP4";
-    public static final String BOT_DC_KEY = "MTA1OTQzMTY0NDA4MTE3MjQ4MQ.GRGHhx.JjZKAwIt2PkflD1iF10M5zPuN75rRpd_-fYJUE"; //Real key
-                                            //"MTQyNDM3NzEzMDgzNzQ3OTU4NA.GF9dAP.lDRqhmpFJKfuCn-BxzpkxiNO0U81sQh3ZGjm_k"; //Test
+    public static final String BOT_API_KEY = getenv("BOT_API_TOKEN");
+    public static String BOT_DC_KEY;
     public static OnlineTimeService onlineTimeService;
 
-    public JavaBot() {
+    public JavaBot(boolean production) {
+        BOT_DC_KEY = production ? getenv("BOT_API_TOKEN") : getenv("BOT_TEST_API_KEY");
+
         injector = createInjector(new RegistrationModule(this));
 
         setUpBot();
@@ -48,7 +50,7 @@ public class JavaBot {
 
     private void setUpBot() {
         api = injector.getInstance(API.class);
-        jda = createDefault(BOT_DC_KEY)
+        jda = createDefault(BOT_API_KEY)
                 .setMemberCachePolicy(ALL)
                 .enableCache(ONLINE_STATUS)
                 .enableIntents(MESSAGE_CONTENT)
