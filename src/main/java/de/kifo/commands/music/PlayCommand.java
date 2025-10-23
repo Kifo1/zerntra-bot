@@ -1,11 +1,9 @@
 package de.kifo.commands.music;
 
-import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 import de.kifo.JavaBot;
 import de.kifo.commands.handle.CommandBase;
 import de.kifo.common.api.model.HistoryEntry;
-import de.kifo.common.api.model.Song;
 import de.kifo.common.exceptions.CommandException;
 import de.kifo.common.music.PlayerManager;
 import de.kifo.common.music.TrackScheduler;
@@ -32,7 +30,7 @@ import static de.kifo.common.enums.message.Message.MessageType.MESSAGE;
 import static de.kifo.common.util.EmbedUtils.getEmbedMessageByText;
 import static java.lang.System.currentTimeMillis;
 import static java.util.Objects.isNull;
-import static java.util.Objects.requireNonNull;
+import static java.util.Objects.nonNull;
 import static net.dv8tion.jda.api.interactions.commands.OptionType.STRING;
 
 @CommandBase.BotCommand(name = "play", description = "Wähle ein Lied, das abgespielt werden soll.", hasOptions = true)
@@ -84,9 +82,8 @@ public class PlayCommand extends CommandBase {
     public void autoComplete(String optionName, CommandAutoCompleteInteractionEvent event) {
         if (optionName.equalsIgnoreCase("song")) {
             List<Command.Choice> replyChoices = javaBot.getApi().getRecommendedSongsByUserId(event.getUser().getIdLong()).stream()
-                    .map(Song::getName)
-                    .filter(songName -> songName.toLowerCase().contains(event.getFocusedOption().getValue().toLowerCase()))
-                    .map(songName -> new Command.Choice(songName, songName))
+                    .filter(song -> song.getName().toLowerCase().contains(event.getFocusedOption().getValue().toLowerCase()))
+                    .map(song -> new Command.Choice(song.getName(), nonNull(song.getUri()) ? song.getUri() : song.getName()))
                     .toList();
 
             event.replyChoices(replyChoices).queue();
@@ -94,7 +91,7 @@ public class PlayCommand extends CommandBase {
     }
 
     @Override
-    public List<OptionData> getOptions() {
-        return ImmutableList.of(new OptionData(STRING, "song", "Titel oder URL vom Lied", true, true));
+    public @NotNull List<OptionData> getOptions() {
+        return List.of(new OptionData(STRING, "song", "Titel oder URL vom Lied", true, true));
     }
 }

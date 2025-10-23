@@ -12,5 +12,6 @@ public class Song {
     private Long timesPlayed;
     private Long lastPlayDate;
     private String name;
+    private String uri;
 
 }

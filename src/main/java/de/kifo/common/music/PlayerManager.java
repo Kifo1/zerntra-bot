@@ -9,6 +9,7 @@ import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 import de.kifo.JavaBot;
 import dev.lavalink.youtube.YoutubeAudioSourceManager;
 import net.dv8tion.jda.api.entities.Guild;
@@ -54,18 +55,17 @@ public class PlayerManager {
         audioPlayerManager.loadItemOrdered(guildMusicManager, trackURL, new AudioLoadResultHandler() {
             @Override
             public void trackLoaded(AudioTrack audioTrack) {
-                javaBot.getApi().updateSong(userId, audioTrack.getInfo().title);
+                AudioTrackInfo trackInfo = audioTrack.getInfo();
+                javaBot.getApi().updateSong(userId, trackInfo.title, trackInfo.uri);
                 guildMusicManager.getTrackScheduler().queue(audioTrack);
             }
 
             @Override
             public void playlistLoaded(AudioPlaylist audioPlaylist) {
-                //AudioTrack audioTrack = audioPlaylist.getTracks().get(0);
-                //javaBot.getApi().updateSong(userId, audioTrack.getInfo().title);
-                //guildMusicManager.getTrackScheduler().queue(audioTrack);
                 if (audioPlaylist.isSearchResult()) {
                     AudioTrack firstTrack = audioPlaylist.getTracks().get(0);
-                    javaBot.getApi().updateSong(userId, firstTrack.getInfo().title);
+                    AudioTrackInfo trackInfo = firstTrack.getInfo();
+                    javaBot.getApi().updateSong(userId, trackInfo.title, trackInfo.uri);
                     guildMusicManager.getTrackScheduler().queue(firstTrack);
                 } else {
                     audioPlaylist.getTracks().forEach(track -> {

@@ -90,11 +90,11 @@ public class API {
         return getObjectListByJson(sendGetRequest("/songs/get-all"), Song.class);
     }
 
-    public void updateSong(Long usedId, String name) {
+    public void updateSong(Long usedId, String name, String uri) {
         Song song = getSongListByUserId(usedId).stream()
                 .filter(s -> s.getName().equalsIgnoreCase(name))
                 .findFirst()
-                .orElseGet(() -> new Song(null, usedId, 0L, currentTimeMillis(), name));
+                .orElseGet(() -> new Song(null, usedId, 0L, currentTimeMillis(), name, uri));
 
         song.setTimesPlayed(song.getTimesPlayed() + 1);
         song.setLastPlayDate(currentTimeMillis());

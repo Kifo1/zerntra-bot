@@ -40,7 +40,7 @@ public class StopCommand extends CommandBase {
     public void execute(Member member, TextChannel textChannel, List<OptionMapping> options, SlashCommandInteractionEvent event) throws CommandException {
         GuildVoiceState guildVoiceState = member.getVoiceState();
 
-        if (isNull(guildVoiceState) || isNull(guildVoiceState.getChannel()) || isNull(guildVoiceState.getChannel().asVoiceChannel())) {
+        if (isNull(guildVoiceState) || isNull(guildVoiceState.getChannel())) {
             throw new CommandException(NOT_IN_SPEECH_CHANNEL, event);
         }
 

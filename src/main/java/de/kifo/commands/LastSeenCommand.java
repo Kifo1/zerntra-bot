@@ -1,6 +1,5 @@
 package de.kifo.commands;
 
-import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 import de.kifo.JavaBot;
 import de.kifo.commands.handle.CommandBase;
@@ -26,7 +25,6 @@ import static java.time.LocalDateTime.now;
 import static java.time.ZoneId.systemDefault;
 import static java.time.format.DateTimeFormatter.ofPattern;
 import static java.time.temporal.ChronoUnit.DAYS;
-import static java.util.List.of;
 import static java.util.Objects.isNull;
 import static net.dv8tion.jda.api.interactions.commands.OptionType.USER;
 
@@ -66,7 +64,7 @@ public class LastSeenCommand extends CommandBase {
     public void autoComplete(String optionName, CommandAutoCompleteInteractionEvent event) {}
 
     @Override
-    public List<OptionData> getOptions() {
-        return ImmutableList.of(new OptionData(USER, "user", "User, von dem du wissen willst, wann er zuletzt online war.", true, false));
+    public @NotNull List<OptionData> getOptions() {
+        return List.of(new OptionData(USER, "user", "User, von dem du wissen willst, wann er zuletzt online war.", true, false));
     }
 }
