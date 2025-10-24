@@ -9,6 +9,7 @@ import lombok.Getter;
 public class HistoryEntry {
 
     private Long id;
+    private Long guildId;
     private Long userId;
     private Type type;
     private Long dateTime;

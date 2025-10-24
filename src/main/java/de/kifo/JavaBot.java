@@ -11,6 +11,7 @@ import lombok.Getter;
 import net.dv8tion.jda.api.JDA;
 
 import static com.google.inject.Guice.createInjector;
+import static java.lang.System.getenv;
 import static net.dv8tion.jda.api.JDABuilder.createDefault;
 import static net.dv8tion.jda.api.entities.Activity.playing;
 import static net.dv8tion.jda.api.requests.GatewayIntent.DIRECT_MESSAGES;
@@ -23,6 +24,8 @@ import static net.dv8tion.jda.api.utils.cache.CacheFlag.ONLINE_STATUS;
 @Getter
 public class JavaBot {
 
+    public static final String VERSION = "3.0.1";
+
     private final Injector injector;
 
     private API api;
@@ -30,10 +33,13 @@ public class JavaBot {
     private PlayerManager playerManager;
     private Registry registry;
 
-    public static final String BOT_API_KEY = "MTA1OTQzMTY0NDA4MTE3MjQ4MQ.GFY5Eo.TcwNJzrB9aSYt_1fYTd6OgHb6BpWgrBFfsAqP4";
+    public static final String BOT_API_KEY = getenv("BOT_API_TOKEN");
+    public static String BOT_DC_KEY;
     public static OnlineTimeService onlineTimeService;
 
-    public JavaBot() {
+    public JavaBot(boolean production) {
+        BOT_DC_KEY = production ? getenv("BOT_API_TOKEN") : getenv("BOT_TEST_API_KEY");
+
         injector = createInjector(new RegistrationModule(this));
 
         setUpBot();
@@ -51,7 +57,7 @@ public class JavaBot {
                 .enableIntents(GUILD_PRESENCES)
                 .enableIntents(DIRECT_MESSAGES)
                 .enableIntents(GUILD_MEMBERS)
-                .setActivity(playing("Musik für die Rasselbande"))
+                .setActivity(playing("Musik ab."))
                 .build();
     }
 

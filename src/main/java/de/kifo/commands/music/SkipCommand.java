@@ -1,5 +1,6 @@
 package de.kifo.commands.music;
 
+import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
@@ -22,9 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
-import static com.google.common.collect.ImmutableList.of;
-import static de.kifo.common.enums.exception.ExceptionType.NOT_IN_SPEECH_CHANNEL;
-import static de.kifo.common.enums.exception.ExceptionType.SKIP_INDEX_NOT_FOUND;
+import static de.kifo.common.enums.exception.ExceptionType.*;
 import static de.kifo.common.enums.message.Message.MessageType.MESSAGE;
 import static de.kifo.common.util.EmbedUtils.getEmbedMessageByText;
 import static java.lang.Math.min;
@@ -47,13 +46,17 @@ public class SkipCommand extends CommandBase {
     public void execute(Member member, TextChannel textChannel, List<OptionMapping> options, SlashCommandInteractionEvent event) throws CommandException {
         GuildVoiceState guildVoiceState = member.getVoiceState();
 
-        if (isNull(guildVoiceState) || isNull(guildVoiceState.getChannel()) || isNull(guildVoiceState.getChannel().asVoiceChannel())) {
+        if (isNull(guildVoiceState) || isNull(guildVoiceState.getChannel())) {
             throw new CommandException(NOT_IN_SPEECH_CHANNEL, event);
         }
 
         PlayerManager playerManager = javaBot.getPlayerManager();
         GuildMusicManager guildMusicManager = playerManager.getGuildMusicManager(event.getGuild());
         AudioPlayer audioPlayer = guildMusicManager.getTrackScheduler().getAudioPlayer();
+
+        if (isNull(audioPlayer.getPlayingTrack())) {
+            throw new CommandException(NO_SONG_RUNNING, event);
+        }
 
         if (options.isEmpty() || isNull(options.get(0))) {
             audioPlayer.stopTrack();
@@ -88,6 +91,6 @@ public class SkipCommand extends CommandBase {
 
     @Override
     public List<OptionData> getOptions() {
-        return of(new OptionData(INTEGER, "index", "Index des Liedes, welches übersprungen werden soll", false, true));
+        return ImmutableList.of(new OptionData(INTEGER, "index", "Index des Liedes, welches übersprungen werden soll", false, true));
     }
 }

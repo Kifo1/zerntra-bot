@@ -1,5 +1,6 @@
 package de.kifo.commands.music;
 
+import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 import de.kifo.JavaBot;
 import de.kifo.commands.handle.CommandBase;
@@ -7,6 +8,8 @@ import de.kifo.common.api.model.HistoryEntry;
 import de.kifo.common.api.model.Song;
 import de.kifo.common.exceptions.CommandException;
 import de.kifo.common.music.PlayerManager;
+import de.kifo.common.music.TrackScheduler;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
@@ -21,15 +24,15 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-import static com.google.common.collect.ImmutableList.of;
 import static de.kifo.common.api.model.HistoryEntry.Type.SONG_PLAY;
+import static de.kifo.common.enums.exception.ExceptionType.BOT_ALREADY_PLAYING_FOR_GUILD;
 import static de.kifo.common.enums.exception.ExceptionType.NOT_IN_SPEECH_CHANNEL;
 import static de.kifo.common.enums.message.Message.MessageType.MESSAGE;
 import static de.kifo.common.music.TrackScheduler.map;
 import static de.kifo.common.util.EmbedUtils.getEmbedMessageByText;
 import static java.lang.System.currentTimeMillis;
-import static java.util.Comparator.comparing;
 import static java.util.Objects.isNull;
+import static java.util.Objects.requireNonNull;
 import static net.dv8tion.jda.api.interactions.commands.OptionType.STRING;
 
 @CommandBase.BotCommand(name = "play", description = "Wähle ein Lied, das abgespielt werden soll.", hasOptions = true)
@@ -45,14 +48,21 @@ public class PlayCommand extends CommandBase {
     @Override
     public void execute(Member member, TextChannel textChannel, List<OptionMapping> options, SlashCommandInteractionEvent event) throws CommandException {
         GuildVoiceState guildVoiceState = member.getVoiceState();
+        Guild guild = event.getGuild();
+        TrackScheduler trackScheduler = javaBot.getPlayerManager().getGuildMusicManager(guild).getTrackScheduler();
 
-        if (isNull(guildVoiceState) || isNull(guildVoiceState.getChannel()) || isNull(guildVoiceState.getChannel().asVoiceChannel())) {
+        if (isNull(guildVoiceState) || isNull(guildVoiceState.getChannel())) {
             throw new CommandException(NOT_IN_SPEECH_CHANNEL, event);
         }
 
         VoiceChannel voiceChannel = guildVoiceState.getChannel().asVoiceChannel();
         PlayerManager playerManager = javaBot.getPlayerManager();
         AudioManager manager = voiceChannel.getGuild().getAudioManager();
+
+        if (trackScheduler.isPlaying() && !manager.getConnectedChannel().equals(guildVoiceState.getChannel())) {
+            throw new CommandException(BOT_ALREADY_PLAYING_FOR_GUILD, event);
+        }
+
         manager.openAudioConnection(voiceChannel);
 
         String url = options.get(0).getAsString();
@@ -64,23 +74,17 @@ public class PlayCommand extends CommandBase {
         playerManager.play(event.getGuild(), url, member.getIdLong());
         map.put(voiceChannel.getGuild().getIdLong(), textChannel);
 
-        javaBot.getApi().createHistoryEntry(new HistoryEntry(null, member.getIdLong(), SONG_PLAY, currentTimeMillis(),
-                "Query " + url + ", " + textChannel.getName()));
+        javaBot.getApi().createHistoryEntry(new HistoryEntry(null, guild.getIdLong(), member.getIdLong(),
+                SONG_PLAY, currentTimeMillis(),"Query " + url + ", " + textChannel.getName()));
     }
 
     @Override
     public void autoComplete(String optionName, CommandAutoCompleteInteractionEvent event) {
-        List<String> options = javaBot.getApi().getSongListByUserId(event.getUser().getIdLong()).stream()
-                .filter(song -> song.getName().length() < 100)
-                .sorted(comparing(Song::getTimesPlayed).reversed())
-                .map(Song::getName)
-                .toList();
-
         if (optionName.equalsIgnoreCase("song")) {
-            List<Command.Choice> replyChoices = options.stream()
-                    .filter(option -> option.toLowerCase().contains(event.getFocusedOption().getValue().toLowerCase()))
-                    .map(option -> new Command.Choice(option, option))
-                    .limit(25)
+            List<Command.Choice> replyChoices = javaBot.getApi().getRecommendedSongsByUserId(event.getUser().getIdLong()).stream()
+                    .map(Song::getName)
+                    .filter(songName -> songName.toLowerCase().contains(event.getFocusedOption().getValue().toLowerCase()))
+                    .map(songName -> new Command.Choice(songName, songName))
                     .toList();
 
             event.replyChoices(replyChoices).queue();
@@ -89,6 +93,6 @@ public class PlayCommand extends CommandBase {
 
     @Override
     public List<OptionData> getOptions() {
-        return of(new OptionData(STRING, "song", "Titel oder URL vom Lied", true, true));
+        return ImmutableList.of(new OptionData(STRING, "song", "Titel oder URL vom Lied", true, true));
     }
 }

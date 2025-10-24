@@ -1,5 +1,6 @@
 package de.kifo.commands;
 
+import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 import de.kifo.JavaBot;
 import de.kifo.commands.handle.CommandBase;
@@ -15,7 +16,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-import static com.google.common.collect.ImmutableList.of;
 import static de.kifo.common.enums.exception.ExceptionType.USER_ALREADY_REGISTERED;
 import static de.kifo.common.enums.message.Message.MessageType.MESSAGE;
 import static de.kifo.common.util.EmbedUtils.getEmbedMessageByText;
@@ -36,9 +36,9 @@ public class RegisterCommand extends CommandBase {
         long userId = member.getIdLong();
         User user = javaBot.getApi().getUserById(userId);
 
-        if (javaBot.getApi().isUserRegistered(user)) {
+        /*if (javaBot.getApi().isUserRegistered(user)) {
             throw new CommandException(USER_ALREADY_REGISTERED, event);
-        }
+        }*/
 
         String password = options.get(0).getAsString();
         user.setPassword(password);
@@ -55,6 +55,6 @@ public class RegisterCommand extends CommandBase {
 
     @Override
     public List<OptionData> getOptions() {
-        return of(new OptionData(STRING, "passwort", "Wähle ein Passwort für deinen Account.", true, false));
+        return ImmutableList.of(new OptionData(STRING, "passwort", "Wähle ein Passwort für deinen Account.", true, false));
     }
 }

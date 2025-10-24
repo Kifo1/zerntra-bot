@@ -1,10 +1,7 @@
 package de.kifo.commands;
 
-import com.google.inject.Inject;
-import de.kifo.JavaBot;
 import de.kifo.commands.handle.CommandBase;
 import de.kifo.common.exceptions.CommandException;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
@@ -14,26 +11,20 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-import static java.awt.Color.MAGENTA;
+import static de.kifo.JavaBot.VERSION;
+import static de.kifo.common.enums.message.Message.MessageType.MESSAGE;
+import static de.kifo.common.util.EmbedUtils.getEmbedMessageByText;
 
-@CommandBase.BotCommand(name = "website", description = "Zeigt den Link zur Website an.")
-public class WebsiteCommand extends CommandBase {
+@CommandBase.BotCommand(name = "version", description = "Zeigt die aktuelle Bot Version an.")
+public class VersionCommand extends CommandBase {
 
-    @Inject
-    private JavaBot javaBot;
-
-    public WebsiteCommand(@NotNull BotCommand command) {
+    public VersionCommand(@NotNull BotCommand command) {
         super(command);
     }
 
     @Override
     public void execute(Member member, TextChannel textChannel, List<OptionMapping> options, SlashCommandInteractionEvent event) throws CommandException {
-        EmbedBuilder builder = new EmbedBuilder()
-                .setColor(MAGENTA)
-                .addField("Website:", "Besuche https://zerntra.org um deine Statistiken zu sehen.", false)
-                .setFooter("Nutze /register <Passwort>, um ein Passwort für deinen Account festzulegen.");
-
-        event.replyEmbeds(builder.build()).queue();
+        event.replyEmbeds(getEmbedMessageByText("Die aktuelle Version ist: " + VERSION, MESSAGE)).queue();
     }
 
     @Override

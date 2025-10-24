@@ -1,5 +1,7 @@
 package de.kifo.common.music;
 
+import com.github.topi314.lavasrc.mirror.DefaultMirroringAudioTrackResolver;
+import com.github.topi314.lavasrc.spotify.SpotifySourceManager;
 import com.google.inject.Inject;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
@@ -15,6 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers.registerRemoteSources;
+import static java.lang.System.getenv;
 
 public class PlayerManager {
 
@@ -28,7 +31,14 @@ public class PlayerManager {
         YoutubeAudioSourceManager youtubeAudioSourceManager = new YoutubeAudioSourceManager();
         audioPlayerManager.registerSourceManager(youtubeAudioSourceManager);
 
+        final String clientId = getenv("SPOTIFY_CLIENT_ID");
+        final String clientSecret = getenv("SPOTIFY_CLIENT_SECRET");
+        final String spDc = getenv("SPOTIFY_SPCD");
+        SpotifySourceManager spotifySourceManager = new SpotifySourceManager(clientId, clientSecret, spDc, "DE", ignored -> audioPlayerManager, new DefaultMirroringAudioTrackResolver(null));
+        audioPlayerManager.registerSourceManager(spotifySourceManager);
+
         registerRemoteSources(audioPlayerManager, com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager.class);
+        registerRemoteSources(audioPlayerManager, SpotifySourceManager.class);
     }
 
     public GuildMusicManager getGuildMusicManager(Guild guild) {
@@ -50,8 +60,18 @@ public class PlayerManager {
 
             @Override
             public void playlistLoaded(AudioPlaylist audioPlaylist) {
-                javaBot.getApi().updateSong(userId, audioPlaylist.getName());
-                audioPlaylist.getTracks().forEach(audioTrack -> guildMusicManager.getTrackScheduler().queue(audioTrack));
+                //AudioTrack audioTrack = audioPlaylist.getTracks().get(0);
+                //javaBot.getApi().updateSong(userId, audioTrack.getInfo().title);
+                //guildMusicManager.getTrackScheduler().queue(audioTrack);
+                if (audioPlaylist.isSearchResult()) {
+                    AudioTrack firstTrack = audioPlaylist.getTracks().get(0);
+                    javaBot.getApi().updateSong(userId, firstTrack.getInfo().title);
+                    guildMusicManager.getTrackScheduler().queue(firstTrack);
+                } else {
+                    audioPlaylist.getTracks().forEach(track -> {
+                        guildMusicManager.getTrackScheduler().queue(track);
+                    });
+                }
             }
 
             @Override
