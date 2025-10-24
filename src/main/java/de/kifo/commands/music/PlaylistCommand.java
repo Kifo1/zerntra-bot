@@ -7,6 +7,8 @@ import de.kifo.common.api.model.HistoryEntry;
 import de.kifo.common.api.model.Playlist;
 import de.kifo.common.exceptions.CommandException;
 import de.kifo.common.music.PlayerManager;
+import de.kifo.common.music.TrackScheduler;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
@@ -22,8 +24,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.google.common.collect.ImmutableList.of;
 import static de.kifo.common.api.model.HistoryEntry.Type.PLAYLIST_PLAY;
+import static de.kifo.common.enums.exception.ExceptionType.BOT_ALREADY_PLAYING_FOR_GUILD;
 import static de.kifo.common.enums.exception.ExceptionType.NOT_IN_SPEECH_CHANNEL;
 import static de.kifo.common.enums.message.Message.MessageType.MESSAGE;
 import static de.kifo.common.music.TrackScheduler.map;
@@ -47,6 +49,7 @@ public class PlaylistCommand extends CommandBase {
     @Override
     public void execute(Member member, TextChannel textChannel, List<OptionMapping> options, SlashCommandInteractionEvent event) throws CommandException {
         GuildVoiceState guildVoiceState = member.getVoiceState();
+        Guild guild = event.getGuild();
 
         if (isNull(guildVoiceState) || isNull(guildVoiceState.getChannel())) {
             throw new CommandException(NOT_IN_SPEECH_CHANNEL, event);
@@ -55,6 +58,12 @@ public class PlaylistCommand extends CommandBase {
         VoiceChannel voiceChannel = guildVoiceState.getChannel().asVoiceChannel();
         PlayerManager playerManager = javaBot.getPlayerManager();
         AudioManager audioManager = voiceChannel.getGuild().getAudioManager();
+        TrackScheduler trackScheduler = playerManager.getGuildMusicManager(guild).getTrackScheduler();
+
+        if (trackScheduler.isPlaying() && !audioManager.getConnectedChannel().equals(guildVoiceState.getChannel())) {
+            throw new CommandException(BOT_ALREADY_PLAYING_FOR_GUILD, event);
+        }
+
         audioManager.openAudioConnection(voiceChannel);
 
         Long playlistId = options.get(0).getAsLong();
@@ -63,11 +72,11 @@ public class PlaylistCommand extends CommandBase {
 
         List<String> queryUrls = new ArrayList<>(playlist.getPlaylistSongs().stream()
                 .map(playlistSong -> {
-                    String url = playlistSong.getUrl();
-                    if (isNull(url) || !url.startsWith("http")) {
-                        url = "ytsearch:" + playlistSong.getName() + " audio";
+                    String uri = playlistSong.getUri();
+                    if (isNull(uri) || !uri.startsWith("http")) {
+                        uri = "ytsearch:" + playlistSong.getName() + " audio";
                     }
-                    return url;
+                    return uri;
                 })
                 .toList());
 
@@ -78,9 +87,9 @@ public class PlaylistCommand extends CommandBase {
         event.replyEmbeds(getEmbedMessageByText("Starte Playlist: " + playlist.getName(), MESSAGE)).queue();
         map.put(voiceChannel.getGuild().getIdLong(), textChannel);
 
-        queryUrls.forEach(queryUrl -> playerManager.play(event.getGuild(), queryUrl, member.getIdLong()));
+        queryUrls.forEach(queryUrl -> playerManager.play(guild, queryUrl, member.getIdLong()));
 
-        javaBot.getApi().createHistoryEntry(new HistoryEntry(null, member.getIdLong(), PLAYLIST_PLAY, currentTimeMillis(),
+        javaBot.getApi().createHistoryEntry(new HistoryEntry(null, guild.getIdLong(), member.getIdLong(), PLAYLIST_PLAY, currentTimeMillis(),
                 playlistId + ", " + textChannel.getName()));
     }
 
@@ -100,7 +109,7 @@ public class PlaylistCommand extends CommandBase {
 
     @Override
     public List<OptionData> getOptions() {
-        return of(new OptionData(STRING, "playlist", "Name der Playlist", true, true),
+        return List.of(new OptionData(STRING, "playlist", "Name der Playlist", true, true),
                   new OptionData(BOOLEAN, "shuffle", "Erstellt eine zufällige Reihenfolge", false, false));
     }
 

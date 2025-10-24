@@ -49,7 +49,6 @@ public class PlayCommand extends CommandBase {
     public void execute(Member member, TextChannel textChannel, List<OptionMapping> options, SlashCommandInteractionEvent event) throws CommandException {
         GuildVoiceState guildVoiceState = member.getVoiceState();
         Guild guild = event.getGuild();
-        TrackScheduler trackScheduler = javaBot.getPlayerManager().getGuildMusicManager(guild).getTrackScheduler();
 
         if (isNull(guildVoiceState) || isNull(guildVoiceState.getChannel())) {
             throw new CommandException(NOT_IN_SPEECH_CHANNEL, event);
@@ -57,6 +56,7 @@ public class PlayCommand extends CommandBase {
 
         VoiceChannel voiceChannel = guildVoiceState.getChannel().asVoiceChannel();
         PlayerManager playerManager = javaBot.getPlayerManager();
+        TrackScheduler trackScheduler = playerManager.getGuildMusicManager(guild).getTrackScheduler();
         AudioManager manager = voiceChannel.getGuild().getAudioManager();
 
         if (trackScheduler.isPlaying() && !manager.getConnectedChannel().equals(guildVoiceState.getChannel())) {
