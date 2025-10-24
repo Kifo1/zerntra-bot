@@ -100,7 +100,7 @@ public class API {
         song.setLastPlayDate(currentTimeMillis());
 
         String jsonRequest = getJsonByObject(song);
-        sendPutRequest("/songs/update/" + song.getUserId(), jsonRequest);
+        sendPutRequest("/songs/update", jsonRequest);
     }
 
     /**
