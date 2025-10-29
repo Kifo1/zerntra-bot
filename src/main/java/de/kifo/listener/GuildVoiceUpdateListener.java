@@ -2,7 +2,7 @@ package de.kifo.listener;
 
 import com.google.inject.Inject;
 import de.kifo.JavaBot;
-import de.kifo.common.api.model.HistoryEntry;
+import de.kifo.common.api.model.HistoryEntryDTO;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.unions.AudioChannelUnion;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent;
@@ -10,9 +10,9 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
 import static de.kifo.JavaBot.onlineTimeService;
-import static de.kifo.common.api.model.HistoryEntry.Type.CHANNEL_CHANGE;
-import static de.kifo.common.api.model.HistoryEntry.Type.CHANNEL_JOIN;
-import static de.kifo.common.api.model.HistoryEntry.Type.CHANNEL_QUIT;
+import static de.kifo.common.api.model.HistoryEntryDTO.Type.CHANNEL_CHANGE;
+import static de.kifo.common.api.model.HistoryEntryDTO.Type.CHANNEL_JOIN;
+import static de.kifo.common.api.model.HistoryEntryDTO.Type.CHANNEL_QUIT;
 import static java.lang.System.currentTimeMillis;
 import static java.util.Objects.nonNull;
 
@@ -28,9 +28,9 @@ public class GuildVoiceUpdateListener extends ListenerAdapter {
         AudioChannelUnion channelJoined = event.getChannelJoined();
         AudioChannelUnion channelLeft = event.getChannelLeft();
 
-        javaBot.getApi().createUserIfNotPresent(userId, event.getMember().getUser().getName());
+        javaBot.getApi().createUser(userId, event.getMember().getUser().getName());
 
-        HistoryEntry.Type type;
+        HistoryEntryDTO.Type type;
         String information;
         if (nonNull(channelJoined) && nonNull(channelLeft)) {
             type = CHANNEL_CHANGE;
@@ -46,7 +46,7 @@ public class GuildVoiceUpdateListener extends ListenerAdapter {
             onlineTimeService.stopVoiceOnlineSession(userId);
         }
 
-        javaBot.getApi().createHistoryEntry(new HistoryEntry(null, guild.getIdLong(),
+        javaBot.getApi().createHistoryEntry(new HistoryEntryDTO(null, guild.getIdLong(),
                 userId, type, currentTimeMillis(), information));
     }
 }

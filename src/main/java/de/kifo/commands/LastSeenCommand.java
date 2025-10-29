@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 import de.kifo.JavaBot;
 import de.kifo.commands.handle.CommandBase;
-import de.kifo.common.api.model.User;
+import de.kifo.common.api.model.UserDTO;
 import de.kifo.common.exceptions.CommandException;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
@@ -26,7 +26,6 @@ import static java.time.LocalDateTime.now;
 import static java.time.ZoneId.systemDefault;
 import static java.time.format.DateTimeFormatter.ofPattern;
 import static java.time.temporal.ChronoUnit.DAYS;
-import static java.util.List.of;
 import static java.util.Objects.isNull;
 import static net.dv8tion.jda.api.interactions.commands.OptionType.USER;
 
@@ -43,22 +42,22 @@ public class LastSeenCommand extends CommandBase {
     @Override
     public void execute(Member member, TextChannel textChannel, List<OptionMapping> options, SlashCommandInteractionEvent event) throws CommandException {
         long requestedUserId = options.get(0).getAsUser().getIdLong();
-        User user = javaBot.getApi().getUserById(requestedUserId);
+        UserDTO userDTO = javaBot.getApi().getUserById(requestedUserId);
 
-        if (isNull(user.getLastOnTime())) {
+        if (isNull(userDTO.getLastOnTime())) {
             throw new CommandException(USER_HAS_NO_DATA, event);
         }
 
-        long lastOnTime = user.getLastOnTime();
+        long lastOnTime = userDTO.getLastOnTime();
         LocalDateTime lastSeenDate = ofEpochMilli(lastOnTime).atZone(systemDefault()).toLocalDateTime();
         long pastDays = DAYS.between(lastSeenDate, now());
 
-        if (!onlineTimeService.isInAVoiceChannelSession(user.getId())) {
+        if (!onlineTimeService.isInAVoiceChannelSession(userDTO.getId())) {
             event.replyEmbeds(getEmbedMessageByText(
-                    user.getUserName() + " war zuletzt am " + lastSeenDate.format(ofPattern("dd.MM.yyyy")) + " um " + lastSeenDate.format(ofPattern("HH:mm:ss")) + " Uhr online. Das ist " + pastDays + " Tage her.", MESSAGE)).queue();
+                    userDTO.getUserName() + " war zuletzt am " + lastSeenDate.format(ofPattern("dd.MM.yyyy")) + " um " + lastSeenDate.format(ofPattern("HH:mm:ss")) + " Uhr online. Das ist " + pastDays + " Tage her.", MESSAGE)).queue();
         } else {
             event.replyEmbeds(getEmbedMessageByText(
-                    user.getUserName() + " ist im Moment in einem Voice-Channel online.", MESSAGE)).queue();
+                    userDTO.getUserName() + " ist im Moment in einem Voice-Channel online.", MESSAGE)).queue();
         }
     }
 

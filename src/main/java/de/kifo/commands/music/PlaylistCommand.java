@@ -3,8 +3,9 @@ package de.kifo.commands.music;
 import com.google.inject.Inject;
 import de.kifo.JavaBot;
 import de.kifo.commands.handle.CommandBase;
-import de.kifo.common.api.model.HistoryEntry;
-import de.kifo.common.api.model.Playlist;
+import de.kifo.common.api.model.HistoryEntryDTO;
+import de.kifo.common.api.model.PlaylistDTO;
+import de.kifo.common.api.model.UserDTO;
 import de.kifo.common.exceptions.CommandException;
 import de.kifo.common.music.PlayerManager;
 import de.kifo.common.music.TrackScheduler;
@@ -24,7 +25,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.kifo.common.api.model.HistoryEntry.Type.PLAYLIST_PLAY;
+import static de.kifo.common.api.model.HistoryEntryDTO.Type.PLAYLIST_PLAY;
 import static de.kifo.common.enums.exception.ExceptionType.BOT_ALREADY_PLAYING_FOR_GUILD;
 import static de.kifo.common.enums.exception.ExceptionType.NOT_IN_SPEECH_CHANNEL;
 import static de.kifo.common.enums.message.Message.MessageType.MESSAGE;
@@ -68,9 +69,9 @@ public class PlaylistCommand extends CommandBase {
 
         Long playlistId = options.get(0).getAsLong();
         boolean shuffle = options.size() > 1 && options.get(1).getAsBoolean();
-        Playlist playlist = javaBot.getApi().getPlaylist(playlistId);
+        PlaylistDTO playlistDTO = javaBot.getApi().getPlaylist(playlistId);
 
-        List<String> queryUrls = new ArrayList<>(playlist.getPlaylistSongs().stream()
+        List<String> queryUrls = new ArrayList<>(playlistDTO.getPlaylistSongs().stream()
                 .map(playlistSong -> {
                     String uri = playlistSong.getUri();
                     if (isNull(uri) || !uri.startsWith("http")) {
@@ -84,12 +85,12 @@ public class PlaylistCommand extends CommandBase {
             shuffle(queryUrls);
         }
 
-        event.replyEmbeds(getEmbedMessageByText("Starte Playlist: " + playlist.getName(), MESSAGE)).queue();
+        event.replyEmbeds(getEmbedMessageByText("Starte Playlist: " + playlistDTO.getName(), MESSAGE)).queue();
         map.put(voiceChannel.getGuild().getIdLong(), textChannel);
 
         queryUrls.forEach(queryUrl -> playerManager.play(guild, queryUrl, member.getIdLong()));
 
-        javaBot.getApi().createHistoryEntry(new HistoryEntry(null, guild.getIdLong(), member.getIdLong(), PLAYLIST_PLAY, currentTimeMillis(),
+        javaBot.getApi().createHistoryEntry(new HistoryEntryDTO(null, guild.getIdLong(), member.getIdLong(), PLAYLIST_PLAY, currentTimeMillis(),
                 playlistId + ", " + textChannel.getName()));
     }
 
@@ -97,9 +98,9 @@ public class PlaylistCommand extends CommandBase {
     public void autoComplete(String optionName, CommandAutoCompleteInteractionEvent event) {
         if (optionName.equalsIgnoreCase("playlist")) {
             List<Command.Choice> replyChoices = javaBot.getApi().getAllPlaylistsByUser(event.getUser().getIdLong()).stream()
-                    .filter(playlist -> getPlaylistOptionString(playlist).toLowerCase()
+                    .filter(playlistDTO -> getPlaylistOptionString(playlistDTO).toLowerCase()
                             .contains(event.getFocusedOption().getValue().toLowerCase()))
-                    .map(playlist -> new Command.Choice(getPlaylistOptionString(playlist), playlist.getId()))
+                    .map(playlistDTO -> new Command.Choice(getPlaylistOptionString(playlistDTO), playlistDTO.getId()))
                     .limit(25)
                     .toList();
 
@@ -113,7 +114,7 @@ public class PlaylistCommand extends CommandBase {
                   new OptionData(BOOLEAN, "shuffle", "Erstellt eine zufällige Reihenfolge", false, false));
     }
 
-    private String getPlaylistOptionString(Playlist playlist) {
-        return playlist.getName() + " - " + playlist.getOwner().getUserName();
+    private String getPlaylistOptionString(PlaylistDTO playlistDTO) {
+        return playlistDTO.getName() + " - " + playlistDTO.getOwner().getUserName();
     }
 }

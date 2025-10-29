@@ -5,12 +5,13 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class Song {
+public class SongDTO {
 
     private Long id;
     private Long userId;
     private Long timesPlayed;
     private Long lastPlayDate;
     private String name;
+    private String uri;
 
 }

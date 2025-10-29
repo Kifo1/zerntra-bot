@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 import de.kifo.JavaBot;
 import de.kifo.commands.handle.CommandBase;
-import de.kifo.common.api.model.User;
+import de.kifo.common.api.model.UserDTO;
 import de.kifo.common.exceptions.CommandException;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
@@ -16,7 +16,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-import static de.kifo.common.enums.exception.ExceptionType.USER_ALREADY_REGISTERED;
 import static de.kifo.common.enums.message.Message.MessageType.MESSAGE;
 import static de.kifo.common.util.EmbedUtils.getEmbedMessageByText;
 import static net.dv8tion.jda.api.interactions.commands.OptionType.STRING;
@@ -34,15 +33,10 @@ public class RegisterCommand extends CommandBase {
     @Override
     public void execute(Member member, TextChannel textChannel, List<OptionMapping> options, SlashCommandInteractionEvent event) throws CommandException {
         long userId = member.getIdLong();
-        User user = javaBot.getApi().getUserById(userId);
-
-        /*if (javaBot.getApi().isUserRegistered(user)) {
-            throw new CommandException(USER_ALREADY_REGISTERED, event);
-        }*/
-
+        UserDTO userDTO = javaBot.getApi().getUserById(userId);
         String password = options.get(0).getAsString();
-        user.setPassword(password);
-        javaBot.getApi().updateUser(user);
+
+        javaBot.getApi().setPasswordForUser(userDTO, password);
 
         event.replyEmbeds(
                 getEmbedMessageByText("Dein Account wurde erfolgreich registriert.", MESSAGE)).

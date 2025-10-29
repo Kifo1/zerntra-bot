@@ -1,16 +1,16 @@
 package de.kifo.common.api;
 
 import com.google.gson.Gson;
-import de.kifo.common.api.model.HistoryEntry;
-import de.kifo.common.api.model.Playlist;
-import de.kifo.common.api.model.Song;
-import de.kifo.common.api.model.User;
-import de.kifo.common.api.model.VoiceChannelOnlineSession;
+import de.kifo.common.api.model.HistoryEntryDTO;
+import de.kifo.common.api.model.PlaylistDTO;
+import de.kifo.common.api.model.SongDTO;
+import de.kifo.common.api.model.UserDTO;
+import de.kifo.common.api.model.VoiceChannelOnlineSessionDTO;
 
+import javax.annotation.Nullable;
 import java.net.URI;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.Collection;
 import java.util.List;
 
 import static com.google.gson.reflect.TypeToken.getParameterized;
@@ -20,7 +20,6 @@ import static java.lang.String.format;
 import static java.lang.System.currentTimeMillis;
 import static java.net.http.HttpClient.newHttpClient;
 import static java.net.http.HttpRequest.newBuilder;
-import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static java.util.Optional.ofNullable;
 
@@ -29,44 +28,30 @@ public class API {
     private final String API_BASE_URL = "http://localhost:8080/api/v1";
 
     /**
-     * {@link User}
+     * {@link UserDTO}
      */
 
-    public void updateUser(User user) {
-        boolean userPresent = nonNull(getUserById(user.getId()));
-
-        String jsonRequest = getJsonByObject(user);
-        if (userPresent) {
-            sendPutRequest("/users/update", jsonRequest);
-        }
+    public void updateUser(UserDTO userDTO) {
+        String jsonRequest = getJsonByObject(userDTO);
+        sendPutRequest("/users/update", jsonRequest);
     }
 
-    public void createUserIfNotPresent(Long userId, String name) {
-        String jsonRequest = getJsonByObject(new User(userId, name, null, currentTimeMillis(), null));
-
-        if (isNull(getUserById(userId))) {
-            sendPostRequest("/users/add", jsonRequest);
-        }
+    public void createUser(Long userId, String name) {
+        String jsonRequest = getJsonByObject(new UserDTO(userId, name, currentTimeMillis()));
+        sendPostRequest("/users/add", jsonRequest);
     }
 
-    public User getUserById(Long id) {
-        return getObjectByJson(sendGetRequest("/users/get/" + id), User.class);
+    public void setPasswordForUser(UserDTO userDto, String password) {
+        String jsonRequest = getJsonByObject(password);
+        sendPostRequest("/users/password/" + userDto.getId(), jsonRequest);
     }
 
-    public boolean isUserRegistered(User user) {
-        return getObjectByJson(sendPutRequest("/users/registered", getJsonByObject(user)), Boolean.class);
-    }
-
-    public List<User> getAllUsers() {
-        return getObjectListByJson(sendGetRequest("/users/get-all"), User.class);
-    }
-
-    public void deleteUser(Long id) {
-        sendDeleteRequest("/users/remove/" + id);
+    public UserDTO getUserById(Long id) {
+        return getObjectByJson(sendGetRequest("/users/get/" + id), UserDTO.class);
     }
 
     /**
-     * {@link Song}
+     * {@link SongDTO}
      */
 
     /**
@@ -75,75 +60,68 @@ public class API {
      * @param userId The id of the user
      * @return The List of every song
      */
-    public List<Song> getSongListByUserId(Long userId) {
-        return getObjectListByJson(sendGetRequest("/songs/get-all/" + userId), Song.class);
+    public List<SongDTO> getSongListByUserId(Long userId) {
+        return getObjectListByJson(sendGetRequest("/songs/get-all/" + userId), SongDTO.class);
     }
 
     /**
      * This methode can be used to receive a users favourite songs (25 most liked)
      */
-    public List<Song> getRecommendedSongsByUserId(Long userId) {
-        return getObjectListByJson(sendGetRequest("/songs/get-recommended/" + userId), Song.class);
+    public List<SongDTO> getRecommendedSongsByUserId(Long userId) {
+        return getObjectListByJson(sendGetRequest("/songs/get-recommended/" + userId), SongDTO.class);
     }
 
-    public List<Song> getAllSongs() {
-        return getObjectListByJson(sendGetRequest("/songs/get-all"), Song.class);
-    }
-
-    public void updateSong(Long usedId, String name) {
-        Song song = getSongListByUserId(usedId).stream()
-                .filter(s -> s.getName().equalsIgnoreCase(name))
+    public void updateSong(Long userId, String name, @Nullable String uri) {
+        SongDTO songDTO = getSongListByUserId(userId).stream()
+                .filter(song -> (nonNull(song.getUri()) && song.getUri().equals(uri)) ||
+                        song.getName().equalsIgnoreCase(name))
                 .findFirst()
-                .orElseGet(() -> new Song(null, usedId, 0L, currentTimeMillis(), name));
+                .orElseGet(() -> new SongDTO(null, userId, 0L, currentTimeMillis(), name, uri));
 
-        song.setTimesPlayed(song.getTimesPlayed() + 1);
-        song.setLastPlayDate(currentTimeMillis());
+        songDTO.setTimesPlayed(songDTO.getTimesPlayed() + 1);
+        songDTO.setLastPlayDate(currentTimeMillis());
 
-        String jsonRequest = getJsonByObject(song);
-        sendPutRequest("/songs/update/" + song.getUserId(), jsonRequest);
+        String jsonRequest = getJsonByObject(songDTO);
+        sendPutRequest("/songs/update", jsonRequest);
     }
 
     /**
-     * {@link Playlist}
+     * {@link PlaylistDTO}
      */
 
-    public List<Playlist> getAllPlaylistsByUser(Long userId) {
-        return getObjectListByJson(sendGetRequest("/javabot/playlist/get-by-user/" + userId), Playlist.class);
+    public List<PlaylistDTO> getAllPlaylistsByUser(Long userId) {
+        return getObjectListByJson(sendGetRequest("/javabot/playlist/get-by-user/" + userId), PlaylistDTO.class);
     }
 
-    public Playlist getPlaylist(Long playlistId) {
-        return getObjectByJson(sendGetRequest("/javabot/playlist/get-by-id/" + playlistId), Playlist.class);
+    public PlaylistDTO getPlaylist(Long playlistId) {
+        return getObjectByJson(sendGetRequest("/javabot/playlist/get-by-id/" + playlistId), PlaylistDTO.class);
     }
 
     /**
-     * {@link HistoryEntry}
+     * {@link HistoryEntryDTO}
      */
 
-    public boolean createHistoryEntry(HistoryEntry historyEntry) {
-        return parseBoolean(sendPutRequest("/history/" + historyEntry.getUserId(), getJsonByObject(historyEntry)));
-    }
-
-    public Collection<HistoryEntry> getHistoryEntriesByUserId(Long userId) {
-        return getObjectListByJson("/history/" + userId, HistoryEntry.class);
+    public boolean createHistoryEntry(HistoryEntryDTO historyEntryDTO) {
+        return parseBoolean(sendPutRequest("/history", getJsonByObject(historyEntryDTO)));
     }
 
     /**
-     *  {@link VoiceChannelOnlineSession}
+     *  {@link VoiceChannelOnlineSessionDTO}
      */
 
-    public void addVoiceChannelOnlineSessionToUser(Long userId, VoiceChannelOnlineSession session) {
+    public void addVoiceChannelOnlineSessionToUser(VoiceChannelOnlineSessionDTO session) {
         String jsonRequest = getJsonByObject(session);
-        sendPutRequest("/users/voice-session/" + userId, jsonRequest);
+        sendPutRequest("/users/voice-session", jsonRequest);
     }
 
-    public long getVoiceSessionSecondsForTimePeriod(Long userId, VoiceChannelOnlineSession.TimePeriod timePeriod) {
+    public long getVoiceSessionSecondsForTimePeriod(Long userId, VoiceChannelOnlineSessionDTO.TimePeriod timePeriod) {
         String uri = format("/users/voice-session/%d?timePeriod=%s", userId, timePeriod.name());
         String response = sendGetRequest(uri);
 
         return ofNullable(getObjectByJson(response, Long.class)).orElse(-1L);
     }
 
-    public long getVoiceSessionSecondsForTimePeriodAndGuild(Long userId, VoiceChannelOnlineSession.TimePeriod timePeriod,
+    public long getVoiceSessionSecondsForTimePeriodAndGuild(Long userId, VoiceChannelOnlineSessionDTO.TimePeriod timePeriod,
                                                             Long guildId) {
         String uri = format("/users/voice-session-for-guild/%d?timePeriod=%s&guildId=%d",
                 userId, timePeriod, guildId);
@@ -152,7 +130,7 @@ public class API {
         return ofNullable(getObjectByJson(response, Long.class)).orElse(-1L);
     }
 
-    public long getVoiceSessionSecondsForTimePeriodAndChannelInGuild(Long userId, VoiceChannelOnlineSession.TimePeriod timePeriod,
+    public long getVoiceSessionSecondsForTimePeriodAndChannelInGuild(Long userId, VoiceChannelOnlineSessionDTO.TimePeriod timePeriod,
                                                                      Long guildId, Long channelId) {
         String uri = format("/users/voice-session-for-channel-in-guild/%d?timePeriod=%s&guildId=%d&channelId=%d",
                 userId, timePeriod, guildId, channelId);

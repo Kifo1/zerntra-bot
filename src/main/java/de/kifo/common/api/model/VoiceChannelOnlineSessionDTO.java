@@ -8,12 +8,12 @@ import static java.lang.Integer.MAX_VALUE;
 
 @Data
 @AllArgsConstructor
-public class VoiceChannelOnlineSession {
+public class VoiceChannelOnlineSessionDTO {
 
     private Long id;
     private Long guildId;
     private Long channelId;
-    private User user;
+    private UserDTO userDto;
     private Long startMillis;
     private Long endMillis;
 

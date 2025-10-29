@@ -3,7 +3,7 @@ package de.kifo.commands;
 import com.google.inject.Inject;
 import de.kifo.JavaBot;
 import de.kifo.commands.handle.CommandBase;
-import de.kifo.common.api.model.VoiceChannelOnlineSession;
+import de.kifo.common.api.model.VoiceChannelOnlineSessionDTO;
 import de.kifo.common.enums.utils.DiscordScope;
 import de.kifo.common.exceptions.CommandException;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
@@ -19,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 import static de.kifo.JavaBot.onlineTimeService;
-import static de.kifo.common.api.model.VoiceChannelOnlineSession.TimePeriod.LIFETIME;
+import static de.kifo.common.api.model.VoiceChannelOnlineSessionDTO.TimePeriod.LIFETIME;
 import static de.kifo.common.enums.exception.ExceptionType.NOT_IN_SPEECH_CHANNEL;
 import static de.kifo.common.enums.exception.ExceptionType.ONLINE_TIME_WRONG_TIME_PERIOD;
 import static de.kifo.common.enums.message.Message.MessageType.MESSAGE;
@@ -45,7 +45,7 @@ public class OnlineTimeCommand extends CommandBase {
     public void execute(Member member, TextChannel textChannel, List<OptionMapping> options, SlashCommandInteractionEvent event) throws CommandException {
         long userId = member.getUser().getIdLong();
         GuildVoiceState guildVoiceState = member.getVoiceState();
-        VoiceChannelOnlineSession.TimePeriod timePeriod = stream(VoiceChannelOnlineSession.TimePeriod.values())
+        VoiceChannelOnlineSessionDTO.TimePeriod timePeriod = stream(VoiceChannelOnlineSessionDTO.TimePeriod.values())
                 .filter(period -> period.getDisplayName().equalsIgnoreCase(options.get(0).getAsString()))
                 .findFirst().orElse(null);
         DiscordScope discordScope = stream(DiscordScope.values())
@@ -77,8 +77,8 @@ public class OnlineTimeCommand extends CommandBase {
         List<Command.Choice> choices = List.of();
 
         if (optionName.equalsIgnoreCase("zeitraum")) {
-            choices = stream(VoiceChannelOnlineSession.TimePeriod.values())
-                    .map(VoiceChannelOnlineSession.TimePeriod::getDisplayName)
+            choices = stream(VoiceChannelOnlineSessionDTO.TimePeriod.values())
+                    .map(VoiceChannelOnlineSessionDTO.TimePeriod::getDisplayName)
                     .filter(timePeriodName -> timePeriodName.toLowerCase().startsWith(event.getFocusedOption().getValue().toLowerCase()))
                     .map(timePeriodName -> new Command.Choice(timePeriodName, timePeriodName))
                     .toList();

@@ -54,7 +54,7 @@ public class PlayerManager {
         audioPlayerManager.loadItemOrdered(guildMusicManager, trackURL, new AudioLoadResultHandler() {
             @Override
             public void trackLoaded(AudioTrack audioTrack) {
-                javaBot.getApi().updateSong(userId, audioTrack.getInfo().title);
+                javaBot.getApi().updateSong(userId, audioTrack.getInfo().title, audioTrack.getInfo().uri);
                 guildMusicManager.getTrackScheduler().queue(audioTrack);
             }
 
@@ -65,7 +65,7 @@ public class PlayerManager {
                 //guildMusicManager.getTrackScheduler().queue(audioTrack);
                 if (audioPlaylist.isSearchResult()) {
                     AudioTrack firstTrack = audioPlaylist.getTracks().get(0);
-                    javaBot.getApi().updateSong(userId, firstTrack.getInfo().title);
+                    javaBot.getApi().updateSong(userId, firstTrack.getInfo().title, firstTrack.getInfo().title);
                     guildMusicManager.getTrackScheduler().queue(firstTrack);
                 } else {
                     audioPlaylist.getTracks().forEach(track -> {

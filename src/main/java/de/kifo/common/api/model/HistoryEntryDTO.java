@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Data
 @AllArgsConstructor
-public class HistoryEntry {
+public class HistoryEntryDTO {
 
     private Long id;
     private Long guildId;

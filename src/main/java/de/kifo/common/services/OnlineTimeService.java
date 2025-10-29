@@ -1,7 +1,7 @@
 package de.kifo.common.services;
 
 import de.kifo.JavaBot;
-import de.kifo.common.api.model.VoiceChannelOnlineSession;
+import de.kifo.common.api.model.VoiceChannelOnlineSessionDTO;
 import de.kifo.common.enums.utils.DiscordScope;
 import lombok.Data;
 
@@ -15,20 +15,20 @@ public class OnlineTimeService {
 
     private final JavaBot javaBot;
 
-    private HashMap<Long, VoiceChannelOnlineSession> voiceChannelOnlineSessions = new HashMap<>();
+    private HashMap<Long, VoiceChannelOnlineSessionDTO> voiceChannelOnlineSessions = new HashMap<>();
 
     public void startVoiceOnlineSession(Long userId, Long guildId, Long channelId) {
         voiceChannelOnlineSessions.putIfAbsent(userId,
-                new VoiceChannelOnlineSession(null, guildId, channelId,
+                new VoiceChannelOnlineSessionDTO(null, guildId, channelId,
                         javaBot.getApi().getUserById(userId), currentTimeMillis(), 0L));
     }
 
-    public VoiceChannelOnlineSession stopVoiceOnlineSession(Long userId) {
-        VoiceChannelOnlineSession session = voiceChannelOnlineSessions.getOrDefault(userId, null);
+    public VoiceChannelOnlineSessionDTO stopVoiceOnlineSession(Long userId) {
+        VoiceChannelOnlineSessionDTO session = voiceChannelOnlineSessions.getOrDefault(userId, null);
 
         if (nonNull(session)) {
             session.setEndMillis(currentTimeMillis());
-            javaBot.getApi().addVoiceChannelOnlineSessionToUser(userId, session);
+            javaBot.getApi().addVoiceChannelOnlineSessionToUser(session);
             voiceChannelOnlineSessions.remove(userId);
         }
 
@@ -39,9 +39,9 @@ public class OnlineTimeService {
         return nonNull(voiceChannelOnlineSessions.getOrDefault(userId, null));
     }
 
-    public long getVoiceOnlineTime(Long userId, Long guildId, Long voiceChannelId, VoiceChannelOnlineSession.TimePeriod timePeriod, DiscordScope discordScope) {
+    public long getVoiceOnlineTime(Long userId, Long guildId, Long voiceChannelId, VoiceChannelOnlineSessionDTO.TimePeriod timePeriod, DiscordScope discordScope) {
         if (voiceChannelOnlineSessions.containsKey(userId)) {
-            VoiceChannelOnlineSession session = stopVoiceOnlineSession(userId);
+            VoiceChannelOnlineSessionDTO session = stopVoiceOnlineSession(userId);
             startVoiceOnlineSession(userId, guildId, voiceChannelId == -1 ? session.getChannelId() : voiceChannelId);
         }
 
