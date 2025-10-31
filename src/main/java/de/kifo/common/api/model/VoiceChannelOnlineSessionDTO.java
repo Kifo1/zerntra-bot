@@ -13,7 +13,7 @@ public class VoiceChannelOnlineSessionDTO {
     private Long id;
     private Long guildId;
     private Long channelId;
-    private UserDTO userDto;
+    private UserDTO user;
     private Long startMillis;
     private Long endMillis;
 

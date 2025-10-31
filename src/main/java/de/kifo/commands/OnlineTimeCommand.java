@@ -49,7 +49,8 @@ public class OnlineTimeCommand extends CommandBase {
                 .filter(period -> period.getDisplayName().equalsIgnoreCase(options.get(0).getAsString()))
                 .findFirst().orElse(null);
         DiscordScope discordScope = stream(DiscordScope.values())
-                .filter(scope -> scope.getDisplayName().equalsIgnoreCase(options.get(1).getAsString()))
+                .filter(scope -> options.size() > 1 &&
+                        scope.getDisplayName().equalsIgnoreCase(options.get(1).getAsString()))
                 .findFirst().orElse(GLOBAL);
 
         if (isNull(timePeriod)) {

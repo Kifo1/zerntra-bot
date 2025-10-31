@@ -13,8 +13,8 @@ public class PlaylistDTO {
     private UserDTO owner;
     private String name;
     private Boolean isPublic;
-    private List<PlaylistSongDTO> playlistSongs;
-    private List<PlaylistMemberDTO> playlistMember;
+    private List<PlaylistSongDTO> songs;
+    private List<PlaylistMemberDTO> members;
     private UserDTO lastEditUser;
     private Long lastEditTime;
     private Long createdAt;
