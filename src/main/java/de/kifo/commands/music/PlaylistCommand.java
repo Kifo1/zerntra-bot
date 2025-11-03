@@ -70,7 +70,7 @@ public class PlaylistCommand extends CommandBase {
         boolean shuffle = options.size() > 1 && options.get(1).getAsBoolean();
         PlaylistDTO playlistDTO = javaBot.getApi().getPlaylist(playlistId);
 
-        List<String> queryUrls = new ArrayList<>(playlistDTO.getPlaylistSongs().stream()
+        List<String> queryUrls = new ArrayList<>(playlistDTO.getSongs().stream()
                 .map(playlistSong -> {
                     String uri = playlistSong.getUri();
                     if (isNull(uri) || !uri.startsWith("http")) {
