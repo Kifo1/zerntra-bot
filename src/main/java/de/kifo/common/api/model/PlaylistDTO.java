@@ -10,12 +10,12 @@ import java.util.List;
 public class PlaylistDTO {
 
     private Long id;
-    private UserDTO owner;
+    private UserDTO createdBy;
     private String name;
     private Boolean isPublic;
     private List<PlaylistSongDTO> songs;
     private List<PlaylistMemberDTO> members;
-    private UserDTO lastEditUser;
-    private Long lastEditTime;
+    private UserDTO updatedBy;
+    private Long updatedAt;
     private Long createdAt;
 }

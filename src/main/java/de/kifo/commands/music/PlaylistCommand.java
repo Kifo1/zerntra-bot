@@ -5,7 +5,6 @@ import de.kifo.JavaBot;
 import de.kifo.commands.handle.CommandBase;
 import de.kifo.common.api.model.HistoryEntryDTO;
 import de.kifo.common.api.model.PlaylistDTO;
-import de.kifo.common.api.model.UserDTO;
 import de.kifo.common.exceptions.CommandException;
 import de.kifo.common.music.PlayerManager;
 import de.kifo.common.music.TrackScheduler;
@@ -115,6 +114,6 @@ public class PlaylistCommand extends CommandBase {
     }
 
     private String getPlaylistOptionString(PlaylistDTO playlistDTO) {
-        return playlistDTO.getName() + " - " + playlistDTO.getOwner().getUserName();
+        return playlistDTO.getName() + " - " + playlistDTO.getCreatedBy().getUserName();
     }
 }

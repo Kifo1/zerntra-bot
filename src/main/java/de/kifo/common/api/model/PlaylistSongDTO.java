@@ -11,8 +11,8 @@ public class PlaylistSongDTO {
     private Long playlistId;
     private String name;
     private String uri;
-    private UserDTO lastEditUser;
-    private Long lastEditTime;
-    private UserDTO creatorUser;
+    private UserDTO updatedBy;
+    private Long updatedAt;
+    private UserDTO createdBy;
     private Long createdAt;
 }
