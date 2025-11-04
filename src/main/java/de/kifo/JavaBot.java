@@ -50,7 +50,7 @@ public class JavaBot {
 
     private void setUpBot() {
         api = injector.getInstance(API.class);
-        jda = createDefault(BOT_API_KEY)
+        jda = createDefault(BOT_DC_KEY)
                 .setMemberCachePolicy(ALL)
                 .enableCache(ONLINE_STATUS)
                 .enableIntents(MESSAGE_CONTENT)
