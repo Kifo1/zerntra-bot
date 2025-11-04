@@ -30,7 +30,7 @@ public class RegisterCommand extends CommandBase {
     private JavaBot javaBot;
 
     private static final Pattern PASSWORD_PATTERN =
-            compile("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$");
+            compile("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$");
 
     public RegisterCommand(@NotNull BotCommand command) {
         super(command);
