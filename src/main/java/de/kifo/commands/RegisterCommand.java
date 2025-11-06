@@ -5,6 +5,7 @@ import com.google.inject.Inject;
 import de.kifo.JavaBot;
 import de.kifo.commands.handle.CommandBase;
 import de.kifo.common.api.model.UserDTO;
+import de.kifo.common.api.model.utils.PasswordDTO;
 import de.kifo.common.exceptions.CommandException;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
@@ -36,7 +37,7 @@ public class RegisterCommand extends CommandBase {
         UserDTO userDTO = javaBot.getApi().getUserById(userId);
         String password = options.get(0).getAsString();
 
-        javaBot.getApi().setPasswordForUser(userDTO, password);
+        javaBot.getApi().setPasswordForUser(userDTO, new PasswordDTO(password));
 
         event.replyEmbeds(
                 getEmbedMessageByText("Dein Account wurde erfolgreich registriert.", MESSAGE)).
@@ -49,6 +50,6 @@ public class RegisterCommand extends CommandBase {
 
     @Override
     public List<OptionData> getOptions() {
-        return ImmutableList.of(new OptionData(STRING, "passwort", "Wähle ein Passwort für deinen Account.", true, false));
+        return List.of(new OptionData(STRING, "passwort", "Wähle ein Passwort für deinen Account.", true, false));
     }
 }

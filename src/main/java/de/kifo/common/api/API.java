@@ -6,6 +6,7 @@ import de.kifo.common.api.model.PlaylistDTO;
 import de.kifo.common.api.model.SongDTO;
 import de.kifo.common.api.model.UserDTO;
 import de.kifo.common.api.model.VoiceChannelOnlineSessionDTO;
+import de.kifo.common.api.model.utils.PasswordDTO;
 
 import javax.annotation.Nullable;
 import java.net.URI;
@@ -41,8 +42,8 @@ public class API {
         sendPostRequest("/users/add", jsonRequest);
     }
 
-    public void setPasswordForUser(UserDTO userDto, String password) {
-        String jsonRequest = getJsonByObject(password);
+    public void setPasswordForUser(UserDTO userDto, PasswordDTO passwordDTO) {
+        String jsonRequest = getJsonByObject(passwordDTO);
         sendPostRequest("/users/password/" + userDto.getId(), jsonRequest);
     }
 
@@ -102,7 +103,7 @@ public class API {
      */
 
     public boolean createHistoryEntry(HistoryEntryDTO historyEntryDTO) {
-        return parseBoolean(sendPutRequest("/history", getJsonByObject(historyEntryDTO)));
+        return parseBoolean(sendPutRequest("/history/create", getJsonByObject(historyEntryDTO)));
     }
 
     /**
