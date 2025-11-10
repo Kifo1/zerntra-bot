@@ -65,7 +65,7 @@ public class PlayerManager {
                 //guildMusicManager.getTrackScheduler().queue(audioTrack);
                 if (audioPlaylist.isSearchResult()) {
                     AudioTrack firstTrack = audioPlaylist.getTracks().get(0);
-                    javaBot.getApi().updateSong(userId, firstTrack.getInfo().title, firstTrack.getInfo().title);
+                    javaBot.getApi().updateSong(userId, firstTrack.getInfo().title, firstTrack.getInfo().uri);
                     guildMusicManager.getTrackScheduler().queue(firstTrack);
                 } else {
                     audioPlaylist.getTracks().forEach(track -> {
