@@ -24,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static de.kifo.JavaBot.messageService;
 import static de.kifo.common.api.model.HistoryEntry.Type.SONG_PLAY;
@@ -39,7 +40,7 @@ public class PlayCommand extends CommandBase {
     @Inject
     private JavaBot javaBot;
 
-    public static HashMap<Long, TextChannel> map = new HashMap<>();
+    public static Map<Long, MessageService.UpdatableMessage> map = new HashMap<>();
 
     public PlayCommand(@NotNull BotCommand command) {
         super(command);
@@ -83,7 +84,7 @@ public class PlayCommand extends CommandBase {
                     return null;
                 });
 
-        map.put(voiceChannel.getGuild().getIdLong(), textChannel);
+        map.putIfAbsent(voiceChannel.getGuild().getIdLong(), updatableMessage);
 
         javaBot.getApi().createHistoryEntry(new HistoryEntry(null, guild.getIdLong(), member.getIdLong(),
                 SONG_PLAY, currentTimeMillis(),"Query " + url[0] + ", " + textChannel.getName()));

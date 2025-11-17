@@ -5,10 +5,12 @@ import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
+import de.kifo.common.services.MessageService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,12 +40,19 @@ public class TrackScheduler extends AudioEventAdapter {
         String url = info.uri;
         long seconds = info.length/1000;
 
-        map.get(guild.getIdLong()).sendMessageEmbeds(new EmbedBuilder()
+        MessageEmbed messageEmbed = new EmbedBuilder()
                 .setColor(MAGENTA)
                 .setTitle("Jetzt läuft: " + info.title)
                 .addField(info.author, "[" + info.title + "](" + url + ")", false)
                 .addField("Länge", info.isStream ? ":red_circle: Stream" : getTimeStringBySeconds(seconds), true)
-                .build()).queue();
+                .build();
+
+        MessageService.UpdatableMessage updatableMessage = map.get(guild.getIdLong());
+        updatableMessage.update(messageEmbed)
+                .exceptionally(e -> {
+                    updatableMessage.fail();
+                    return null;
+                });
     }
 
     @Override
@@ -59,6 +68,7 @@ public class TrackScheduler extends AudioEventAdapter {
 
             if(isNull(player.getPlayingTrack()) && nonNull(guild.getAudioManager().getConnectedChannel())) {
                 guild.getAudioManager().closeAudioConnection();
+                map.remove(guild.getIdLong());
             }
         });
     }
@@ -75,7 +85,8 @@ public class TrackScheduler extends AudioEventAdapter {
         if (audioPlayer.startTrack(audioTrack, true)) {
             return true;
         }
-        return queue.offer(audioTrack);
+        queue.offer(audioTrack);
+        return false;
     }
 
     public void shuffleQueue() {
