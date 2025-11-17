@@ -19,10 +19,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+import static de.kifo.JavaBot.messageService;
 import static de.kifo.common.enums.exception.ExceptionType.NOT_IN_SPEECH_CHANNEL;
 import static de.kifo.common.enums.exception.ExceptionType.NO_SONG_RUNNING;
-import static de.kifo.common.enums.message.Message.MessageType.MESSAGE;
-import static de.kifo.common.util.EmbedUtils.getEmbedMessageByText;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
@@ -40,7 +39,7 @@ public class StopCommand extends CommandBase {
     public void execute(Member member, TextChannel textChannel, List<OptionMapping> options, SlashCommandInteractionEvent event) throws CommandException {
         GuildVoiceState guildVoiceState = member.getVoiceState();
 
-        if (isNull(guildVoiceState) || isNull(guildVoiceState.getChannel()) || isNull(guildVoiceState.getChannel().asVoiceChannel())) {
+        if (isNull(guildVoiceState) || isNull(guildVoiceState.getChannel())) {
             throw new CommandException(NOT_IN_SPEECH_CHANNEL, event);
         }
 
@@ -56,7 +55,7 @@ public class StopCommand extends CommandBase {
                 guildMusicManager.getTrackScheduler().getAudioPlayer().stopTrack();
             }
             audioManager.closeAudioConnection();
-            event.replyEmbeds(getEmbedMessageByText("Die Musik wurde beendet.", MESSAGE)).queue();
+            event.replyEmbeds(messageService.message("Die Musik wurde beendet.")).queue();
         } else {
             throw new CommandException(NO_SONG_RUNNING, event);
         }

@@ -23,9 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
+import static de.kifo.JavaBot.messageService;
 import static de.kifo.common.enums.exception.ExceptionType.*;
-import static de.kifo.common.enums.message.Message.MessageType.MESSAGE;
-import static de.kifo.common.util.EmbedUtils.getEmbedMessageByText;
 import static java.lang.Math.min;
 import static java.lang.String.valueOf;
 import static java.util.Objects.isNull;
@@ -60,7 +59,7 @@ public class SkipCommand extends CommandBase {
 
         if (options.isEmpty() || isNull(options.get(0))) {
             audioPlayer.stopTrack();
-            event.replyEmbeds(getEmbedMessageByText("Das Lied wird übersprungen...", MESSAGE)).queue();
+            event.replyEmbeds(messageService.message("Das Lied wird übersprungen...")).queue();
         } else {
             BlockingQueue<AudioTrack> tracks = guildMusicManager.getTrackScheduler().getQueue();
             int number = options.get(0).getAsInt();
@@ -68,9 +67,9 @@ public class SkipCommand extends CommandBase {
             if (tracks.size() >= number) {
                 AudioTrack track = (AudioTrack) tracks.toArray()[number - 1];
                 guildMusicManager.getTrackScheduler().getQueue().remove(track);
-                event.replyEmbeds(getEmbedMessageByText(
+                event.replyEmbeds(messageService.message(
                         track.getInfo().title + " von " + track.getInfo().author +
-                        " wurde aus der Playlist entfernt.", MESSAGE)).queue();
+                        " wurde aus der Playlist entfernt.")).queue();
             } else {
                 throw new CommandException(SKIP_INDEX_NOT_FOUND, event);
             }

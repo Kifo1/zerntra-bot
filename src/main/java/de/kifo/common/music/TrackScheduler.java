@@ -71,10 +71,11 @@ public class TrackScheduler extends AudioEventAdapter {
         return nonNull(audioPlayer.getPlayingTrack());
     }
 
-    public void queue(AudioTrack audioTrack) {
-        if (!audioPlayer.startTrack(audioTrack, true)) {
-            queue.offer(audioTrack);
+    public boolean queue(AudioTrack audioTrack) {
+        if (audioPlayer.startTrack(audioTrack, true)) {
+            return true;
         }
+        return queue.offer(audioTrack);
     }
 
     public void shuffleQueue() {
