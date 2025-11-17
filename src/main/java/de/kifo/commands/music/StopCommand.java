@@ -58,7 +58,8 @@ public class StopCommand extends CommandBase {
                 guildMusicManager.getTrackScheduler().getAudioPlayer().stopTrack();
             }
             audioManager.closeAudioConnection();
-            event.replyEmbeds(messageService.message("Die Musik wurde beendet.")).queue();
+            event.deferReply().queue();
+            messageService.sendMessageAndDestroy(event, "Die Musik wurde beendet.", 60);
             map.remove(guild.getIdLong());
         } else {
             throw new CommandException(NO_SONG_RUNNING, event);

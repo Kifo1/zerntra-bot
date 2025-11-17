@@ -7,6 +7,7 @@ import lombok.Getter;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 import java.awt.*;
 import java.util.concurrent.CompletableFuture;
@@ -14,6 +15,7 @@ import java.util.concurrent.CompletableFuture;
 import static de.kifo.JavaBot.messageService;
 import static de.kifo.common.services.MessageService.MessageType.*;
 import static java.awt.Color.*;
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 @Data
 public class MessageService {
@@ -30,6 +32,18 @@ public class MessageService {
 
     public MessageEmbed error(String text) {
         return getEmbedMessageByText(text, ERROR);
+    }
+
+    public void sendMessageAndDestroy(SlashCommandInteractionEvent event, String text, int durationSeconds) {
+        event.getHook().sendMessageEmbeds(message(text)).complete().delete().queueAfter(durationSeconds, SECONDS);
+    }
+
+    public void sendErrorAndDestroy(SlashCommandInteractionEvent event, String text, int durationSeconds) {
+        event.getHook().sendMessageEmbeds(error(text)).complete().delete().queueAfter(durationSeconds, SECONDS);
+    }
+
+    public void sendInfoAndDestroy(SlashCommandInteractionEvent event, String text, int durationSeconds) {
+        event.getHook().sendMessageEmbeds(info(text)).complete().delete().queueAfter(durationSeconds, SECONDS);
     }
 
     private MessageEmbed getEmbedMessageByText(String text, MessageType messageType) {
@@ -52,8 +66,14 @@ public class MessageService {
                     });
         }
 
-        public CompletableFuture<Message> fail() {
-            return update(messageService.error("Etwas ist schief gelaufen."));
+        public CompletableFuture<Message> updateAndDestroyAfter(MessageEmbed embed, long timeInSeconds) {
+            message.delete().queueAfter(timeInSeconds, SECONDS);
+            return update(embed);
+        }
+
+        public void fail() {
+            message.delete().queueAfter(60, SECONDS);
+            update(messageService.error("Etwas ist schief gelaufen."));
         }
     }
 

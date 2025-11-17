@@ -32,6 +32,7 @@ import static de.kifo.common.enums.exception.ExceptionType.BOT_ALREADY_PLAYING_F
 import static de.kifo.common.enums.exception.ExceptionType.NOT_IN_SPEECH_CHANNEL;
 import static java.lang.System.currentTimeMillis;
 import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 import static net.dv8tion.jda.api.interactions.commands.OptionType.STRING;
 
 @CommandBase.BotCommand(name = "play", description = "Wähle ein Lied, das abgespielt werden soll.", hasOptions = true)
@@ -78,7 +79,13 @@ public class PlayCommand extends CommandBase {
         );
 
         playerManager.play(guild, url[0], event.getUser().getIdLong())
-                .thenCompose(updatableMessage::update)
+                .thenCompose(updatedMessage -> {
+                    String title = updatedMessage.getTitle();
+                    if (nonNull(title) && title.contains("Jetzt läuft:")) {
+                        return updatableMessage.update(updatedMessage);
+                    }
+                    return updatableMessage.updateAndDestroyAfter(updatedMessage, 60);
+                })
                 .exceptionally(e -> {
                     updatableMessage.fail();
                     return null;

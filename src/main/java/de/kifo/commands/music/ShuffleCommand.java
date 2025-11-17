@@ -52,7 +52,9 @@ public class ShuffleCommand extends CommandBase {
         }
 
         trackScheduler.shuffleQueue();
-        event.replyEmbeds(messageService.message("Die Songlist wurde geshuffled.")).queue();
+
+        event.deferReply().queue();
+        messageService.sendMessageAndDestroy(event, "Die Songlist wurde geshuffled.", 60);
     }
 
     @Override

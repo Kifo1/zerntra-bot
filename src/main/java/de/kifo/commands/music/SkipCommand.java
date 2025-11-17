@@ -59,7 +59,8 @@ public class SkipCommand extends CommandBase {
 
         if (options.isEmpty() || isNull(options.get(0))) {
             audioPlayer.stopTrack();
-            event.replyEmbeds(messageService.message("Das Lied wird übersprungen...")).queue();
+            event.deferReply().queue();
+            messageService.sendMessageAndDestroy(event, "Das Lied wird übersprungen...", 60);
         } else {
             BlockingQueue<AudioTrack> tracks = guildMusicManager.getTrackScheduler().getQueue();
             int number = options.get(0).getAsInt();
@@ -67,9 +68,10 @@ public class SkipCommand extends CommandBase {
             if (tracks.size() >= number) {
                 AudioTrack track = (AudioTrack) tracks.toArray()[number - 1];
                 guildMusicManager.getTrackScheduler().getQueue().remove(track);
-                event.replyEmbeds(messageService.message(
-                        track.getInfo().title + " von " + track.getInfo().author +
-                        " wurde aus der Playlist entfernt.")).queue();
+                event.deferReply().queue();
+                messageService.sendMessageAndDestroy(event,
+                        track.getInfo().title + " von " + track.getInfo().author + " wurde aus der Playlist entfernt.",
+                        60);
             } else {
                 throw new CommandException(SKIP_INDEX_NOT_FOUND, event);
             }
