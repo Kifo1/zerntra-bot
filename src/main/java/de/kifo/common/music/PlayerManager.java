@@ -13,11 +13,14 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 import de.kifo.JavaBot;
 import dev.lavalink.youtube.YoutubeAudioSourceManager;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 import static com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers.registerRemoteSources;
+import static de.kifo.JavaBot.messageService;
 import static java.lang.System.getenv;
 
 public class PlayerManager {
@@ -50,39 +53,50 @@ public class PlayerManager {
         });
     }
 
-    public void play(Guild guild, String trackURL, Long userId) {
+    public CompletableFuture<MessageEmbed> play(Guild guild, String trackURL, Long userId) {
         GuildMusicManager guildMusicManager = getGuildMusicManager(guild);
+        TrackScheduler trackScheduler = guildMusicManager.getTrackScheduler();
+        CompletableFuture<MessageEmbed> future = new CompletableFuture<>();
+
         audioPlayerManager.loadItemOrdered(guildMusicManager, trackURL, new AudioLoadResultHandler() {
             @Override
             public void trackLoaded(AudioTrack audioTrack) {
-                AudioTrackInfo trackInfo = audioTrack.getInfo();
-                javaBot.getApi().updateSong(userId, trackInfo.title, trackInfo.uri);
-                guildMusicManager.getTrackScheduler().queue(audioTrack);
+                AudioTrackInfo audioTrackInfo = audioTrack.getInfo();
+                javaBot.getApi().updateSong(userId, audioTrackInfo.title);
+                if (trackScheduler.queue(audioTrack)) {
+                    future.complete(messageService.message("Das Lied startet jetzt."));
+                } else {
+                    future.complete(messageService.message(audioTrackInfo.title + " wurde zur Songlist hinzugefügt."));
+                }
             }
 
             @Override
             public void playlistLoaded(AudioPlaylist audioPlaylist) {
                 if (audioPlaylist.isSearchResult()) {
                     AudioTrack firstTrack = audioPlaylist.getTracks().get(0);
-                    AudioTrackInfo trackInfo = firstTrack.getInfo();
-                    javaBot.getApi().updateSong(userId, trackInfo.title, trackInfo.uri);
-                    guildMusicManager.getTrackScheduler().queue(firstTrack);
+                    javaBot.getApi().updateSong(userId, firstTrack.getInfo().title);
+                    if(trackScheduler.queue(firstTrack)) {
+                        future.complete(messageService.message("Das Lied startet jetzt."));
+                    } else {
+                        future.complete(messageService.message(firstTrack.getInfo().title + " wurde zur Songlist hinzugefügt."));
+                    }
                 } else {
-                    audioPlaylist.getTracks().forEach(track -> {
-                        guildMusicManager.getTrackScheduler().queue(track);
-                    });
+                    audioPlaylist.getTracks().forEach(trackScheduler::queue);
+                    future.complete(messageService.message("Playlist wurde geladen."));
                 }
             }
 
             @Override
             public void noMatches() {
-                System.out.println("not matches");
+                future.complete(messageService.error("Das Lied konnte nicht gefunden werden."));
             }
 
             @Override
             public void loadFailed(FriendlyException e) {
-                System.out.println("load failed");
+                future.complete(messageService.error("Das Lied konnte nicht geladen werden."));
             }
         });
+
+        return future;
     }
 }

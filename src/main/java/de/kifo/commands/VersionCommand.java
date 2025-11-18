@@ -12,8 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 import static de.kifo.JavaBot.VERSION;
-import static de.kifo.common.enums.message.Message.MessageType.MESSAGE;
-import static de.kifo.common.util.EmbedUtils.getEmbedMessageByText;
+import static de.kifo.JavaBot.messageService;
 
 @CommandBase.BotCommand(name = "version", description = "Zeigt die aktuelle Bot Version an.")
 public class VersionCommand extends CommandBase {
@@ -24,7 +23,7 @@ public class VersionCommand extends CommandBase {
 
     @Override
     public void execute(Member member, TextChannel textChannel, List<OptionMapping> options, SlashCommandInteractionEvent event) throws CommandException {
-        event.replyEmbeds(getEmbedMessageByText("Die aktuelle Version ist: " + VERSION, MESSAGE)).queue();
+        event.replyEmbeds(messageService.message("Die aktuelle Version ist: " + VERSION)).queue();
     }
 
     @Override

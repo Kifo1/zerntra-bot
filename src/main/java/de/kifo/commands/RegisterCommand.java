@@ -16,9 +16,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import static de.kifo.JavaBot.messageService;
 import static de.kifo.common.enums.exception.ExceptionType.PASSWORD_NOT_SECURE;
-import static de.kifo.common.enums.message.Message.MessageType.MESSAGE;
-import static de.kifo.common.util.EmbedUtils.getEmbedMessageByText;
 import static java.util.regex.Pattern.compile;
 import static net.dv8tion.jda.api.interactions.commands.OptionType.STRING;
 
@@ -47,9 +46,8 @@ public class RegisterCommand extends CommandBase {
         user.setPassword(password);
         javaBot.getApi().updateUser(user);
 
-        event.replyEmbeds(
-                getEmbedMessageByText("Dein Account wurde erfolgreich registriert.", MESSAGE)).
-                setEphemeral(true)
+        event.replyEmbeds(messageService.message("Dein Account wurde erfolgreich registriert."))
+                .setEphemeral(true)
                 .queue();
     }
 

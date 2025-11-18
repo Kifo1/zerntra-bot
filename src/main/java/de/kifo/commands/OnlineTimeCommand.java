@@ -18,14 +18,13 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+import static de.kifo.JavaBot.messageService;
 import static de.kifo.JavaBot.onlineTimeService;
 import static de.kifo.common.api.model.VoiceChannelOnlineSession.TimePeriod.LIFETIME;
 import static de.kifo.common.enums.exception.ExceptionType.NOT_IN_SPEECH_CHANNEL;
 import static de.kifo.common.enums.exception.ExceptionType.ONLINE_TIME_WRONG_TIME_PERIOD;
-import static de.kifo.common.enums.message.Message.MessageType.MESSAGE;
 import static de.kifo.common.enums.utils.DiscordScope.CHANNEL;
 import static de.kifo.common.enums.utils.DiscordScope.GLOBAL;
-import static de.kifo.common.util.EmbedUtils.getEmbedMessageByText;
 import static de.kifo.common.util.StringUtils.getTimeStringBySeconds;
 import static java.util.Arrays.stream;
 import static java.util.Objects.isNull;
@@ -67,9 +66,10 @@ public class OnlineTimeCommand extends CommandBase {
         long onlineSeconds = onlineTimeService.getVoiceOnlineTime(userId, event.getGuild().getIdLong(), voiceChannelId, timePeriod, discordScope);
         String timeString = getTimeStringBySeconds(onlineSeconds);
 
-        event.replyEmbeds(getEmbedMessageByText(
-                "Du warst " + (timePeriod == LIFETIME ? "insgesamt " : "in den letzten " + timePeriod.getDays() + " Tagen ") +
-                        timeString + " in Sprachkanälen " + discordScope.getMessageText() + " online.", MESSAGE)).queue();
+        String lastOnlineMessage = "Du warst " + (timePeriod == LIFETIME ? "insgesamt " : "in den letzten " + timePeriod.getDays() + " Tagen ") +
+                timeString + " in Sprachkanälen " + discordScope.getMessageText() + " online.";
+
+        event.replyEmbeds(messageService.message(lastOnlineMessage)).queue();
     }
 
     @Override
