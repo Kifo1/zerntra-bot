@@ -3,7 +3,8 @@ package de.kifo.commands;
 import com.google.inject.Inject;
 import de.kifo.JavaBot;
 import de.kifo.commands.handle.CommandBase;
-import de.kifo.common.api.model.User;
+import de.kifo.common.api.model.UserDTO;
+import de.kifo.common.api.model.utils.PasswordDTO;
 import de.kifo.common.exceptions.CommandException;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
@@ -37,15 +38,15 @@ public class RegisterCommand extends CommandBase {
     @Override
     public void execute(Member member, TextChannel textChannel, List<OptionMapping> options, SlashCommandInteractionEvent event) throws CommandException {
         long userId = member.getIdLong();
-        User user = javaBot.getApi().getUserById(userId);
-
+        UserDTO userDTO = javaBot.getApi().getUserById(userId);
         String password = options.get(0).getAsString();
+
         if (!isValidPassword(password)) {
             throw new CommandException(PASSWORD_NOT_SECURE, event);
         }
-        user.setPassword(password);
-        javaBot.getApi().updateUser(user);
 
+        javaBot.getApi().setPasswordForUser(userDTO, new PasswordDTO(password));
+        
         event.replyEmbeds(messageService.message("Dein Account wurde erfolgreich registriert."))
                 .setEphemeral(true)
                 .queue();
@@ -55,6 +56,7 @@ public class RegisterCommand extends CommandBase {
     public void autoComplete(String optionName, CommandAutoCompleteInteractionEvent event) {}
 
     @Override
+
     public @NotNull List<OptionData> getOptions() {
         return List.of(new OptionData(STRING, "passwort", "Wähle ein Passwort für deinen Account.", true, false));
     }

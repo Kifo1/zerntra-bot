@@ -2,7 +2,7 @@ package de.kifo.listener.command;
 
 import com.google.inject.Inject;
 import de.kifo.JavaBot;
-import de.kifo.common.api.model.HistoryEntry;
+import de.kifo.common.api.model.HistoryEntryDTO;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-import static de.kifo.common.api.model.HistoryEntry.Type.COMMAND_USE;
+import static de.kifo.common.api.model.HistoryEntryDTO.Type.COMMAND_USE;
 import static java.lang.System.currentTimeMillis;
 
 public class CommandListener extends ListenerAdapter {
@@ -23,7 +23,7 @@ public class CommandListener extends ListenerAdapter {
 
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
-        javaBot.getApi().createUserIfNotPresent(event.getUser().getIdLong(), event.getUser().getName());
+        javaBot.getApi().createUser(event.getUser().getIdLong(), event.getUser().getName());
         Member member = event.getMember();
         TextChannel textChannel = event.getChannel().asTextChannel();
         Guild guild = event.getGuild();
@@ -34,7 +34,7 @@ public class CommandListener extends ListenerAdapter {
                 .findFirst()
                 .ifPresent(command -> {
                     command.executeInitialization(member, textChannel, options, event);
-                    javaBot.getApi().createHistoryEntry(new HistoryEntry(null, guild.getIdLong(), member.getIdLong(),
+                    javaBot.getApi().createHistoryEntry(new HistoryEntryDTO(null, guild.getIdLong(), member.getIdLong(),
                             COMMAND_USE, currentTimeMillis(), command.getName() + " in channel " + textChannel.getName()));
                 });
     }

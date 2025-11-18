@@ -3,7 +3,7 @@ package de.kifo.commands;
 import com.google.inject.Inject;
 import de.kifo.JavaBot;
 import de.kifo.commands.handle.CommandBase;
-import de.kifo.common.api.model.User;
+import de.kifo.common.api.model.UserDTO;
 import de.kifo.common.exceptions.CommandException;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
@@ -40,22 +40,22 @@ public class LastSeenCommand extends CommandBase {
     @Override
     public void execute(Member member, TextChannel textChannel, List<OptionMapping> options, SlashCommandInteractionEvent event) throws CommandException {
         long requestedUserId = options.get(0).getAsUser().getIdLong();
-        User user = javaBot.getApi().getUserById(requestedUserId);
+        UserDTO userDTO = javaBot.getApi().getUserById(requestedUserId);
 
-        if (isNull(user.getLastOnTime())) {
+        if (isNull(userDTO.getLastOnTime())) {
             throw new CommandException(USER_HAS_NO_DATA, event);
         }
 
-        long lastOnTime = user.getLastOnTime();
+        long lastOnTime = userDTO.getLastOnTime();
         LocalDateTime lastSeenDate = ofEpochMilli(lastOnTime).atZone(systemDefault()).toLocalDateTime();
         long pastDays = DAYS.between(lastSeenDate, now());
 
-        if (!onlineTimeService.isInAVoiceChannelSession(user.getId())) {
+        if (!onlineTimeService.isInAVoiceChannelSession(userDTO.getId())) {
             event.replyEmbeds(messageService.message(
-                    user.getUserName() + " war zuletzt am " + lastSeenDate.format(ofPattern("dd.MM.yyyy")) + " um " + lastSeenDate.format(ofPattern("HH:mm:ss")) + " Uhr online. Das ist " + pastDays + " Tage her.")).queue();
+                    userDTO.getUserName() + " war zuletzt am " + lastSeenDate.format(ofPattern("dd.MM.yyyy")) + " um " + lastSeenDate.format(ofPattern("HH:mm:ss")) + " Uhr online. Das ist " + pastDays + " Tage her.")).queue();
         } else {
             event.replyEmbeds(messageService.message(
-                    user.getUserName() + " ist im Moment in einem Voice-Channel online.")).queue();
+                    userDTO.getUserName() + " ist im Moment in einem Voice-Channel online.")).queue();
         }
     }
 

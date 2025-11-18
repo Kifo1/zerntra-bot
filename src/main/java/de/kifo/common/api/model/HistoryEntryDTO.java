@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Data
 @AllArgsConstructor
-public class HistoryEntry {
+public class HistoryEntryDTO {
 
     private Long id;
     private Long guildId;
@@ -20,6 +20,7 @@ public class HistoryEntry {
     public enum Type {
 
         SONG_PLAY,
+        PLAYLIST_PLAY,
         COMMAND_USE,
         ONLINE_STATUS_CHANGE,
         CHANNEL_JOIN,

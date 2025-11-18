@@ -62,7 +62,7 @@ public class PlayerManager {
             @Override
             public void trackLoaded(AudioTrack audioTrack) {
                 AudioTrackInfo audioTrackInfo = audioTrack.getInfo();
-                javaBot.getApi().updateSong(userId, audioTrackInfo.title);
+                javaBot.getApi().updateSong(userId, audioTrackInfo.title, audioTrackInfo.uri);
                 if (trackScheduler.queue(audioTrack)) {
                     future.complete(messageService.message("Das Lied startet jetzt."));
                 } else {
@@ -74,11 +74,12 @@ public class PlayerManager {
             public void playlistLoaded(AudioPlaylist audioPlaylist) {
                 if (audioPlaylist.isSearchResult()) {
                     AudioTrack firstTrack = audioPlaylist.getTracks().get(0);
-                    javaBot.getApi().updateSong(userId, firstTrack.getInfo().title);
+                    AudioTrackInfo audioTrackInfo = firstTrack.getInfo();
+                    javaBot.getApi().updateSong(userId, audioTrackInfo.title, audioTrackInfo.uri);
                     if(trackScheduler.queue(firstTrack)) {
                         future.complete(messageService.message("Das Lied startet jetzt."));
                     } else {
-                        future.complete(messageService.message(firstTrack.getInfo().title + " wurde zur Songlist hinzugefügt."));
+                        future.complete(messageService.message(audioTrackInfo.title + " wurde zur Songlist hinzugefügt."));
                     }
                 } else {
                     audioPlaylist.getTracks().forEach(trackScheduler::queue);

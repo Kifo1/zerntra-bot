@@ -3,7 +3,8 @@ package de.kifo.commands.music;
 import com.google.inject.Inject;
 import de.kifo.JavaBot;
 import de.kifo.commands.handle.CommandBase;
-import de.kifo.common.api.model.HistoryEntry;
+import de.kifo.common.api.model.HistoryEntryDTO;
+import de.kifo.common.api.model.SongDTO;
 import de.kifo.common.exceptions.CommandException;
 import de.kifo.common.music.PlayerManager;
 import de.kifo.common.music.TrackScheduler;
@@ -26,7 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 import static de.kifo.JavaBot.messageService;
-import static de.kifo.common.api.model.HistoryEntry.Type.SONG_PLAY;
+import static de.kifo.common.api.model.HistoryEntryDTO.Type.SONG_PLAY;
 import static de.kifo.common.enums.exception.ExceptionType.BOT_ALREADY_PLAYING_FOR_GUILD;
 import static de.kifo.common.enums.exception.ExceptionType.NOT_IN_SPEECH_CHANNEL;
 import static java.lang.System.currentTimeMillis;
@@ -50,7 +51,6 @@ public class PlayCommand extends CommandBase {
     public void execute(Member member, TextChannel textChannel, List<OptionMapping> options, SlashCommandInteractionEvent event) throws CommandException {
         GuildVoiceState guildVoiceState = member.getVoiceState();
         Guild guild = event.getGuild();
-        TrackScheduler trackScheduler = javaBot.getPlayerManager().getGuildMusicManager(guild).getTrackScheduler();
 
         if (isNull(guildVoiceState) || isNull(guildVoiceState.getChannel())) {
             throw new CommandException(NOT_IN_SPEECH_CHANNEL, event);
@@ -58,6 +58,7 @@ public class PlayCommand extends CommandBase {
 
         VoiceChannel voiceChannel = guildVoiceState.getChannel().asVoiceChannel();
         PlayerManager playerManager = javaBot.getPlayerManager();
+        TrackScheduler trackScheduler = playerManager.getGuildMusicManager(guild).getTrackScheduler();
         AudioManager manager = voiceChannel.getGuild().getAudioManager();
 
         if (trackScheduler.isPlaying() && !manager.getConnectedChannel().equals(guildVoiceState.getChannel())) {
@@ -92,7 +93,7 @@ public class PlayCommand extends CommandBase {
 
         map.putIfAbsent(voiceChannel.getGuild().getIdLong(), updatableMessage);
 
-        javaBot.getApi().createHistoryEntry(new HistoryEntry(null, guild.getIdLong(), member.getIdLong(),
+        javaBot.getApi().createHistoryEntry(new HistoryEntryDTO(null, guild.getIdLong(), member.getIdLong(),
                 SONG_PLAY, currentTimeMillis(),"Query " + url[0] + ", " + textChannel.getName()));
     }
 
@@ -100,8 +101,9 @@ public class PlayCommand extends CommandBase {
     public void autoComplete(String optionName, CommandAutoCompleteInteractionEvent event) {
         if (optionName.equalsIgnoreCase("song")) {
             List<Command.Choice> replyChoices = javaBot.getApi().getRecommendedSongsByUserId(event.getUser().getIdLong()).stream()
-                    .filter(song -> song.getName().toLowerCase().contains(event.getFocusedOption().getValue().toLowerCase()))
-                    .map(song -> new Command.Choice(song.getName(), nonNull(song.getUri()) ? song.getUri() : song.getName()))
+                    .map(SongDTO::getName)
+                    .filter(songName -> songName.toLowerCase().contains(event.getFocusedOption().getValue().toLowerCase()))
+                    .map(songName -> new Command.Choice(songName, songName))
                     .toList();
 
             event.replyChoices(replyChoices).queue();
