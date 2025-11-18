@@ -55,7 +55,7 @@ public class RegisterCommand extends CommandBase {
     public void autoComplete(String optionName, CommandAutoCompleteInteractionEvent event) {}
 
     @Override
-    public List<OptionData> getOptions() {
+    public @NotNull List<OptionData> getOptions() {
         return List.of(new OptionData(STRING, "passwort", "Wähle ein Passwort für deinen Account.", true, false));
     }
 

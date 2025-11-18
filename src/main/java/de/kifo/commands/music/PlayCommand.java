@@ -4,7 +4,6 @@ import com.google.inject.Inject;
 import de.kifo.JavaBot;
 import de.kifo.commands.handle.CommandBase;
 import de.kifo.common.api.model.HistoryEntry;
-import de.kifo.common.api.model.Song;
 import de.kifo.common.exceptions.CommandException;
 import de.kifo.common.music.PlayerManager;
 import de.kifo.common.music.TrackScheduler;
@@ -101,9 +100,8 @@ public class PlayCommand extends CommandBase {
     public void autoComplete(String optionName, CommandAutoCompleteInteractionEvent event) {
         if (optionName.equalsIgnoreCase("song")) {
             List<Command.Choice> replyChoices = javaBot.getApi().getRecommendedSongsByUserId(event.getUser().getIdLong()).stream()
-                    .map(Song::getName)
-                    .filter(songName -> songName.toLowerCase().contains(event.getFocusedOption().getValue().toLowerCase()))
-                    .map(songName -> new Command.Choice(songName, songName))
+                    .filter(song -> song.getName().toLowerCase().contains(event.getFocusedOption().getValue().toLowerCase()))
+                    .map(song -> new Command.Choice(song.getName(), nonNull(song.getUri()) ? song.getUri() : song.getName()))
                     .toList();
 
             event.replyChoices(replyChoices).queue();
@@ -111,7 +109,7 @@ public class PlayCommand extends CommandBase {
     }
 
     @Override
-    public List<OptionData> getOptions() {
+    public @NotNull List<OptionData> getOptions() {
         return List.of(new OptionData(STRING, "song", "Titel oder URL vom Lied", true, true));
     }
 }

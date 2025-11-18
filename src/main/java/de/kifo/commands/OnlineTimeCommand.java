@@ -94,7 +94,7 @@ public class OnlineTimeCommand extends CommandBase {
     }
 
     @Override
-    public List<OptionData> getOptions() {
+    public @NotNull List<OptionData> getOptions() {
         return List.of(
                 new OptionData(STRING, "zeitraum", "Der Zeitraum, für den du deine Online-Zeit wissen willst", true, true),
                 new OptionData(STRING, "bereich", "Der Discord Bereich, in dem du online warst.", false, true));
