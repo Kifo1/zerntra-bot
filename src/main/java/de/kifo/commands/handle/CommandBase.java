@@ -18,7 +18,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 import java.util.List;
 
-import static de.kifo.common.enums.message.Message.MessageType.ERROR;
+import static de.kifo.common.services.MessageService.MessageType.ERROR;
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static java.util.Objects.nonNull;

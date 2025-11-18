@@ -7,6 +7,7 @@ import de.kifo.commands.handle.CommandBase;
 import de.kifo.common.exceptions.CommandException;
 import de.kifo.common.music.GuildMusicManager;
 import de.kifo.common.music.PlayerManager;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
@@ -19,10 +20,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+import static de.kifo.JavaBot.messageService;
+import static de.kifo.commands.music.PlayCommand.map;
 import static de.kifo.common.enums.exception.ExceptionType.NOT_IN_SPEECH_CHANNEL;
 import static de.kifo.common.enums.exception.ExceptionType.NO_SONG_RUNNING;
-import static de.kifo.common.enums.message.Message.MessageType.MESSAGE;
-import static de.kifo.common.util.EmbedUtils.getEmbedMessageByText;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
@@ -39,14 +40,15 @@ public class StopCommand extends CommandBase {
     @Override
     public void execute(Member member, TextChannel textChannel, List<OptionMapping> options, SlashCommandInteractionEvent event) throws CommandException {
         GuildVoiceState guildVoiceState = member.getVoiceState();
+        Guild guild = event.getGuild();
 
-        if (isNull(guildVoiceState) || isNull(guildVoiceState.getChannel()) || isNull(guildVoiceState.getChannel().asVoiceChannel())) {
+        if (isNull(guildVoiceState) || isNull(guildVoiceState.getChannel())) {
             throw new CommandException(NOT_IN_SPEECH_CHANNEL, event);
         }
 
         VoiceChannel voiceChannel = guildVoiceState.getChannel().asVoiceChannel();
         PlayerManager playerManager = javaBot.getPlayerManager();
-        GuildMusicManager guildMusicManager = playerManager.getGuildMusicManager(event.getGuild());
+        GuildMusicManager guildMusicManager = playerManager.getGuildMusicManager(guild);
         AudioPlayer audioPlayer = guildMusicManager.getTrackScheduler().getAudioPlayer();
         AudioManager audioManager = voiceChannel.getGuild().getAudioManager();
 
@@ -56,7 +58,9 @@ public class StopCommand extends CommandBase {
                 guildMusicManager.getTrackScheduler().getAudioPlayer().stopTrack();
             }
             audioManager.closeAudioConnection();
-            event.replyEmbeds(getEmbedMessageByText("Die Musik wurde beendet.", MESSAGE)).queue();
+            event.deferReply().queue();
+            messageService.sendMessageAndDestroy(event, "Die Musik wurde beendet.", 60);
+            map.remove(guild.getIdLong());
         } else {
             throw new CommandException(NO_SONG_RUNNING, event);
         }

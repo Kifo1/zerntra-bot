@@ -1,6 +1,5 @@
 package de.kifo.commands.music;
 
-import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
@@ -23,9 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
+import static de.kifo.JavaBot.messageService;
 import static de.kifo.common.enums.exception.ExceptionType.*;
-import static de.kifo.common.enums.message.Message.MessageType.MESSAGE;
-import static de.kifo.common.util.EmbedUtils.getEmbedMessageByText;
 import static java.lang.Math.min;
 import static java.lang.String.valueOf;
 import static java.util.Objects.isNull;
@@ -60,7 +58,8 @@ public class SkipCommand extends CommandBase {
 
         if (options.isEmpty() || isNull(options.get(0))) {
             audioPlayer.stopTrack();
-            event.replyEmbeds(getEmbedMessageByText("Das Lied wird übersprungen...", MESSAGE)).queue();
+            event.deferReply().queue();
+            messageService.sendMessageAndDestroy(event, "Das Lied wird übersprungen...", 60);
         } else {
             BlockingQueue<AudioTrack> tracks = guildMusicManager.getTrackScheduler().getQueue();
             int number = options.get(0).getAsInt();
@@ -68,9 +67,10 @@ public class SkipCommand extends CommandBase {
             if (tracks.size() >= number) {
                 AudioTrack track = (AudioTrack) tracks.toArray()[number - 1];
                 guildMusicManager.getTrackScheduler().getQueue().remove(track);
-                event.replyEmbeds(getEmbedMessageByText(
-                        track.getInfo().title + " von " + track.getInfo().author +
-                        " wurde aus der Playlist entfernt.", MESSAGE)).queue();
+                event.deferReply().queue();
+                messageService.sendMessageAndDestroy(event,
+                        track.getInfo().title + " von " + track.getInfo().author + " wurde aus der Playlist entfernt.",
+                        60);
             } else {
                 throw new CommandException(SKIP_INDEX_NOT_FOUND, event);
             }
@@ -90,7 +90,7 @@ public class SkipCommand extends CommandBase {
     }
 
     @Override
-    public List<OptionData> getOptions() {
-        return ImmutableList.of(new OptionData(INTEGER, "index", "Index des Liedes, welches übersprungen werden soll", false, true));
+    public @NotNull List<OptionData> getOptions() {
+        return List.of(new OptionData(INTEGER, "index", "Index des Liedes, welches übersprungen werden soll", false, true));
     }
 }

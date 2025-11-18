@@ -8,8 +8,8 @@ import net.dv8tion.jda.api.entities.Guild;
 @Getter
 public class GuildMusicManager {
 
-    private TrackScheduler trackScheduler;
-    private AudioForwarder audioForwarder;
+    private final TrackScheduler trackScheduler;
+    private final AudioForwarder audioForwarder;
 
     public GuildMusicManager(AudioPlayerManager audioPlayerManager, Guild guild) {
         AudioPlayer audioPlayer = audioPlayerManager.createPlayer();

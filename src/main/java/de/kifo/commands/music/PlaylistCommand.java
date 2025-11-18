@@ -8,6 +8,7 @@ import de.kifo.common.api.model.PlaylistDTO;
 import de.kifo.common.exceptions.CommandException;
 import de.kifo.common.music.PlayerManager;
 import de.kifo.common.music.TrackScheduler;
+import de.kifo.common.services.MessageService;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.Member;
@@ -24,12 +25,10 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+import static de.kifo.JavaBot.messageService;
+import static de.kifo.commands.music.PlayCommand.map;
 import static de.kifo.common.api.model.HistoryEntryDTO.Type.PLAYLIST_PLAY;
-import static de.kifo.common.enums.exception.ExceptionType.BOT_ALREADY_PLAYING_FOR_GUILD;
-import static de.kifo.common.enums.exception.ExceptionType.NOT_IN_SPEECH_CHANNEL;
-import static de.kifo.common.enums.message.Message.MessageType.MESSAGE;
-import static de.kifo.common.music.TrackScheduler.map;
-import static de.kifo.common.util.EmbedUtils.getEmbedMessageByText;
+import static de.kifo.common.enums.exception.ExceptionType.*;
 import static java.lang.System.currentTimeMillis;
 import static java.util.Collections.shuffle;
 import static java.util.Objects.isNull;
@@ -70,6 +69,10 @@ public class PlaylistCommand extends CommandBase {
         boolean shuffle = options.size() > 1 && options.get(1).getAsBoolean();
         PlaylistDTO playlistDTO = javaBot.getApi().getPlaylist(playlistId);
 
+        if (isNull(playlistDTO)) {
+            throw new CommandException(PLAYLIST_NOT_FOUND, event);
+        }
+
         List<String> queryUrls = new ArrayList<>(playlistDTO.getSongs().stream()
                 .map(playlistSong -> {
                     String uri = playlistSong.getUri();
@@ -84,8 +87,11 @@ public class PlaylistCommand extends CommandBase {
             shuffle(queryUrls);
         }
 
-        event.replyEmbeds(getEmbedMessageByText("Starte Playlist: " + playlistDTO.getName(), MESSAGE)).queue();
-        map.put(voiceChannel.getGuild().getIdLong(), textChannel);
+        event.deferReply().queue();
+        MessageService.UpdatableMessage updatableMessage = new MessageService.UpdatableMessage(
+            event.getHook().sendMessageEmbeds(messageService.message("Starte Playlist: " + playlistDTO.getName())).complete()
+        );
+        map.putIfAbsent(voiceChannel.getGuild().getIdLong(), updatableMessage);
 
         queryUrls.forEach(queryUrl -> playerManager.play(guild, queryUrl, member.getIdLong()));
 
@@ -108,7 +114,7 @@ public class PlaylistCommand extends CommandBase {
     }
 
     @Override
-    public List<OptionData> getOptions() {
+    public @NotNull List<OptionData> getOptions() {
         return List.of(new OptionData(STRING, "playlist", "Name der Playlist", true, true),
                   new OptionData(BOOLEAN, "shuffle", "Erstellt eine zufällige Reihenfolge", false, false));
     }

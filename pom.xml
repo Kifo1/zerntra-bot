@@ -73,7 +73,7 @@
         <dependency>
             <groupId>net.dv8tion</groupId>
             <artifactId>JDA</artifactId>
-            <version>5.6.1</version>
+            <version>6.1.1</version>
         </dependency>
 
         <!-- Music library - Lavaplayer (https://github.com/lavalink-devs/lavaplayer)-->
@@ -87,7 +87,7 @@
         <dependency>
             <groupId>dev.lavalink.youtube</groupId>
             <artifactId>youtube-plugin</artifactId>
-            <version>1.14.0</version>
+            <version>1.16.0</version>
         </dependency>
 
         <!-- Spotify Plugin - Additional src plugins -->
@@ -111,7 +111,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.40</version>
+            <version>1.18.42</version>
             <scope>provided</scope>
         </dependency>
 

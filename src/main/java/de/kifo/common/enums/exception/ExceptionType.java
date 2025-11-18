@@ -12,6 +12,9 @@ public enum ExceptionType {
     SKIP_INDEX_NOT_FOUND("Dieser Index existiert nicht. Verbende \"/songlist\", um die aktuelle Songlist anzuschauen."),
     ONLINE_TIME_WRONG_TIME_PERIOD("Bitte gib einen gültigen Wert für den Zeitraum an."),
     PAGE_NOT_AVAILABLE("Die aktuelle Songlist besitzt diese Seite nicht."),
+    PLAYLIST_NOT_FOUND("Die Playlist konnte nicht gefunden werden."),
+    PASSWORD_NOT_SECURE("Das Passwort muss eine Zahl, Groß- und Kleinbuchstaben " +
+            "und ein Sonderzeichen enthalten und muss mindestens 8 Zeichen lang sein."),
 
     // COMMAND - Miscellaneous
     NOT_IN_SPEECH_CHANNEL("Du musst in einem Sprachkanal sein."),

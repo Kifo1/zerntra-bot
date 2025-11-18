@@ -1,6 +1,5 @@
 package de.kifo.commands;
 
-import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 import de.kifo.JavaBot;
 import de.kifo.commands.handle.CommandBase;
@@ -17,10 +16,9 @@ import org.jetbrains.annotations.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static de.kifo.JavaBot.messageService;
 import static de.kifo.JavaBot.onlineTimeService;
 import static de.kifo.common.enums.exception.ExceptionType.USER_HAS_NO_DATA;
-import static de.kifo.common.enums.message.Message.MessageType.MESSAGE;
-import static de.kifo.common.util.EmbedUtils.getEmbedMessageByText;
 import static java.time.Instant.ofEpochMilli;
 import static java.time.LocalDateTime.now;
 import static java.time.ZoneId.systemDefault;
@@ -53,11 +51,11 @@ public class LastSeenCommand extends CommandBase {
         long pastDays = DAYS.between(lastSeenDate, now());
 
         if (!onlineTimeService.isInAVoiceChannelSession(userDTO.getId())) {
-            event.replyEmbeds(getEmbedMessageByText(
-                    userDTO.getUserName() + " war zuletzt am " + lastSeenDate.format(ofPattern("dd.MM.yyyy")) + " um " + lastSeenDate.format(ofPattern("HH:mm:ss")) + " Uhr online. Das ist " + pastDays + " Tage her.", MESSAGE)).queue();
+            event.replyEmbeds(messageService.message(
+                    userDTO.getUserName() + " war zuletzt am " + lastSeenDate.format(ofPattern("dd.MM.yyyy")) + " um " + lastSeenDate.format(ofPattern("HH:mm:ss")) + " Uhr online. Das ist " + pastDays + " Tage her.")).queue();
         } else {
-            event.replyEmbeds(getEmbedMessageByText(
-                    userDTO.getUserName() + " ist im Moment in einem Voice-Channel online.", MESSAGE)).queue();
+            event.replyEmbeds(messageService.message(
+                    userDTO.getUserName() + " ist im Moment in einem Voice-Channel online.")).queue();
         }
     }
 
@@ -65,7 +63,7 @@ public class LastSeenCommand extends CommandBase {
     public void autoComplete(String optionName, CommandAutoCompleteInteractionEvent event) {}
 
     @Override
-    public List<OptionData> getOptions() {
-        return ImmutableList.of(new OptionData(USER, "user", "User, von dem du wissen willst, wann er zuletzt online war.", true, false));
+    public @NotNull List<OptionData> getOptions() {
+        return List.of(new OptionData(USER, "user", "User, von dem du wissen willst, wann er zuletzt online war.", true, false));
     }
 }
