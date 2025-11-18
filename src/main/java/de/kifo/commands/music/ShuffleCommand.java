@@ -18,10 +18,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+import static de.kifo.JavaBot.messageService;
 import static de.kifo.common.enums.exception.ExceptionType.*;
-import static de.kifo.common.enums.message.Message.MessageType.MESSAGE;
-import static de.kifo.common.enums.message.Message.SONGLIST_SHUFFLED;
-import static de.kifo.common.util.EmbedUtils.getEmbedMessageByText;
 import static java.util.Objects.isNull;
 
 @CommandBase.BotCommand(name = "shuffle", description = "Ändert die Reihenfolge der aktuellen songlist.")
@@ -54,7 +52,9 @@ public class ShuffleCommand extends CommandBase {
         }
 
         trackScheduler.shuffleQueue();
-        event.replyEmbeds(getEmbedMessageByText(SONGLIST_SHUFFLED.getMessageText(), MESSAGE)).queue();
+
+        event.deferReply().queue();
+        messageService.sendMessageAndDestroy(event, "Die Songlist wurde geshuffled.", 60);
     }
 
     @Override

@@ -7,7 +7,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
-import static de.kifo.common.enums.message.Message.WRONG_COMMAND_SYNTAX_HELP;
+import static de.kifo.JavaBot.messageService;
 import static net.dv8tion.jda.api.entities.channel.ChannelType.TEXT;
 
 public class MessageReceivedListener extends ListenerAdapter {
@@ -21,7 +21,8 @@ public class MessageReceivedListener extends ListenerAdapter {
         MessageChannelUnion messageChannel = event.getChannel();
 
         if (messageChannel.getType().equals(TEXT) && isWrongCommandSyntax(message)) {
-            WRONG_COMMAND_SYNTAX_HELP.sendToTextChannel(messageChannel.asTextChannel());
+            messageChannel.asTextChannel().sendMessageEmbeds(
+                    messageService.error("Nutze \"/\" anstelle von \"!\", um Befehle auszuführen.")).queue();
         }
     }
 
