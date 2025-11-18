@@ -83,7 +83,7 @@ public class PlayerManager {
                     }
                 } else {
                     audioPlaylist.getTracks().forEach(trackScheduler::queue);
-                    future.complete(messageService.message("Playlist wurde geladen."));
+                    future.complete(messageService.message("Die Playlist startet jetzt."));
                 }
             }
 
