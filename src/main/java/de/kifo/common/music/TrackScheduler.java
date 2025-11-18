@@ -15,16 +15,20 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ScheduledExecutorService;
 
+import static de.kifo.JavaBot.messageService;
 import static de.kifo.commands.music.PlayCommand.map;
-import static de.kifo.common.util.StringUtils.getTimeStringBySeconds;
+import static de.kifo.common.util.StringUtils.getProgressBar;
 import static java.awt.Color.MAGENTA;
 import static java.lang.Thread.sleep;
 import static java.util.Collections.shuffle;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static java.util.concurrent.Executors.newSingleThreadExecutor;
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 @Getter
 @RequiredArgsConstructor
@@ -33,31 +37,45 @@ public class TrackScheduler extends AudioEventAdapter {
     private final AudioPlayer audioPlayer;
     private final Guild guild;
     private final BlockingQueue<AudioTrack> queue = new LinkedBlockingQueue<>();
+    private ScheduledExecutorService scheduler;
 
     @Override
     public void onTrackStart(AudioPlayer player, AudioTrack track) {
-        AudioTrackInfo info = track.getInfo();
-        String url = info.uri;
-        long seconds = info.length/1000;
-
-        MessageEmbed messageEmbed = new EmbedBuilder()
-                .setColor(MAGENTA)
-                .setTitle("Jetzt läuft: " + info.title)
-                .addField(info.author, "[" + info.title + "](" + url + ")", false)
-                .addField("Länge", info.isStream ? ":red_circle: Stream" : getTimeStringBySeconds(seconds), true)
-                .build();
-
         MessageService.UpdatableMessage updatableMessage = map.get(guild.getIdLong());
-        updatableMessage.update(messageEmbed)
-                .exceptionally(e -> {
-                    updatableMessage.fail();
-                    return null;
-                });
+
+        stopSchedulerIfRunning();
+
+        scheduler = Executors.newSingleThreadScheduledExecutor();
+
+        Runnable task = () -> {
+            AudioTrack t = audioPlayer.getPlayingTrack();
+            if (isNull(t) || t.getPosition() >= t.getDuration() || !t.isSeekable()) {
+                stopSchedulerIfRunning();
+                return;
+            }
+
+            MessageEmbed embed = getMessageEmbedBySongQueueState(true, t);
+            updatableMessage.update(embed);
+        };
+
+        scheduler.scheduleAtFixedRate(task, 0, 1, SECONDS);
+    }
+
+    private void stopSchedulerIfRunning() {
+        if (nonNull(scheduler) && !scheduler.isShutdown()) {
+            scheduler.shutdown();
+        }
     }
 
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
-        audioPlayer.startTrack(queue.poll(), false);
+        if (isQueueEmpty()) {
+            MessageService.UpdatableMessage updatableMessage = map.get(guild.getIdLong());
+            updatableMessage.getMessage().delete().queue();
+            map.remove(guild.getIdLong());
+        } else {
+            audioPlayer.startTrack(queue.poll(), false);
+        }
 
         newSingleThreadExecutor().execute(() -> {
             try {
@@ -94,5 +112,17 @@ public class TrackScheduler extends AudioEventAdapter {
         shuffle(songList);
         queue.clear();
         queue.addAll(songList);
+    }
+
+    public MessageEmbed getMessageEmbedBySongQueueState(boolean isNowPlaying, AudioTrack audioTrack) {
+        AudioTrackInfo audioTrackInfo = audioTrack.getInfo();
+        return isNowPlaying ?
+                new EmbedBuilder()
+                        .setColor(MAGENTA)
+                        .setTitle(audioTrackInfo.title)
+                        .setDescription(getProgressBar(audioTrack.getPosition(), audioTrack.getDuration(), 20))
+                        .setThumbnail("https://img.youtube.com/vi/" + audioTrackInfo.identifier + "/hqdefault.jpg")
+                        .build() :
+                messageService.message(audioTrackInfo.title + " wurde zur Songlist hinzugefügt.");
     }
 }

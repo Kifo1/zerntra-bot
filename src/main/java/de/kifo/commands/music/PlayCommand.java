@@ -80,8 +80,8 @@ public class PlayCommand extends CommandBase {
 
         playerManager.play(guild, url[0], event.getUser().getIdLong())
                 .thenCompose(updatedMessage -> {
-                    String title = updatedMessage.getTitle();
-                    if (nonNull(title) && title.contains("Jetzt läuft:")) {
+                    String description = updatedMessage.getDescription();
+                    if (nonNull(description) && description.contains("Das Lied startet jetzt.")) {
                         return updatableMessage.update(updatedMessage);
                     }
                     return updatableMessage.updateAndDestroyAfter(updatedMessage, 60);

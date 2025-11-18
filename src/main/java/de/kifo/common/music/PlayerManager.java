@@ -12,7 +12,6 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 import de.kifo.JavaBot;
 import dev.lavalink.youtube.YoutubeAudioSourceManager;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
@@ -22,8 +21,6 @@ import java.util.concurrent.CompletableFuture;
 
 import static com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers.registerRemoteSources;
 import static de.kifo.JavaBot.messageService;
-import static de.kifo.common.util.StringUtils.getTimeStringBySeconds;
-import static java.awt.Color.MAGENTA;
 import static java.lang.System.getenv;
 
 public class PlayerManager {
@@ -58,6 +55,7 @@ public class PlayerManager {
 
     public CompletableFuture<MessageEmbed> play(Guild guild, String trackURL, Long userId) {
         GuildMusicManager guildMusicManager = getGuildMusicManager(guild);
+        TrackScheduler trackScheduler = guildMusicManager.getTrackScheduler();
         CompletableFuture<MessageEmbed> future = new CompletableFuture<>();
 
         audioPlayerManager.loadItemOrdered(guildMusicManager, trackURL, new AudioLoadResultHandler() {
@@ -65,18 +63,25 @@ public class PlayerManager {
             public void trackLoaded(AudioTrack audioTrack) {
                 AudioTrackInfo audioTrackInfo = audioTrack.getInfo();
                 javaBot.getApi().updateSong(userId, audioTrackInfo.title);
-                future.complete(getMessageEmbedBySongQueueState(guildMusicManager.getTrackScheduler().queue(audioTrack), audioTrackInfo));
+                if (trackScheduler.queue(audioTrack)) {
+                    future.complete(messageService.message("Das Lied startet jetzt."));
+                } else {
+                    future.complete(messageService.message(audioTrackInfo.title + " wurde zur Songlist hinzugefügt."));
+                }
             }
 
             @Override
             public void playlistLoaded(AudioPlaylist audioPlaylist) {
                 if (audioPlaylist.isSearchResult()) {
                     AudioTrack firstTrack = audioPlaylist.getTracks().get(0);
-                    AudioTrackInfo audioTrackInfo = firstTrack.getInfo();
                     javaBot.getApi().updateSong(userId, firstTrack.getInfo().title);
-                    future.complete(getMessageEmbedBySongQueueState(guildMusicManager.getTrackScheduler().queue(firstTrack), audioTrackInfo));
+                    if(trackScheduler.queue(firstTrack)) {
+                        future.complete(messageService.message("Das Lied startet jetzt."));
+                    } else {
+                        future.complete(messageService.message(firstTrack.getInfo().title + " wurde zur Songlist hinzugefügt."));
+                    }
                 } else {
-                    audioPlaylist.getTracks().forEach(track -> guildMusicManager.getTrackScheduler().queue(track));
+                    audioPlaylist.getTracks().forEach(trackScheduler::queue);
                     future.complete(messageService.message("Playlist wurde geladen."));
                 }
             }
@@ -93,16 +98,5 @@ public class PlayerManager {
         });
 
         return future;
-    }
-
-    private MessageEmbed getMessageEmbedBySongQueueState(boolean skipQueue, AudioTrackInfo audioTrackInfo) {
-        return skipQueue ?
-                new EmbedBuilder()
-                        .setColor(MAGENTA)
-                        .setTitle("Jetzt läuft: " + audioTrackInfo.title)
-                        .addField(audioTrackInfo.author, "[" + audioTrackInfo.title + "](" + audioTrackInfo.uri + ")", false)
-                        .addField("Länge", audioTrackInfo.isStream ? ":red_circle: Stream" : getTimeStringBySeconds(audioTrackInfo.length / 1000), true)
-                        .build() :
-                messageService.message(audioTrackInfo.title + " wurde zur Songlist hinzugefügt.");
     }
 }
