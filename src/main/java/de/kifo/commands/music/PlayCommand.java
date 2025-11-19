@@ -78,20 +78,22 @@ public class PlayCommand extends CommandBase {
                 event.getHook().sendMessageEmbeds(messageService.info("Suche nach dem Titel...")).complete()
         );
 
+        map.putIfAbsent(guild.getIdLong(), updatableMessage);
+
         playerManager.play(guild, url[0], event.getUser().getIdLong())
                 .thenCompose(updatedMessage -> {
                     String description = updatedMessage.getDescription();
                     if (nonNull(description) && description.contains("startet jetzt.")) {
                         return updatableMessage.update(updatedMessage);
                     }
+                    map.remove(guild.getIdLong());
                     return updatableMessage.updateAndDestroyAfter(updatedMessage, 60);
                 })
                 .exceptionally(e -> {
                     updatableMessage.fail();
+                    map.remove(guild.getIdLong());
                     return null;
                 });
-
-        map.putIfAbsent(voiceChannel.getGuild().getIdLong(), updatableMessage);
 
         javaBot.getApi().createHistoryEntry(new HistoryEntryDTO(null, guild.getIdLong(), member.getIdLong(),
                 SONG_PLAY, currentTimeMillis(),"Query " + url[0] + ", " + textChannel.getName()));
