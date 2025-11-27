@@ -1,6 +1,5 @@
 package de.kifo.commands.handle;
 
-import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 import de.kifo.JavaBot;
 import de.kifo.common.exceptions.CommandException;
@@ -53,8 +52,9 @@ public abstract class CommandBase extends CommandDataImpl {
 
     public abstract void autoComplete(String optionName, CommandAutoCompleteInteractionEvent event);
 
-    public List<OptionData> getOptions() {
-        return ImmutableList.of();
+    @Override
+    public @NotNull List<OptionData> getOptions() {
+        return List.of();
     }
 
     @Target(TYPE)

@@ -4,7 +4,6 @@ import com.google.inject.Inject;
 import de.kifo.JavaBot;
 import de.kifo.commands.handle.CommandBase;
 import de.kifo.common.api.model.HistoryEntryDTO;
-import de.kifo.common.api.model.SongDTO;
 import de.kifo.common.exceptions.CommandException;
 import de.kifo.common.music.PlayerManager;
 import de.kifo.common.music.TrackScheduler;
@@ -103,9 +102,8 @@ public class PlayCommand extends CommandBase {
     public void autoComplete(String optionName, CommandAutoCompleteInteractionEvent event) {
         if (optionName.equalsIgnoreCase("song")) {
             List<Command.Choice> replyChoices = javaBot.getApi().getRecommendedSongsByUserId(event.getUser().getIdLong()).stream()
-                    .map(SongDTO::getName)
-                    .filter(songName -> songName.toLowerCase().contains(event.getFocusedOption().getValue().toLowerCase()))
-                    .map(songName -> new Command.Choice(songName, songName))
+                    .filter(song -> song.getName().toLowerCase().contains(event.getFocusedOption().getValue().toLowerCase()))
+                    .map(song -> new Command.Choice(song.getName(), song.getUri()))
                     .toList();
 
             event.replyChoices(replyChoices).queue();
