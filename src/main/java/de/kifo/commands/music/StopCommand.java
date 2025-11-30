@@ -21,7 +21,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 import static de.kifo.JavaBot.messageService;
-import static de.kifo.commands.music.PlayCommand.map;
 import static de.kifo.common.enums.exception.ExceptionType.NOT_IN_SPEECH_CHANNEL;
 import static de.kifo.common.enums.exception.ExceptionType.NO_SONG_RUNNING;
 import static java.util.Objects.isNull;
@@ -60,7 +59,6 @@ public class StopCommand extends CommandBase {
             audioManager.closeAudioConnection();
             event.deferReply().queue();
             messageService.sendMessageAndDestroy(event, "Die Musik wurde beendet.", 60);
-            map.remove(guild.getIdLong());
         } else {
             throw new CommandException(NO_SONG_RUNNING, event);
         }

@@ -48,14 +48,24 @@ public class TrackScheduler extends AudioEventAdapter {
         scheduler = Executors.newSingleThreadScheduledExecutor();
 
         Runnable task = () -> {
-            AudioTrack t = audioPlayer.getPlayingTrack();
-            if (isNull(t) || t.getPosition() >= t.getDuration() || !t.isSeekable()) {
-                stopSchedulerIfRunning();
-                return;
-            }
+            try {
+                AudioTrack t = audioPlayer.getPlayingTrack();
+                if ((isNull(t) && queue.isEmpty()) ||
+                        (t.getPosition() >= t.getDuration() && queue.isEmpty()) ||
+                        !t.isSeekable()) {
+                    System.out.println("REMOVE!!!!!!!!!");
+                    stopSchedulerIfRunning();
+                    map.remove(guild.getIdLong());
+                    updatableMessage.getMessage().delete().queue();
+                    return;
+                }
 
-            MessageEmbed embed = getMessageEmbedBySongQueueState(true, t);
-            updatableMessage.update(embed);
+                MessageEmbed embed = getMessageEmbedBySongQueueState(true, t);
+                updatableMessage.update(embed);
+
+            } catch (Exception ex) {
+                ex.printStackTrace(); // <-- Jetzt siehst du den Grund
+            }
         };
 
         scheduler.scheduleAtFixedRate(task, 0, 1, SECONDS);
@@ -69,13 +79,7 @@ public class TrackScheduler extends AudioEventAdapter {
 
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
-        if (isQueueEmpty()) {
-            MessageService.UpdatableMessage updatableMessage = map.get(guild.getIdLong());
-            updatableMessage.getMessage().delete().queue();
-            map.remove(guild.getIdLong());
-        } else {
-            audioPlayer.startTrack(queue.poll(), false);
-        }
+        audioPlayer.startTrack(queue.poll(), false);
 
         newSingleThreadExecutor().execute(() -> {
             try {

@@ -1,6 +1,7 @@
 package de.kifo.commands.music;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import de.kifo.JavaBot;
 import de.kifo.commands.handle.CommandBase;
 import de.kifo.common.api.model.HistoryEntryDTO;
@@ -34,13 +35,14 @@ import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static net.dv8tion.jda.api.interactions.commands.OptionType.STRING;
 
+@Singleton
 @CommandBase.BotCommand(name = "play", description = "Wähle ein Lied, das abgespielt werden soll.", hasOptions = true)
 public class PlayCommand extends CommandBase {
 
     @Inject
     private JavaBot javaBot;
 
-    public static Map<Long, MessageService.UpdatableMessage> map = new HashMap<>();
+    public static final Map<Long, MessageService.UpdatableMessage> map = new HashMap<>();
 
     public PlayCommand(@NotNull BotCommand command) {
         super(command);
@@ -85,7 +87,6 @@ public class PlayCommand extends CommandBase {
                     if (nonNull(description) && description.contains("startet jetzt.")) {
                         return updatableMessage.update(updatedMessage);
                     }
-                    map.remove(guild.getIdLong());
                     return updatableMessage.updateAndDestroyAfter(updatedMessage, 60);
                 })
                 .exceptionally(e -> {
