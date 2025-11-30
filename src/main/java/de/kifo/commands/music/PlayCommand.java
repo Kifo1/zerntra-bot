@@ -1,10 +1,10 @@
 package de.kifo.commands.music;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import de.kifo.JavaBot;
 import de.kifo.commands.handle.CommandBase;
 import de.kifo.common.api.model.HistoryEntryDTO;
-import de.kifo.common.api.model.SongDTO;
 import de.kifo.common.exceptions.CommandException;
 import de.kifo.common.music.PlayerManager;
 import de.kifo.common.music.TrackScheduler;
@@ -35,13 +35,14 @@ import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static net.dv8tion.jda.api.interactions.commands.OptionType.STRING;
 
+@Singleton
 @CommandBase.BotCommand(name = "play", description = "Wähle ein Lied, das abgespielt werden soll.", hasOptions = true)
 public class PlayCommand extends CommandBase {
 
     @Inject
     private JavaBot javaBot;
 
-    public static Map<Long, MessageService.UpdatableMessage> map = new HashMap<>();
+    public static final Map<Long, MessageService.UpdatableMessage> map = new HashMap<>();
 
     public PlayCommand(@NotNull BotCommand command) {
         super(command);
@@ -78,6 +79,8 @@ public class PlayCommand extends CommandBase {
                 event.getHook().sendMessageEmbeds(messageService.info("Suche nach dem Titel...")).complete()
         );
 
+        map.putIfAbsent(guild.getIdLong(), updatableMessage);
+
         playerManager.play(guild, url[0], event.getUser().getIdLong())
                 .thenCompose(updatedMessage -> {
                     String description = updatedMessage.getDescription();
@@ -88,10 +91,9 @@ public class PlayCommand extends CommandBase {
                 })
                 .exceptionally(e -> {
                     updatableMessage.fail();
+                    map.remove(guild.getIdLong());
                     return null;
                 });
-
-        map.putIfAbsent(voiceChannel.getGuild().getIdLong(), updatableMessage);
 
         javaBot.getApi().createHistoryEntry(new HistoryEntryDTO(null, guild.getIdLong(), member.getIdLong(),
                 SONG_PLAY, currentTimeMillis(),"Query " + url[0] + ", " + textChannel.getName()));
@@ -101,9 +103,8 @@ public class PlayCommand extends CommandBase {
     public void autoComplete(String optionName, CommandAutoCompleteInteractionEvent event) {
         if (optionName.equalsIgnoreCase("song")) {
             List<Command.Choice> replyChoices = javaBot.getApi().getRecommendedSongsByUserId(event.getUser().getIdLong()).stream()
-                    .map(SongDTO::getName)
-                    .filter(songName -> songName.toLowerCase().contains(event.getFocusedOption().getValue().toLowerCase()))
-                    .map(songName -> new Command.Choice(songName, songName))
+                    .filter(song -> song.getName().toLowerCase().contains(event.getFocusedOption().getValue().toLowerCase()))
+                    .map(song -> new Command.Choice(song.getName(), song.getUri()))
                     .toList();
 
             event.replyChoices(replyChoices).queue();

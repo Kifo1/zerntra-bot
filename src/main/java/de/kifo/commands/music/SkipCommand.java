@@ -64,7 +64,7 @@ public class SkipCommand extends CommandBase {
             BlockingQueue<AudioTrack> tracks = guildMusicManager.getTrackScheduler().getQueue();
             int number = options.get(0).getAsInt();
 
-            if (tracks.size() >= number) {
+            if (number > 0 && number <= tracks.size()) {
                 AudioTrack track = (AudioTrack) tracks.toArray()[number - 1];
                 guildMusicManager.getTrackScheduler().getQueue().remove(track);
                 event.deferReply().queue();
