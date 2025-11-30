@@ -21,10 +21,10 @@ public class VoiceChannelOnlineSessionDTO {
     @AllArgsConstructor
     public enum TimePeriod {
 
-        WEEK("Woche", 7),
-        MONTH("Monat", 30),
-        YEAR("Jahr", 365),
-        LIFETIME("Insgesamt", MAX_VALUE);
+        WEEK("Week", 7),
+        MONTH("Month", 30),
+        YEAR("Year", 365),
+        LIFETIME("Lifetime", MAX_VALUE);
 
         private final String displayName;
         private final int days;
