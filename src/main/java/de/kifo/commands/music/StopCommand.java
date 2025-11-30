@@ -26,7 +26,7 @@ import static de.kifo.common.enums.exception.ExceptionType.NO_SONG_RUNNING;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
-@CommandBase.BotCommand(name = "stop", description = "Beende das Abspielen von Musik.")
+@CommandBase.BotCommand(name = "stop", description = "Stop playing music.")
 public class StopCommand extends CommandBase {
 
     @Inject
@@ -58,7 +58,7 @@ public class StopCommand extends CommandBase {
             }
             audioManager.closeAudioConnection();
             event.deferReply().queue();
-            messageService.sendMessageAndDestroy(event, "Die Musik wurde beendet.", 60);
+            messageService.sendMessageAndDestroy(event, "The music has been stopped.", 60);
         } else {
             throw new CommandException(NO_SONG_RUNNING, event);
         }

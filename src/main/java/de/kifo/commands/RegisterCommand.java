@@ -22,7 +22,7 @@ import static de.kifo.common.enums.exception.ExceptionType.PASSWORD_NOT_SECURE;
 import static java.util.regex.Pattern.compile;
 import static net.dv8tion.jda.api.interactions.commands.OptionType.STRING;
 
-@CommandBase.BotCommand(name = "register", description = "Registriere deinen Account.", hasOptions = true)
+@CommandBase.BotCommand(name = "register", description = "Register your account.", hasOptions = true)
 public class RegisterCommand extends CommandBase {
 
     @Inject
@@ -47,7 +47,7 @@ public class RegisterCommand extends CommandBase {
 
         javaBot.getApi().setPasswordForUser(userDTO, new PasswordDTO(password));
         
-        event.replyEmbeds(messageService.message("Dein Account wurde erfolgreich registriert."))
+        event.replyEmbeds(messageService.message("Your account has been successfully registered."))
                 .setEphemeral(true)
                 .queue();
     }
@@ -58,7 +58,7 @@ public class RegisterCommand extends CommandBase {
     @Override
 
     public @NotNull List<OptionData> getOptions() {
-        return List.of(new OptionData(STRING, "passwort", "Wähle ein Passwort für deinen Account.", true, false));
+        return List.of(new OptionData(STRING, "password", "Choose a password for your account", true, false));
     }
 
     private boolean isValidPassword(@NotNull String password) {

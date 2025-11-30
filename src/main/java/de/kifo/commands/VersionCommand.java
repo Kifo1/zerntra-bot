@@ -14,7 +14,7 @@ import java.util.List;
 import static de.kifo.JavaBot.VERSION;
 import static de.kifo.JavaBot.messageService;
 
-@CommandBase.BotCommand(name = "version", description = "Zeigt die aktuelle Bot Version an.")
+@CommandBase.BotCommand(name = "version", description = "Shows the current bot version.")
 public class VersionCommand extends CommandBase {
 
     public VersionCommand(@NotNull BotCommand command) {
@@ -23,7 +23,7 @@ public class VersionCommand extends CommandBase {
 
     @Override
     public void execute(Member member, TextChannel textChannel, List<OptionMapping> options, SlashCommandInteractionEvent event) throws CommandException {
-        event.replyEmbeds(messageService.message("Die aktuelle Version ist: " + VERSION)).queue();
+        event.replyEmbeds(messageService.message("The current version is: " + VERSION)).queue();
     }
 
     @Override

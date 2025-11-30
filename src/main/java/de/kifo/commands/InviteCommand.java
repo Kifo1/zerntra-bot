@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-@CommandBase.BotCommand(name = "invite", description = "Erstelle einen Invite-Link")
+@CommandBase.BotCommand(name = "invite", description = "Create an invite link.")
 public class InviteCommand extends CommandBase {
 
     @Inject
@@ -24,9 +24,9 @@ public class InviteCommand extends CommandBase {
 
     @Override
     public void execute(Member member, TextChannel textChannel, List<OptionMapping> options, SlashCommandInteractionEvent event) {
-        event.reply("Verschicke diesen Link, um jemanden zum Server einzuladen:").queue();
+        event.reply("Send this link to invite someone to the server:").queue();
         event.getMessageChannel().sendMessage(textChannel.createInvite().setMaxAge(3600).complete().getUrl()).queue();
-        event.getMessageChannel().sendMessage("Du kannst den Link für eine Stunde nutzen.").queue();
+        event.getMessageChannel().sendMessage("You can use the link for one hour.").queue();
     }
 
     @Override

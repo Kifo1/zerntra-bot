@@ -33,7 +33,7 @@ import static java.util.Objects.isNull;
 import static java.util.stream.IntStream.rangeClosed;
 import static net.dv8tion.jda.api.interactions.commands.OptionType.INTEGER;
 
-@CommandBase.BotCommand(name = "songlist", description = "Zeigt die aktuelle Song Liste an.", hasOptions = true)
+@CommandBase.BotCommand(name = "songlist", description = "Displays the current song list.", hasOptions = true)
 public class SongListCommand extends CommandBase {
 
     @Inject
@@ -73,15 +73,15 @@ public class SongListCommand extends CommandBase {
             throw new CommandException(PAGE_NOT_AVAILABLE, event);
         }
 
-        builder.setTitle("Seite " + page + ":");
+        builder.setTitle("Page " + page + ":");
         rangeClosed(((page - 1) * 10), (9 + (page - 1) * 10)).forEach(index -> {
             if (index <= queuedSongList.size() - 1) {
                 int trackNumber = index + 1;
                 AudioTrack song = queuedSongList.get(index);
-                builder.addField("Lied " + trackNumber + ": ", song.getInfo().title, false);
+                builder.addField("Song " + trackNumber + ": ", song.getInfo().title, false);
             }
         });
-        builder.setFooter("Verwende \"/skip <Nummer>\", um das gewünschte Lied aus der Liste zu entfernen.");
+        builder.setFooter("Use \"/skip <Nummer>\", to remove the song from the songlist.");
         event.replyEmbeds(builder.build()).queue();
     }
 
@@ -103,7 +103,7 @@ public class SongListCommand extends CommandBase {
 
     @Override
     public @NotNull List<OptionData> getOptions() {
-        return List.of(new OptionData(INTEGER, "page", "Die Seite der Songlist, die angezeigt werden soll.", false, true));
+        return List.of(new OptionData(INTEGER, "page", "The page of the songlist to be displayed", false, true));
     }
 
     private int getCurrentPageAmount(Guild guild) {

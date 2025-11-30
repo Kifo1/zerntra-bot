@@ -36,12 +36,12 @@ public abstract class CommandBase extends CommandDataImpl {
             this.execute(member, textChannel, options, event);
         } catch (Exception e) {
             if (!(e instanceof CommandException)) {
-                String reason = nonNull(e.getMessage()) ? e.getMessage() : "Unbekannter Fehler";
+                String reason = nonNull(e.getMessage()) ? e.getMessage() : "Unexpected error";
 
                 event.replyEmbeds(new EmbedBuilder()
                         .setColor(ERROR.getEmbedColor())
-                        .setTitle("Beim Ausführen des Commands kam es zu einem unerwarteten Fehler.")
-                        .addField("Fehler:", reason, false)
+                        .setTitle("An unexpected error occurred while executing the command.\n")
+                        .addField("Error:", reason, false)
                         .build()).queue();
             }
             throw new RuntimeException(e);

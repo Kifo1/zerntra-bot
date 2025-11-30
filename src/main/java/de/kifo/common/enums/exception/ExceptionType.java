@@ -8,20 +8,19 @@ import lombok.Getter;
 public enum ExceptionType {
 
     // COMMAND - Arguments
-    USER_HAS_NO_DATA("Es konnten keine Daten zu diesem User gefunden werden."),
-    SKIP_INDEX_NOT_FOUND("Dieser Index existiert nicht. Verbende \"/songlist\", um die aktuelle Songlist anzuschauen."),
-    ONLINE_TIME_WRONG_TIME_PERIOD("Bitte gib einen gültigen Wert für den Zeitraum an."),
-    PAGE_NOT_AVAILABLE("Die aktuelle Songlist besitzt diese Seite nicht."),
-    PLAYLIST_NOT_FOUND("Die Playlist konnte nicht gefunden werden."),
-    PASSWORD_NOT_SECURE("Das Passwort muss eine Zahl, Groß- und Kleinbuchstaben " +
-            "und ein Sonderzeichen enthalten und muss mindestens 8 Zeichen lang sein."),
+    USER_HAS_NO_DATA("No data could be found for this user."),
+    SKIP_INDEX_NOT_FOUND("This index does not exist. Use \"/songlist\" to view the current song list."),
+    ONLINE_TIME_WRONG_TIME_PERIOD("Please provide a valid value for the time period."),
+    PAGE_NOT_AVAILABLE("This page does not exist in the current song list."),
+    PLAYLIST_NOT_FOUND("The playlist could not be found."),
+    PASSWORD_NOT_SECURE("The password must contain a number, uppercase and lowercase letters, a special character, and be at least 8 characters long."),
 
     // COMMAND - Miscellaneous
-    NOT_IN_SPEECH_CHANNEL("Du musst in einem Sprachkanal sein."),
-    NO_SONG_RUNNING("Es läuft im Moment kein Lied."),
-    NO_SONG_IN_QUEUE("Es ist kein Lied in der Songlist."),
-    BOT_ALREADY_PLAYING_FOR_GUILD("Der Bot spielt bereits in einem anderen Channel Musik ab."),
-    USER_ALREADY_REGISTERED("Dieser Discord Account ist bereits registriert.");
+    NOT_IN_SPEECH_CHANNEL("You must be in a voice channel."),
+    NO_SONG_RUNNING("No song is currently playing."),
+    NO_SONG_IN_QUEUE("There is no song in the song list."),
+    BOT_ALREADY_PLAYING_FOR_GUILD("The bot is already playing music in another channel."),
+    USER_ALREADY_REGISTERED("This Discord account is already registered.");
 
     private final String message;
 }

@@ -53,7 +53,6 @@ public class TrackScheduler extends AudioEventAdapter {
                 if ((isNull(t) && queue.isEmpty()) ||
                         (t.getPosition() >= t.getDuration() && queue.isEmpty()) ||
                         !t.isSeekable()) {
-                    System.out.println("REMOVE!!!!!!!!!");
                     stopSchedulerIfRunning();
                     map.remove(guild.getIdLong());
                     updatableMessage.getMessage().delete().queue();
@@ -127,6 +126,6 @@ public class TrackScheduler extends AudioEventAdapter {
                         .setDescription(getProgressBar(audioTrack.getPosition(), audioTrack.getDuration(), 20))
                         .setThumbnail("https://img.youtube.com/vi/" + audioTrackInfo.identifier + "/hqdefault.jpg")
                         .build() :
-                messageService.message(audioTrackInfo.title + " wurde zur Songlist hinzugefügt.");
+                messageService.message(audioTrackInfo.title + " has been added to the songlist.");
     }
 }

@@ -14,7 +14,7 @@ import net.dv8tion.jda.api.JDA;
 import static com.google.inject.Guice.createInjector;
 import static java.lang.System.getenv;
 import static net.dv8tion.jda.api.JDABuilder.createDefault;
-import static net.dv8tion.jda.api.entities.Activity.playing;
+import static net.dv8tion.jda.api.entities.Activity.watching;
 import static net.dv8tion.jda.api.requests.GatewayIntent.DIRECT_MESSAGES;
 import static net.dv8tion.jda.api.requests.GatewayIntent.GUILD_MEMBERS;
 import static net.dv8tion.jda.api.requests.GatewayIntent.GUILD_PRESENCES;
@@ -61,7 +61,7 @@ public class JavaBot {
                 .enableIntents(GUILD_PRESENCES)
                 .enableIntents(DIRECT_MESSAGES)
                 .enableIntents(GUILD_MEMBERS)
-                .setActivity(playing("Musik ab."))
+                .setActivity(watching("zerntra.org"))
                 .build();
     }
 

@@ -36,7 +36,7 @@ import static java.util.Objects.nonNull;
 import static net.dv8tion.jda.api.interactions.commands.OptionType.STRING;
 
 @Singleton
-@CommandBase.BotCommand(name = "play", description = "Wähle ein Lied, das abgespielt werden soll.", hasOptions = true)
+@CommandBase.BotCommand(name = "play", description = "Choose a song to play.", hasOptions = true)
 public class PlayCommand extends CommandBase {
 
     @Inject
@@ -76,7 +76,7 @@ public class PlayCommand extends CommandBase {
         event.deferReply().queue();
 
         MessageService.UpdatableMessage updatableMessage = new MessageService.UpdatableMessage(
-                event.getHook().sendMessageEmbeds(messageService.info("Suche nach dem Titel...")).complete()
+                event.getHook().sendMessageEmbeds(messageService.info("Searching for the song...")).complete()
         );
 
         map.putIfAbsent(guild.getIdLong(), updatableMessage);
@@ -84,7 +84,7 @@ public class PlayCommand extends CommandBase {
         playerManager.play(guild, url[0], event.getUser().getIdLong())
                 .thenCompose(updatedMessage -> {
                     String description = updatedMessage.getDescription();
-                    if (nonNull(description) && description.contains("startet jetzt.")) {
+                    if (nonNull(description) && description.contains("starts now.")) {
                         return updatableMessage.update(updatedMessage);
                     }
                     return updatableMessage.updateAndDestroyAfter(updatedMessage, 60);
@@ -113,6 +113,6 @@ public class PlayCommand extends CommandBase {
 
     @Override
     public @NotNull List<OptionData> getOptions() {
-        return List.of(new OptionData(STRING, "song", "Titel oder URL vom Lied", true, true));
+        return List.of(new OptionData(STRING, "song", "Song title or URL", true, true));
     }
 }

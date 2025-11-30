@@ -30,7 +30,7 @@ import static java.util.Objects.isNull;
 import static java.util.stream.IntStream.rangeClosed;
 import static net.dv8tion.jda.api.interactions.commands.OptionType.INTEGER;
 
-@CommandBase.BotCommand(name = "skip", description = "Überspringe ein Lied aus der aktuellen Playlist.", hasOptions = true)
+@CommandBase.BotCommand(name = "skip", description = "Skip a song from the current songlist.", hasOptions = true)
 public class SkipCommand extends CommandBase {
 
     @Inject
@@ -59,7 +59,7 @@ public class SkipCommand extends CommandBase {
         if (options.isEmpty() || isNull(options.get(0))) {
             audioPlayer.stopTrack();
             event.deferReply().queue();
-            messageService.sendMessageAndDestroy(event, "Das Lied wird übersprungen...", 60);
+            messageService.sendMessageAndDestroy(event, "The song will be skipped...", 60);
         } else {
             BlockingQueue<AudioTrack> tracks = guildMusicManager.getTrackScheduler().getQueue();
             int number = options.get(0).getAsInt();
@@ -69,7 +69,7 @@ public class SkipCommand extends CommandBase {
                 guildMusicManager.getTrackScheduler().getQueue().remove(track);
                 event.deferReply().queue();
                 messageService.sendMessageAndDestroy(event,
-                        track.getInfo().title + " von " + track.getInfo().author + " wurde aus der Playlist entfernt.",
+                        track.getInfo().title + " by " + track.getInfo().author + " has been removed from the current songlist.",
                         60);
             } else {
                 throw new CommandException(SKIP_INDEX_NOT_FOUND, event);
@@ -91,6 +91,6 @@ public class SkipCommand extends CommandBase {
 
     @Override
     public @NotNull List<OptionData> getOptions() {
-        return List.of(new OptionData(INTEGER, "index", "Index des Liedes, welches übersprungen werden soll", false, true));
+        return List.of(new OptionData(INTEGER, "index", "Index of the song to be skipped", false, true));
     }
 }

@@ -73,7 +73,7 @@ public class MessageService {
 
         public void fail() {
             message.delete().queueAfter(60, SECONDS);
-            update(messageService.error("Etwas ist schief gelaufen."));
+            update(messageService.error("Something went wrong."));
         }
     }
 

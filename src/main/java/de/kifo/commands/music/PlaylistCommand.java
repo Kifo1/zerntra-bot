@@ -35,7 +35,7 @@ import static java.util.Objects.isNull;
 import static net.dv8tion.jda.api.interactions.commands.OptionType.BOOLEAN;
 import static net.dv8tion.jda.api.interactions.commands.OptionType.STRING;
 
-@CommandBase.BotCommand(name = "playlist", description = "Wähle eine Playlist, die abgespielt werden soll.", hasOptions = true)
+@CommandBase.BotCommand(name = "playlist", description = "Select a playlist to play.", hasOptions = true)
 public class PlaylistCommand extends CommandBase {
 
     @Inject
@@ -89,7 +89,7 @@ public class PlaylistCommand extends CommandBase {
 
         event.deferReply().queue();
         MessageService.UpdatableMessage updatableMessage = new MessageService.UpdatableMessage(
-            event.getHook().sendMessageEmbeds(messageService.message("Starte Playlist: " + playlistDTO.getName())).complete()
+            event.getHook().sendMessageEmbeds(messageService.message("Starting playlist: " + playlistDTO.getName())).complete()
         );
         map.putIfAbsent(voiceChannel.getGuild().getIdLong(), updatableMessage);
 
@@ -115,8 +115,8 @@ public class PlaylistCommand extends CommandBase {
 
     @Override
     public @NotNull List<OptionData> getOptions() {
-        return List.of(new OptionData(STRING, "playlist", "Name der Playlist", true, true),
-                  new OptionData(BOOLEAN, "shuffle", "Erstellt eine zufällige Reihenfolge", false, false));
+        return List.of(new OptionData(STRING, "playlist", "Playlist name", true, true),
+                  new OptionData(BOOLEAN, "shuffle", "Creates a random song order", false, false));
     }
 
     private String getPlaylistOptionString(PlaylistDTO playlistDTO) {

@@ -16,7 +16,7 @@ import java.util.List;
 
 import static java.awt.Color.MAGENTA;
 
-@CommandBase.BotCommand(name = "website", description = "Zeigt den Link zur Website an.")
+@CommandBase.BotCommand(name = "website", description = "Displays the link to the website.")
 public class WebsiteCommand extends CommandBase {
 
     @Inject
@@ -30,8 +30,8 @@ public class WebsiteCommand extends CommandBase {
     public void execute(Member member, TextChannel textChannel, List<OptionMapping> options, SlashCommandInteractionEvent event) throws CommandException {
         EmbedBuilder builder = new EmbedBuilder()
                 .setColor(MAGENTA)
-                .addField("Website:", "Besuche https://zerntra.org um deine Statistiken zu sehen.", false)
-                .setFooter("Nutze /register <Passwort>, um ein Passwort für deinen Account festzulegen.");
+                .addField("Website:", "Visit https://zerntra.org to view your statistics.", false)
+                .setFooter("Use /register <password> to set a password for your account.");
 
         event.replyEmbeds(builder.build()).queue();
     }

@@ -22,7 +22,7 @@ import static de.kifo.JavaBot.messageService;
 import static de.kifo.common.enums.exception.ExceptionType.*;
 import static java.util.Objects.isNull;
 
-@CommandBase.BotCommand(name = "shuffle", description = "Ändert die Reihenfolge der aktuellen songlist.")
+@CommandBase.BotCommand(name = "shuffle", description = "Changes the order of the current songlist.")
 public class ShuffleCommand extends CommandBase {
 
     @Inject
@@ -54,7 +54,7 @@ public class ShuffleCommand extends CommandBase {
         trackScheduler.shuffleQueue();
 
         event.deferReply().queue();
-        messageService.sendMessageAndDestroy(event, "Die Songlist wurde geshuffled.", 60);
+        messageService.sendMessageAndDestroy(event, "The song list has been shuffled.", 60);
     }
 
     @Override

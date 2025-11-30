@@ -22,7 +22,7 @@ public class MessageReceivedListener extends ListenerAdapter {
 
         if (messageChannel.getType().equals(TEXT) && isWrongCommandSyntax(message)) {
             messageChannel.asTextChannel().sendMessageEmbeds(
-                    messageService.error("Nutze \"/\" anstelle von \"!\", um Befehle auszuführen.")).queue();
+                    messageService.error("Use \"/\" instead of \"!\" to execute commands.")).queue();
         }
     }
 

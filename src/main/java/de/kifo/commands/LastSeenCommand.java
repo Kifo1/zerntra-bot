@@ -27,7 +27,7 @@ import static java.time.temporal.ChronoUnit.DAYS;
 import static java.util.Objects.isNull;
 import static net.dv8tion.jda.api.interactions.commands.OptionType.USER;
 
-@CommandBase.BotCommand(name = "lastseen", description = "Schaue nach, wann jemand zuletzt online war.", hasOptions = true)
+@CommandBase.BotCommand(name = "lastseen", description = "Check when someone was last online.", hasOptions = true)
 public class LastSeenCommand extends CommandBase {
 
     @Inject
@@ -52,10 +52,10 @@ public class LastSeenCommand extends CommandBase {
 
         if (!onlineTimeService.isInAVoiceChannelSession(userDTO.getId())) {
             event.replyEmbeds(messageService.message(
-                    userDTO.getUserName() + " war zuletzt am " + lastSeenDate.format(ofPattern("dd.MM.yyyy")) + " um " + lastSeenDate.format(ofPattern("HH:mm:ss")) + " Uhr online. Das ist " + pastDays + " Tage her.")).queue();
+                    userDTO.getUserName() + "was last online on " + lastSeenDate.format(ofPattern("dd.MM.yyyy")) + " at " + lastSeenDate.format(ofPattern("HH:mm:ss")) + ". That was " + pastDays + " days ago.")).queue();
         } else {
             event.replyEmbeds(messageService.message(
-                    userDTO.getUserName() + " ist im Moment in einem Voice-Channel online.")).queue();
+                    userDTO.getUserName() + " is currently online in a voice channel.")).queue();
         }
     }
 
@@ -64,6 +64,6 @@ public class LastSeenCommand extends CommandBase {
 
     @Override
     public @NotNull List<OptionData> getOptions() {
-        return List.of(new OptionData(USER, "user", "User, von dem du wissen willst, wann er zuletzt online war.", true, false));
+        return List.of(new OptionData(USER, "user", "The user whose last online time you want to check", true, false));
     }
 }

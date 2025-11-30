@@ -8,8 +8,8 @@ import lombok.Getter;
 public enum DiscordScope {
 
     GLOBAL("Global", ""),
-    GUILD("Server", "auf diesem Server"),
-    CHANNEL("Channel", "in diesem Channel");
+    GUILD("Server", "on this server"),
+    CHANNEL("Channel", "in this channel");
 
     private final String displayName;
     private final String messageText;

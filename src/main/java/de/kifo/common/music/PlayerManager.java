@@ -64,9 +64,9 @@ public class PlayerManager {
                 AudioTrackInfo audioTrackInfo = audioTrack.getInfo();
                 javaBot.getApi().updateSong(userId, audioTrackInfo.title, audioTrackInfo.uri);
                 if (trackScheduler.queue(audioTrack)) {
-                    future.complete(messageService.message("Das Lied startet jetzt."));
+                    future.complete(messageService.message("The song starts now."));
                 } else {
-                    future.complete(messageService.message(audioTrackInfo.title + " wurde zur Songlist hinzugefügt."));
+                    future.complete(messageService.message(audioTrackInfo.title + " has been added to the songlist."));
                 }
             }
 
@@ -77,24 +77,24 @@ public class PlayerManager {
                     AudioTrackInfo audioTrackInfo = firstTrack.getInfo();
                     javaBot.getApi().updateSong(userId, audioTrackInfo.title, audioTrackInfo.uri);
                     if(trackScheduler.queue(firstTrack)) {
-                        future.complete(messageService.message("Das Lied startet jetzt."));
+                        future.complete(messageService.message("The song starts now."));
                     } else {
-                        future.complete(messageService.message(audioTrackInfo.title + " wurde zur Songlist hinzugefügt."));
+                        future.complete(messageService.message(audioTrackInfo.title + " has been added to the songlist."));
                     }
                 } else {
                     audioPlaylist.getTracks().forEach(trackScheduler::queue);
-                    future.complete(messageService.message("Die Playlist startet jetzt."));
+                    future.complete(messageService.message("The playlist starts now."));
                 }
             }
 
             @Override
             public void noMatches() {
-                future.complete(messageService.error("Das Lied konnte nicht gefunden werden."));
+                future.complete(messageService.error("This song could not be found."));
             }
 
             @Override
             public void loadFailed(FriendlyException e) {
-                future.complete(messageService.error("Das Lied konnte nicht geladen werden."));
+                future.complete(messageService.error("This song could not be found."));
             }
         });
 
