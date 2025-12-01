@@ -5,6 +5,7 @@ import de.kifo.JavaBot;
 import de.kifo.common.api.model.HistoryEntryDTO;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -23,7 +24,8 @@ public class CommandListener extends ListenerAdapter {
 
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
-        javaBot.getApi().createUser(event.getUser().getIdLong(), event.getUser().getName());
+        User user = event.getUser();
+        javaBot.getApi().createUser(user.getIdLong(), user.getName());
         Member member = event.getMember();
         TextChannel textChannel = event.getChannel().asTextChannel();
         Guild guild = event.getGuild();

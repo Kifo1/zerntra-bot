@@ -2,6 +2,7 @@ package de.kifo.listener.command;
 
 import com.google.inject.Inject;
 import de.kifo.JavaBot;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
@@ -13,7 +14,8 @@ public class AutoCompleteListener extends ListenerAdapter {
 
     @Override
     public void onCommandAutoCompleteInteraction(@NotNull CommandAutoCompleteInteractionEvent event) {
-        javaBot.getApi().createUser(event.getUser().getIdLong(), event.getUser().getName());
+        User user = event.getUser();
+        javaBot.getApi().createUser(user.getIdLong(), user.getName());
         String optionName = event.getFocusedOption().getName();
 
         this.javaBot.getRegistry().getCommandBases().stream()

@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import de.kifo.JavaBot;
 import de.kifo.common.api.model.HistoryEntryDTO;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.channel.unions.AudioChannelUnion;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -23,12 +24,13 @@ public class GuildVoiceUpdateListener extends ListenerAdapter {
 
     @Override
     public void onGuildVoiceUpdate(@NotNull GuildVoiceUpdateEvent event) {
-        Long userId = event.getMember().getIdLong();
+        User user = event.getMember().getUser();
+        Long userId = user.getIdLong();
         Guild guild = event.getGuild();
         AudioChannelUnion channelJoined = event.getChannelJoined();
         AudioChannelUnion channelLeft = event.getChannelLeft();
 
-        javaBot.getApi().createUser(userId, event.getMember().getUser().getName());
+        javaBot.getApi().createUser(userId, user.getName());
 
         HistoryEntryDTO.Type type;
         String information;

@@ -78,7 +78,7 @@ public class SongListCommand extends CommandBase {
             if (index <= queuedSongList.size() - 1) {
                 int trackNumber = index + 1;
                 AudioTrack song = queuedSongList.get(index);
-                builder.addField("Song " + trackNumber + ": ", song.getInfo().title, false);
+                builder.appendDescription("Song " + trackNumber + ": " + song.getInfo().title + "\n");
             }
         });
         builder.setFooter("Use \"/skip <Nummer>\", to remove the song from the songlist.");
