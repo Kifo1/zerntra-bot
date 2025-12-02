@@ -19,7 +19,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 import static de.kifo.JavaBot.messageService;
-import static de.kifo.JavaBot.onlineTimeService;
 import static de.kifo.common.api.model.VoiceChannelOnlineSessionDTO.TimePeriod.LIFETIME;
 import static de.kifo.common.enums.exception.ExceptionType.NOT_IN_SPEECH_CHANNEL;
 import static de.kifo.common.enums.exception.ExceptionType.ONLINE_TIME_WRONG_TIME_PERIOD;
@@ -64,7 +63,7 @@ public class OnlineTimeCommand extends CommandBase {
             voiceChannelId = guildVoiceState.getChannel().asVoiceChannel().getIdLong();
         }
 
-        long onlineSeconds = onlineTimeService.getVoiceOnlineTime(userId, event.getGuild().getIdLong(), voiceChannelId, timePeriod, discordScope);
+        long onlineSeconds = javaBot.getApi().getVoiceOnlineTime(userId, event.getGuild().getIdLong(), voiceChannelId, timePeriod, discordScope);
         String timeString = getTimeStringBySeconds(onlineSeconds);
 
         String lastOnlineMessage = "You have been online in voice channels " +

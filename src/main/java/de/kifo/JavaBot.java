@@ -6,7 +6,6 @@ import de.kifo.common.api.API;
 import de.kifo.common.music.PlayerManager;
 import de.kifo.common.registration.Registry;
 import de.kifo.common.services.MessageService;
-import de.kifo.common.services.OnlineTimeService;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.dv8tion.jda.api.JDA;
@@ -38,7 +37,6 @@ public class JavaBot {
     public static String BOT_DC_KEY;
 
     public static MessageService messageService;
-    public static OnlineTimeService onlineTimeService;
 
     public JavaBot(boolean production) {
         BOT_DC_KEY = production ? getenv("BOT_API_TOKEN") : getenv("BOT_TEST_API_KEY");
@@ -49,7 +47,6 @@ public class JavaBot {
         handleRegistrations();
 
         messageService = new MessageService(this);
-        onlineTimeService = new OnlineTimeService(this);
     }
 
     private void setUpBot() {

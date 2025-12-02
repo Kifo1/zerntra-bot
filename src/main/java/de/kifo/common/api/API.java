@@ -7,6 +7,7 @@ import de.kifo.common.api.model.SongDTO;
 import de.kifo.common.api.model.UserDTO;
 import de.kifo.common.api.model.VoiceChannelOnlineSessionDTO;
 import de.kifo.common.api.model.utils.PasswordDTO;
+import de.kifo.common.enums.utils.DiscordScope;
 
 import javax.annotation.Nullable;
 import java.net.URI;
@@ -110,30 +111,43 @@ public class API {
      *  {@link VoiceChannelOnlineSessionDTO}
      */
 
-    public void addVoiceChannelOnlineSessionToUser(VoiceChannelOnlineSessionDTO session) {
-        String jsonRequest = getJsonByObject(session);
-        sendPutRequest("/users/voice-session", jsonRequest);
+    public void startVoiceSession(Long userId, Long guildId, Long channelId) {
+        String uri = format("/onlinetime/start-voice-session/%d?guildId=%d&channelId=%d", userId, guildId, channelId);
+        sendPostRequest(uri, "");
     }
 
-    public long getVoiceSessionSecondsForTimePeriod(Long userId, VoiceChannelOnlineSessionDTO.TimePeriod timePeriod) {
-        String uri = format("/users/voice-session/%d?timePeriod=%s", userId, timePeriod.name());
+    public void stopVoiceSession(Long userId) {
+        String uri = format("/onlinetime/stop-voice-session/%d", userId);
+        sendPostRequest(uri, "");
+    }
+
+    public long getVoiceOnlineTime(Long userId, Long guildId, Long voiceChannelId, VoiceChannelOnlineSessionDTO.TimePeriod timePeriod, DiscordScope discordScope) {
+        return switch (discordScope) {
+            case GUILD -> getVoiceSessionSecondsForTimePeriodAndGuild(userId, timePeriod, guildId);
+            case CHANNEL -> getVoiceSessionSecondsForTimePeriodAndChannelInGuild(userId, timePeriod, guildId, voiceChannelId);
+            default -> getVoiceSessionSecondsForTimePeriod(userId, timePeriod);
+        };
+    }
+
+    private long getVoiceSessionSecondsForTimePeriod(Long userId, VoiceChannelOnlineSessionDTO.TimePeriod timePeriod) {
+        String uri = format("/onlinetime/voice-session/%d?timePeriod=%s", userId, timePeriod.name());
         String response = sendGetRequest(uri);
 
         return ofNullable(getObjectByJson(response, Long.class)).orElse(-1L);
     }
 
-    public long getVoiceSessionSecondsForTimePeriodAndGuild(Long userId, VoiceChannelOnlineSessionDTO.TimePeriod timePeriod,
+    private long getVoiceSessionSecondsForTimePeriodAndGuild(Long userId, VoiceChannelOnlineSessionDTO.TimePeriod timePeriod,
                                                             Long guildId) {
-        String uri = format("/users/voice-session-for-guild/%d?timePeriod=%s&guildId=%d",
+        String uri = format("/onlinetime/voice-session-for-guild/%d?timePeriod=%s&guildId=%d",
                 userId, timePeriod, guildId);
         String response = sendGetRequest(uri);
 
         return ofNullable(getObjectByJson(response, Long.class)).orElse(-1L);
     }
 
-    public long getVoiceSessionSecondsForTimePeriodAndChannelInGuild(Long userId, VoiceChannelOnlineSessionDTO.TimePeriod timePeriod,
+    private long getVoiceSessionSecondsForTimePeriodAndChannelInGuild(Long userId, VoiceChannelOnlineSessionDTO.TimePeriod timePeriod,
                                                                      Long guildId, Long channelId) {
-        String uri = format("/users/voice-session-for-channel-in-guild/%d?timePeriod=%s&guildId=%d&channelId=%d",
+        String uri = format("/onlinetime/voice-session-for-channel-in-guild/%d?timePeriod=%s&guildId=%d&channelId=%d",
                 userId, timePeriod, guildId, channelId);
         String response = sendGetRequest(uri);
 
