@@ -28,7 +28,7 @@ public class MessageReceivedListener extends ListenerAdapter {
 
     private boolean isWrongCommandSyntax(String message) {
         if (!message.startsWith("!")) return false;
-        String commandSubString = message.split(" ")[0].replaceAll("!", "");
+        String commandSubString = message.split(" ")[0].replace("!", "");
 
         return javaBot.getRegistry().getCommands().stream()
                 .anyMatch(botCommand -> botCommand.name().equalsIgnoreCase(commandSubString));

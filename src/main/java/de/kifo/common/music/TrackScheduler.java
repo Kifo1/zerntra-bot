@@ -61,9 +61,8 @@ public class TrackScheduler extends AudioEventAdapter {
 
                 MessageEmbed embed = getMessageEmbedBySongQueueState(true, t);
                 updatableMessage.update(embed);
-
             } catch (Exception ex) {
-                ex.printStackTrace(); // <-- Jetzt siehst du den Grund
+                ex.printStackTrace();
             }
         };
 
