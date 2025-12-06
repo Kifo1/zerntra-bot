@@ -3,16 +3,14 @@ package de.kifo.common.registration;
 import com.google.common.reflect.ClassPath;
 import com.google.inject.Injector;
 import de.kifo.commands.handle.CommandBase;
+import de.kifo.common.button.handle.ButtonBase;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.google.common.collect.ImmutableSet.of;
@@ -27,9 +25,13 @@ public class Registry {
     private final Injector injector;
 
     @Getter
-    private final Collection<CommandBase> commandBases = new ArrayList<>();
+    private final Set<CommandBase> commandBases = new HashSet<>();
     @Getter
-    private final Collection<CommandBase.BotCommand> commands = new ArrayList<>();
+    private final Set<CommandBase.BotCommand> commands = new HashSet<>();
+    @Getter
+    private final Map<Integer, ButtonBase> buttonBases = new HashMap<>();
+    @Getter
+    private final Set<ButtonBase.BotButton> buttons = new HashSet<>();
 
     public void registerAllCommands() {
         AtomicInteger successCases = new AtomicInteger();
@@ -71,6 +73,30 @@ public class Registry {
                     successCases.getAndIncrement();
                 });
         System.out.printf("Registered Listeners: %d/%d%n", successCases.get(), listenerClasses.size());
+    }
+
+    public void registerAllButtons() {
+        AtomicInteger successCases = new AtomicInteger();
+        List<Class<?>> buttonClasses = getAllClassesFromPackage("de.kifo.common.button").stream()
+                .filter(ButtonBase.class::isAssignableFrom)
+                .filter(buttonClass -> buttonClass.isAnnotationPresent(ButtonBase.BotButton.class))
+                .toList();
+
+        buttonClasses.forEach(buttonClass -> {
+            try {
+                ButtonBase.BotButton button = buttonClass.getAnnotation(ButtonBase.BotButton.class);
+                this.buttons.add(button);
+                ButtonBase buttonBase = ((Class<ButtonBase>) buttonClass).getConstructor(ButtonBase.BotButton.class).newInstance(button);
+                this.injector.injectMembers(buttonBase);
+                buttonBases.put(1, buttonBase);
+
+                successCases.getAndIncrement();
+            } catch (Exception e) {
+                System.out.println("Failed to register button: " + buttonClass.getSimpleName());
+                e.printStackTrace();
+            }
+        });
+        System.out.printf("Registered Buttons: %d/%d%n", successCases.get(), buttonClasses.size());
     }
 
     private Set<Class<?>> getAllClassesFromPackage(String packageName) {

@@ -6,8 +6,6 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
-import static de.kifo.common.button.handle.Button.registeredButtons;
-
 public class ButtonClickListener extends ListenerAdapter {
 
     @Inject
@@ -18,9 +16,9 @@ public class ButtonClickListener extends ListenerAdapter {
         User user = event.getUser();
         javaBot.getApi().createUser(user.getIdLong(), user.getName());
 
-        registeredButtons.stream()
-                .filter(button -> button.getLabel().equals(event.getButton().getLabel()))
+        javaBot.getRegistry().getButtonBases().values().stream()
+                .filter(button -> button.getId().equals(event.getButton().getCustomId()))
                 .findFirst()
-                .ifPresent(button -> button.getButtonClickFunction().apply(event));
+                .ifPresent(button -> button.onClick(event));
     }
 }

@@ -68,6 +68,7 @@ public class JavaBot {
         this.registry = new Registry(this.jda, this.getClass().getClassLoader(), this.injector);
         this.registry.registerAllCommands();
         this.registry.registerAllListeners();
+        this.registry.registerAllButtons();
     }
 
     @AllArgsConstructor
