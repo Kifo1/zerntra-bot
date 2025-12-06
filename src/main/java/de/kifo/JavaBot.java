@@ -5,6 +5,7 @@ import com.google.inject.Injector;
 import de.kifo.common.api.API;
 import de.kifo.common.music.PlayerManager;
 import de.kifo.common.registration.Registry;
+import de.kifo.common.services.ButtonService;
 import de.kifo.common.services.MessageService;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -36,6 +37,7 @@ public class JavaBot {
     public static final String BOT_API_KEY = getenv("BOT_API_TOKEN");
     public static String BOT_DC_KEY;
 
+    public static ButtonService buttonService;
     public static MessageService messageService;
 
     public JavaBot(boolean production) {
@@ -46,6 +48,7 @@ public class JavaBot {
         setUpBot();
         handleRegistrations();
 
+        buttonService = new ButtonService(this);
         messageService = new MessageService(this);
     }
 

@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.components.actionrow.ActionRow;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -60,6 +61,14 @@ public class MessageService {
 
         public CompletableFuture<Message> update(MessageEmbed embed) {
             return message.editMessageEmbeds(embed).submit()
+                    .thenApply(updated -> {
+                        this.message = updated;
+                        return updated;
+                    });
+        }
+
+        public void updateActionRow(ActionRow actionRow) {
+            message.editMessageComponents(actionRow).submit()
                     .thenApply(updated -> {
                         this.message = updated;
                         return updated;

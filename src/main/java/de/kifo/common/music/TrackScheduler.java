@@ -19,6 +19,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ScheduledExecutorService;
 
+import static de.kifo.JavaBot.buttonService;
 import static de.kifo.JavaBot.messageService;
 import static de.kifo.commands.music.PlayCommand.map;
 import static de.kifo.common.util.StringUtils.getProgressBar;
@@ -61,6 +62,7 @@ public class TrackScheduler extends AudioEventAdapter {
 
                 MessageEmbed embed = getMessageEmbedBySongQueueState(true, t);
                 updatableMessage.update(embed);
+                updatableMessage.updateActionRow(buttonService.getSongActionRow());
             } catch (Exception ex) {
                 ex.printStackTrace();
             }

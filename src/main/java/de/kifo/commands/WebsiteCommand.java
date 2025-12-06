@@ -33,9 +33,7 @@ public class WebsiteCommand extends CommandBase {
                 .addField("Website:", "Visit https://zerntra.org to view your statistics.", false)
                 .setFooter("Use /register <password> to set a password for your account.");
 
-        event.replyEmbeds(builder.build())
-                .addComponents(javaBot.getRegistry().getButtonBases().get(1).getActionRow())
-                .queue();
+        event.replyEmbeds(builder.build()).queue();
     }
 
     @Override

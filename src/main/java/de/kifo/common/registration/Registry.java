@@ -29,7 +29,7 @@ public class Registry {
     @Getter
     private final Set<CommandBase.BotCommand> commands = new HashSet<>();
     @Getter
-    private final Map<Integer, ButtonBase> buttonBases = new HashMap<>();
+    private final Map<ButtonBase.ButtonType, ButtonBase> buttonBases = new HashMap<>();
     @Getter
     private final Set<ButtonBase.BotButton> buttons = new HashSet<>();
 
@@ -88,7 +88,7 @@ public class Registry {
                 this.buttons.add(button);
                 ButtonBase buttonBase = ((Class<ButtonBase>) buttonClass).getConstructor(ButtonBase.BotButton.class).newInstance(button);
                 this.injector.injectMembers(buttonBase);
-                buttonBases.put(1, buttonBase);
+                buttonBases.put(button.buttonType(), buttonBase);
 
                 successCases.getAndIncrement();
             } catch (Exception e) {

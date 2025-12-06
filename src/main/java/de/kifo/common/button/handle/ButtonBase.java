@@ -2,11 +2,11 @@ package de.kifo.common.button.handle;
 
 import com.google.inject.Inject;
 import de.kifo.JavaBot;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.dv8tion.jda.api.components.actionrow.ActionRow;
 import net.dv8tion.jda.api.components.buttons.Button;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
-import org.jetbrains.annotations.NotNull;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
@@ -19,20 +19,18 @@ import static net.dv8tion.jda.api.components.buttons.Button.secondary;
 public abstract class ButtonBase {
 
     @Inject
-    private JavaBot javaBot;
+    public JavaBot javaBot;
 
-    private final String label;
-    private final String id;
+    private final ButtonType buttonType;
 
-    public ButtonBase(@NotNull BotButton botButton) {
-        label = botButton.label();
-        id = botButton.id();
+    public ButtonBase(BotButton botButton) {
+        this.buttonType = botButton.buttonType();
     }
 
     public abstract void onClick(ButtonInteractionEvent event);
 
     public Button getButton() {
-        return secondary(id, label);
+        return secondary(buttonType.id, buttonType.label);
     }
 
     public ActionRow getActionRow() {
@@ -43,8 +41,18 @@ public abstract class ButtonBase {
     @Retention(RUNTIME)
     public @interface BotButton {
 
-        String label();
+        ButtonType buttonType();
+    }
 
-        String id();
+    @Getter
+    @AllArgsConstructor
+    public enum ButtonType {
+
+        DELETE("Delete", "d1"),
+        TOGGLE_SONG("⏯", "tp1"),
+        NEXT_SONG(">", "ns1");
+
+        private final String label;
+        private final String id;
     }
 }

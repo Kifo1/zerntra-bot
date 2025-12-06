@@ -17,7 +17,7 @@ public class ButtonClickListener extends ListenerAdapter {
         javaBot.getApi().createUser(user.getIdLong(), user.getName());
 
         javaBot.getRegistry().getButtonBases().values().stream()
-                .filter(button -> button.getId().equals(event.getButton().getCustomId()))
+                .filter(button -> button.getButtonType().getId().equals(event.getButton().getCustomId()))
                 .findFirst()
                 .ifPresent(button -> button.onClick(event));
     }
