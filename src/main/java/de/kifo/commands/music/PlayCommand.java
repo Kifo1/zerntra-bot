@@ -79,12 +79,11 @@ public class PlayCommand extends CommandBase {
                 event.getHook().sendMessageEmbeds(messageService.info("Searching for the song...")).complete()
         );
 
-        map.putIfAbsent(guild.getIdLong(), updatableMessage);
-
         playerManager.play(guild, url[0], event.getUser().getIdLong())
                 .thenCompose(updatedMessage -> {
                     String description = updatedMessage.getDescription();
                     if (nonNull(description) && description.contains("starts now.")) {
+                        map.putIfAbsent(guild.getIdLong(), updatableMessage);
                         return updatableMessage.update(updatedMessage);
                     }
                     return updatableMessage.updateAndDestroyAfter(updatedMessage, 60);
