@@ -68,7 +68,7 @@ public class TrackScheduler extends AudioEventAdapter {
             }
         };
 
-        scheduler.scheduleAtFixedRate(task, 0, 1, SECONDS);
+        scheduler.scheduleAtFixedRate(task, 0, 3, SECONDS);
     }
 
     private void stopSchedulerIfRunning() {
