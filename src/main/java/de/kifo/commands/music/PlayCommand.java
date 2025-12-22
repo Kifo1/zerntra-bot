@@ -33,6 +33,7 @@ import static de.kifo.common.enums.exception.ExceptionType.NOT_IN_SPEECH_CHANNEL
 import static java.lang.System.currentTimeMillis;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
+import static net.dv8tion.jda.api.audio.hooks.ConnectionStatus.CONNECTED;
 import static net.dv8tion.jda.api.interactions.commands.OptionType.STRING;
 
 @Singleton
@@ -62,7 +63,9 @@ public class PlayCommand extends CommandBase {
         TrackScheduler trackScheduler = playerManager.getGuildMusicManager(guild).getTrackScheduler();
         AudioManager manager = voiceChannel.getGuild().getAudioManager();
 
-        if (trackScheduler.isPlaying() && !manager.getConnectedChannel().equals(guildVoiceState.getChannel())) {
+        if (trackScheduler.isPlaying() &&
+                !manager.getConnectedChannel().equals(guildVoiceState.getChannel()) &&
+                manager.getConnectionStatus() == CONNECTED) {
             throw new CommandException(BOT_ALREADY_PLAYING_FOR_GUILD, event);
         }
 
