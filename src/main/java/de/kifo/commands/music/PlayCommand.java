@@ -82,12 +82,16 @@ public class PlayCommand extends CommandBase {
                 event.getHook().sendMessageEmbeds(messageService.info("Searching for the song...")).complete()
         );
 
+        map.putIfAbsent(guild.getIdLong(), updatableMessage);
+
         playerManager.play(guild, url[0], event.getUser().getIdLong())
                 .thenCompose(updatedMessage -> {
                     String description = updatedMessage.getDescription();
                     if (nonNull(description) && description.contains("starts now.")) {
-                        map.putIfAbsent(guild.getIdLong(), updatableMessage);
                         return updatableMessage.update(updatedMessage);
+                    }
+                    if (!trackScheduler.isPlaying()) { // Not playing = Load failed => Error message should not be the updatable message
+                        map.remove(guild.getIdLong());
                     }
                     return updatableMessage.updateAndDestroyAfter(updatedMessage, 60);
                 })
