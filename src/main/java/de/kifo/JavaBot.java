@@ -40,8 +40,8 @@ public class JavaBot {
     public static ButtonService buttonService;
     public static MessageService messageService;
 
-    public JavaBot(boolean production) {
-        BOT_DC_KEY = production ? getenv("BOT_API_TOKEN") : getenv("BOT_TEST_API_KEY");
+    public JavaBot(boolean isProduction) {
+        BOT_DC_KEY = isProduction ? getenv("BOT_API_TOKEN") : getenv("BOT_TEST_API_KEY");
 
         injector = createInjector(new RegistrationModule(this));
 

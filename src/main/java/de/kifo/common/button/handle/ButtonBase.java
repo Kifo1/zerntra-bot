@@ -50,7 +50,8 @@ public abstract class ButtonBase {
 
         DELETE("Delete", "d1"),
         TOGGLE_SONG("⏯", "tp1"),
-        NEXT_SONG(">", "ns1");
+        NEXT_SONG(">", "ns1"),
+        SHUFFLE_LIST("\uD83D\uDD00", "sl1");
 
         private final String label;
         private final String id;
