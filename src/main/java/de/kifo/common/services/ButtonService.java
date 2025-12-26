@@ -15,6 +15,7 @@ public class ButtonService {
 
     public ActionRow getSongActionRow() {
         return ActionRow.of(
+                getButtonByType(STOP_MUSIC).getButton(),
                 getButtonByType(TOGGLE_SONG).getButton(),
                 getButtonByType(NEXT_SONG).getButton(),
                 getButtonByType(SHUFFLE_LIST).getButton());

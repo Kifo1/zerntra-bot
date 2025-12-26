@@ -45,11 +45,10 @@ public class StopCommand extends CommandBase {
             throw new CommandException(NOT_IN_SPEECH_CHANNEL, event);
         }
 
-        VoiceChannel voiceChannel = guildVoiceState.getChannel().asVoiceChannel();
         PlayerManager playerManager = javaBot.getPlayerManager();
         GuildMusicManager guildMusicManager = playerManager.getGuildMusicManager(guild);
         AudioPlayer audioPlayer = guildMusicManager.getTrackScheduler().getAudioPlayer();
-        AudioManager audioManager = voiceChannel.getGuild().getAudioManager();
+        AudioManager audioManager = guild.getAudioManager();
 
         if (audioManager.isConnected()) {
             if (nonNull(audioPlayer.getPlayingTrack())) {
