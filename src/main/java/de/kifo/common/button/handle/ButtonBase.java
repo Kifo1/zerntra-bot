@@ -2,7 +2,7 @@ package de.kifo.common.button.handle;
 
 import com.google.inject.Inject;
 import de.kifo.JavaBot;
-import lombok.AllArgsConstructor;
+import de.kifo.common.enums.button.ButtonType;
 import lombok.Getter;
 import net.dv8tion.jda.api.components.actionrow.ActionRow;
 import net.dv8tion.jda.api.components.buttons.Button;
@@ -30,7 +30,7 @@ public abstract class ButtonBase {
     public abstract void onClick(ButtonInteractionEvent event);
 
     public Button getButton() {
-        return secondary(buttonType.id, buttonType.label);
+        return secondary(buttonType.getId(), buttonType.getLabel());
     }
 
     public ActionRow getActionRow() {
@@ -42,18 +42,5 @@ public abstract class ButtonBase {
     public @interface BotButton {
 
         ButtonType buttonType();
-    }
-
-    @Getter
-    @AllArgsConstructor
-    public enum ButtonType {
-
-        DELETE("Delete", "d1"),
-        TOGGLE_SONG("⏯", "tp1"),
-        NEXT_SONG(">", "ns1"),
-        SHUFFLE_LIST("\uD83D\uDD00", "sl1");
-
-        private final String label;
-        private final String id;
     }
 }

@@ -4,7 +4,7 @@ import de.kifo.common.button.handle.ButtonBase;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import org.jetbrains.annotations.NotNull;
 
-import static de.kifo.common.button.handle.ButtonBase.ButtonType.DELETE;
+import static de.kifo.common.enums.button.ButtonType.DELETE;
 
 @ButtonBase.BotButton(buttonType = DELETE)
 public class DeleteButton extends ButtonBase{

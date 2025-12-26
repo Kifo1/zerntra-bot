@@ -2,10 +2,11 @@ package de.kifo.common.services;
 
 import de.kifo.JavaBot;
 import de.kifo.common.button.handle.ButtonBase;
+import de.kifo.common.enums.button.ButtonType;
 import lombok.Data;
 import net.dv8tion.jda.api.components.actionrow.ActionRow;
 
-import static de.kifo.common.button.handle.ButtonBase.ButtonType.*;
+import static de.kifo.common.enums.button.ButtonType.*;
 
 @Data
 public class ButtonService {
@@ -19,7 +20,7 @@ public class ButtonService {
                 getButtonByType(SHUFFLE_LIST).getButton());
     }
 
-    public ButtonBase getButtonByType(ButtonBase.ButtonType buttonType) {
+    public ButtonBase getButtonByType(ButtonType buttonType) {
         return javaBot.getRegistry().getButtonBases().get(buttonType);
     }
 }

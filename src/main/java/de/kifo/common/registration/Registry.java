@@ -4,6 +4,7 @@ import com.google.common.reflect.ClassPath;
 import com.google.inject.Injector;
 import de.kifo.commands.handle.CommandBase;
 import de.kifo.common.button.handle.ButtonBase;
+import de.kifo.common.enums.button.ButtonType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.dv8tion.jda.api.JDA;
@@ -29,7 +30,7 @@ public class Registry {
     @Getter
     private final Set<CommandBase.BotCommand> commands = new HashSet<>();
     @Getter
-    private final Map<ButtonBase.ButtonType, ButtonBase> buttonBases = new HashMap<>();
+    private final Map<ButtonType, ButtonBase> buttonBases = new HashMap<>();
     @Getter
     private final Set<ButtonBase.BotButton> buttons = new HashSet<>();
 

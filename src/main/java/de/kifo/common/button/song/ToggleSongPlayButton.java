@@ -7,7 +7,7 @@ import de.kifo.common.music.PlayerManager;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 
-import static de.kifo.common.button.handle.ButtonBase.ButtonType.TOGGLE_SONG;
+import static de.kifo.common.enums.button.ButtonType.TOGGLE_SONG;
 import static java.util.Objects.isNull;
 
 @ButtonBase.BotButton(buttonType = TOGGLE_SONG)

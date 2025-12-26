@@ -7,7 +7,7 @@ import de.kifo.common.music.TrackScheduler;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 
-import static de.kifo.common.button.handle.ButtonBase.ButtonType.SHUFFLE_LIST;
+import static de.kifo.common.enums.button.ButtonType.SHUFFLE_LIST;
 import static java.util.Objects.isNull;
 
 @ButtonBase.BotButton(buttonType = SHUFFLE_LIST)
