@@ -128,12 +128,12 @@ public class SongListCommand extends CommandBase {
         } else if (page == pages) {
             actionRow = ActionRow.of(
                     buttonService.getButtonByType(PREVIOUS_PAGE).getButton(),
-                    buttonService.getButtonByType(DELETE).getButton(),
-                    buttonService.getButtonByType(NEXT_PAGE).getButton());
+                    buttonService.getButtonByType(DELETE).getButton());
         } else {
             actionRow = ActionRow.of(
                     buttonService.getButtonByType(PREVIOUS_PAGE).getButton(),
-                    buttonService.getButtonByType(DELETE).getButton());
+                    buttonService.getButtonByType(DELETE).getButton(),
+                    buttonService.getButtonByType(NEXT_PAGE).getButton());
         }
         return actionRow;
     }
