@@ -28,8 +28,8 @@ public class PlayerManager {
     @Inject
     private JavaBot javaBot;
 
-    private Map<Long, GuildMusicManager> guildMusicManagers = new HashMap<>();
-    private AudioPlayerManager audioPlayerManager = new DefaultAudioPlayerManager();
+    private final Map<Long, GuildMusicManager> guildMusicManagers = new HashMap<>();
+    private final AudioPlayerManager audioPlayerManager = new DefaultAudioPlayerManager();
 
     public PlayerManager() {
         YoutubeAudioSourceManager youtubeAudioSourceManager = new YoutubeAudioSourceManager();
@@ -48,7 +48,7 @@ public class PlayerManager {
     }
 
     public GuildMusicManager getGuildMusicManager(Guild guild) {
-        return guildMusicManagers.computeIfAbsent(guild.getIdLong(), (guildId) -> {
+        return guildMusicManagers.computeIfAbsent(guild.getIdLong(), guildId -> {
             GuildMusicManager musicManager = new GuildMusicManager(audioPlayerManager, guild);
             guild.getAudioManager().setSendingHandler(musicManager.getAudioForwarder());
             return musicManager;
