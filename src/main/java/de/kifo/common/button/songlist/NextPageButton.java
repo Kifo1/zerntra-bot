@@ -7,8 +7,8 @@ import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 
 import java.util.Objects;
 
-import static de.kifo.commands.music.SongListCommand.*;
 import static de.kifo.common.enums.button.ButtonType.*;
+import static de.kifo.common.util.SonglistUtils.*;
 
 @ButtonBase.BotButton(buttonType = NEXT_PAGE)
 public class NextPageButton extends ButtonBase {
@@ -21,9 +21,11 @@ public class NextPageButton extends ButtonBase {
     public void onClick(ButtonInteractionEvent event) {
         Guild guild = event.getGuild();
         Message message = event.getMessage();
-        int page = extractPage(Objects.requireNonNull(message.getEmbeds().getFirst().getTitle())) + 1;
+        int page = extractPage(Objects.requireNonNull(message.getEmbeds().get(0).getTitle())) + 1;
 
-        message.editMessageEmbeds(getSonglistPageEmbed(guild, page)).queue();
-        message.editMessageComponents(getSonglistPageActionRow(guild, page)).queue();
+        event.deferEdit()
+                .setEmbeds(getSonglistPageEmbed(guild, page))
+                .setComponents(getSonglistPageActionRow(guild, page))
+                .queue();
     }
 }

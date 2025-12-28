@@ -26,6 +26,7 @@ import static net.dv8tion.jda.api.utils.cache.CacheFlag.ONLINE_STATUS;
 public class JavaBot {
 
     public static final String VERSION = "1.0.0-dev";
+    public static JavaBot javaBot = null;
 
     private final Injector injector;
 
@@ -41,6 +42,7 @@ public class JavaBot {
     public static MessageService messageService;
 
     public JavaBot(boolean isProduction) {
+        javaBot = this;
         BOT_DC_KEY = isProduction ? getenv("BOT_API_TOKEN") : getenv("BOT_TEST_API_KEY");
 
         injector = createInjector(new RegistrationModule(this));
