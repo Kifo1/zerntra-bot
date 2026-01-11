@@ -9,7 +9,8 @@ public enum ButtonType {
 
     DELETE("\uD83D\uDDD1", "d1"),
     STOP_MUSIC("⏹\uFE0F", "sm1"),
-    TOGGLE_SONG("⏯", "tp1"),
+    TOGGLE_PLAYING_TO_ON("▶\uFE0E", "tp1"),
+    TOGGLE_PLAYING_TO_OFF("❚❚\uFE0E", "tp2"),
     NEXT_SONG("➡\uFE0F", "ns1"),
     SHUFFLE_LIST("\uD83D\uDD00", "sl1"),
     PREVIOUS_PAGE("⬅\uFE0F", "pp1"),

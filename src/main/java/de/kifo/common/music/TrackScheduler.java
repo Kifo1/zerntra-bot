@@ -62,7 +62,7 @@ public class TrackScheduler extends AudioEventAdapter {
 
                 MessageEmbed embed = getMessageEmbedBySongQueueState(true, t);
                 updatableMessage.update(embed);
-                updatableMessage.updateActionRow(buttonService.getSongActionRow());
+                updatableMessage.updateActionRow(buttonService.getSongActionRow(!audioPlayer.isPaused()));
             } catch (Exception ex) {
                 ex.printStackTrace();
             }

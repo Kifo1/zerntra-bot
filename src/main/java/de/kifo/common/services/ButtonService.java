@@ -13,10 +13,10 @@ public class ButtonService {
 
     private final JavaBot javaBot;
 
-    public ActionRow getSongActionRow() {
+    public ActionRow getSongActionRow(boolean isPlaying) {
         return ActionRow.of(
                 getButtonByType(STOP_MUSIC).getButton(),
-                getButtonByType(TOGGLE_SONG).getButton(),
+                getButtonByType(isPlaying ? TOGGLE_PLAYING_TO_OFF : TOGGLE_PLAYING_TO_ON ).getButton(),
                 getButtonByType(NEXT_SONG).getButton(),
                 getButtonByType(SHUFFLE_LIST).getButton());
     }
