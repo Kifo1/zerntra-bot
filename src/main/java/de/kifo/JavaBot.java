@@ -1,5 +1,6 @@
 package de.kifo;
 
+import club.minnced.discord.jdave.interop.JDaveSessionFactory;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import de.kifo.common.api.API;
@@ -10,6 +11,7 @@ import de.kifo.common.services.MessageService;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.audio.AudioModuleConfig;
 
 import static com.google.inject.Guice.createInjector;
 import static java.lang.System.getenv;
@@ -64,6 +66,8 @@ public class JavaBot {
                 .enableIntents(DIRECT_MESSAGES)
                 .enableIntents(GUILD_MEMBERS)
                 .setActivity(watching("zerntra.org"))
+                .setAudioModuleConfig(new AudioModuleConfig()
+                        .withDaveSessionFactory(new JDaveSessionFactory()))
                 .build();
     }
 
