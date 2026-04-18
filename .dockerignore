@@ -1,0 +1,13 @@
+# Ignore Git
+.git
+
+# Ignore Gradle
+.gradle
+build/
+
+# Add shadowJar
+!build/libs/*-all.jar
+
+# Ignore IDE files
+.idea
+.vscode
