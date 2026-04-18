@@ -20,3 +20,23 @@ It uses **YouTube music sources by default**, but you can use many other sources
 
 ## 🚀 Quick Start
 coming soon...
+
+---
+
+## Development guide
+### Build docker image
+#### For local operating system:
+> **docker build -t zentra-bot .**
+#### For arm64 based operating system (e.g. Raspberry Pi):
+> **docker buildx build --platform linux/arm64 -t zerntra-bot --load .**
+
+### Create .tar file from image for exports
+> **docker save -o zerntra-bot.tar zerntra-bot**
+
+### Load .tar file to docker
+> **docker load -i zerntra-bot.tar**
+
+### Run docker container
+> **Add your secrets to the .env file**
+
+> **docker run -d --name zerntra-bot --env-file .env --add-host=host.docker.internal:host-gateway --restart unless-stopped zerntra-bot:latest**

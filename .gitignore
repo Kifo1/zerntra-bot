@@ -40,5 +40,8 @@ out/
 ### Mac OS ###
 .DS_Store
 
-# Variables
+### Docker ###
+*.tar
+
+### Secrets ###
 .env

@@ -27,7 +27,7 @@ import static java.util.Optional.ofNullable;
 
 public class API {
 
-    private static final String API_BASE_URL = "http://localhost:8080/api/v1";
+    private static final String API_BASE_URL = "http://host.docker.internal:8080/api/v1";
 
     /**
      * {@link UserDTO}
