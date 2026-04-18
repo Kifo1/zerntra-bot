@@ -5,7 +5,7 @@
 plugins {
     `java-library`
     `application`
-    id("com.github.johnrengelman.shadow") version "8.1.1"
+    id("com.gradleup.shadow") version "9.4.1"
     `maven-publish`
 }
 
@@ -46,7 +46,7 @@ dependencies {
 group = "de.kifo"
 version = "1.0.0-dev"
 description = "DiscordBot"
-java.sourceCompatibility = JavaVersion.VERSION_17
+java.sourceCompatibility = JavaVersion.VERSION_25
 
 application {
     mainClass.set("de.kifo.Main")
