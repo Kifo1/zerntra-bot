@@ -1,7 +1,10 @@
 package de.kifo.common.util;
 
+import lombok.experimental.UtilityClass;
+
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
+@UtilityClass
 public class StringUtils {
 
     public static String getTimeStringBySeconds(long seconds) {

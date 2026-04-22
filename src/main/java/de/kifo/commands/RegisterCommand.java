@@ -29,7 +29,7 @@ public class RegisterCommand extends CommandBase {
     private JavaBot javaBot;
 
     private static final Pattern PASSWORD_PATTERN =
-            compile("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$");
+            compile("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$");
 
     public RegisterCommand(@NotNull BotCommand command) {
         super(command);
@@ -39,7 +39,7 @@ public class RegisterCommand extends CommandBase {
     public void execute(Member member, TextChannel textChannel, List<OptionMapping> options, SlashCommandInteractionEvent event) throws CommandException {
         long userId = member.getIdLong();
         UserDTO userDTO = javaBot.getApi().getUserById(userId);
-        String password = options.get(0).getAsString();
+        String password = options.getFirst().getAsString();
 
         if (!isValidPassword(password)) {
             throw new CommandException(PASSWORD_NOT_SECURE, event);
@@ -53,7 +53,9 @@ public class RegisterCommand extends CommandBase {
     }
 
     @Override
-    public void autoComplete(String optionName, CommandAutoCompleteInteractionEvent event) {}
+    public void autoComplete(String optionName, CommandAutoCompleteInteractionEvent event) {
+        throw new UnsupportedOperationException("Register command does not have arguments for auto complete.");
+    }
 
     @Override
 

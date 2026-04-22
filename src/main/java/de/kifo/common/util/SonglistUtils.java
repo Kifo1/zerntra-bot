@@ -5,6 +5,7 @@ import de.kifo.JavaBot;
 import de.kifo.common.music.GuildMusicManager;
 import de.kifo.common.music.PlayerManager;
 import de.kifo.common.music.TrackScheduler;
+import lombok.experimental.UtilityClass;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.components.actionrow.ActionRow;
 import net.dv8tion.jda.api.entities.Guild;
@@ -19,6 +20,7 @@ import static java.awt.Color.MAGENTA;
 import static java.lang.Math.ceil;
 import static java.util.stream.IntStream.rangeClosed;
 
+@UtilityClass
 public class SonglistUtils {
 
     private static final JavaBot javaBot = JavaBot.javaBot;

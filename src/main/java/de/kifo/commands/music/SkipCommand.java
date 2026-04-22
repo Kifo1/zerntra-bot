@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.BlockingQueue;
 
 import static de.kifo.JavaBot.messageService;
@@ -49,20 +50,20 @@ public class SkipCommand extends CommandBase {
         }
 
         PlayerManager playerManager = javaBot.getPlayerManager();
-        GuildMusicManager guildMusicManager = playerManager.getGuildMusicManager(event.getGuild());
+        GuildMusicManager guildMusicManager = playerManager.getGuildMusicManager(Objects.requireNonNull(event.getGuild()));
         AudioPlayer audioPlayer = guildMusicManager.getTrackScheduler().getAudioPlayer();
 
         if (isNull(audioPlayer.getPlayingTrack())) {
             throw new CommandException(NO_SONG_RUNNING, event);
         }
 
-        if (options.isEmpty() || isNull(options.get(0))) {
+        if (options.isEmpty() || isNull(options.getFirst())) {
             audioPlayer.stopTrack();
             event.deferReply().queue();
             messageService.sendMessageAndDestroy(event, "The song will be skipped...", 60);
         } else {
             BlockingQueue<AudioTrack> tracks = guildMusicManager.getTrackScheduler().getQueue();
-            int number = options.get(0).getAsInt();
+            int number = options.getFirst().getAsInt();
 
             if (number > 0 && number <= tracks.size()) {
                 AudioTrack track = (AudioTrack) tracks.toArray()[number - 1];

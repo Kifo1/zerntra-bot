@@ -30,5 +30,7 @@ public class InviteCommand extends CommandBase {
     }
 
     @Override
-    public void autoComplete(String optionName, CommandAutoCompleteInteractionEvent event) {}
+    public void autoComplete(String optionName, CommandAutoCompleteInteractionEvent event) {
+        throw new UnsupportedOperationException("Invite command does not have arguments for auto complete.");
+    }
 }

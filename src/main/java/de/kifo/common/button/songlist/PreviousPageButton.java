@@ -21,7 +21,7 @@ public class PreviousPageButton extends ButtonBase {
     public void onClick(ButtonInteractionEvent event) {
         Guild guild = event.getGuild();
         Message message = event.getMessage();
-        int page = extractPage(Objects.requireNonNull(message.getEmbeds().get(0).getTitle())) - 1;
+        int page = extractPage(Objects.requireNonNull(message.getEmbeds().getFirst().getTitle())) - 1;
 
         event.deferEdit()
                 .setEmbeds(getSonglistPageEmbed(guild, page))

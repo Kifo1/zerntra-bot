@@ -71,7 +71,7 @@ public class PlayCommand extends CommandBase {
 
         manager.openAudioConnection(voiceChannel);
 
-        String[] url = {options.get(0).getAsString()};
+        String[] url = {options.getFirst().getAsString()};
         if (!url[0].startsWith("http")) {
             url[0] = "ytsearch:" + url[0] + " audio";
         }

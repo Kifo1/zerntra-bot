@@ -75,7 +75,7 @@ public class PlayerManager {
             @Override
             public void playlistLoaded(AudioPlaylist audioPlaylist) {
                 if (audioPlaylist.isSearchResult()) {
-                    AudioTrack firstTrack = audioPlaylist.getTracks().get(0);
+                    AudioTrack firstTrack = audioPlaylist.getTracks().getFirst();
                     AudioTrackInfo audioTrackInfo = firstTrack.getInfo();
                     javaBot.getApi().updateSong(userId, audioTrackInfo.title, audioTrackInfo.uri);
                     if(trackScheduler.queue(firstTrack)) {
