@@ -8,6 +8,7 @@ import de.kifo.common.api.model.UserDTO;
 import de.kifo.common.api.model.VoiceChannelOnlineSessionDTO;
 import de.kifo.common.api.model.utils.PasswordDTO;
 import de.kifo.common.enums.utils.DiscordScope;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.Nullable;
 import java.net.URI;
@@ -25,6 +26,7 @@ import static java.net.http.HttpRequest.newBuilder;
 import static java.util.Objects.nonNull;
 import static java.util.Optional.ofNullable;
 
+@Slf4j
 public class API {
 
     private static final String API_BASE_URL = "http://host.docker.internal:8080/api/v1";
@@ -181,7 +183,7 @@ public class API {
                     .build();
             return newHttpClient().send(httpRequest, HttpResponse.BodyHandlers.ofString()).body();
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            log.error(e.getMessage());
             return "";
         }
     }
@@ -196,7 +198,7 @@ public class API {
                     .build();
             return newHttpClient().send(httpRequest, HttpResponse.BodyHandlers.ofString()).body();
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            log.error(e.getMessage());
             return "";
         }
     }
@@ -211,7 +213,7 @@ public class API {
                     .build();
             return newHttpClient().send(httpRequest, HttpResponse.BodyHandlers.ofString()).body();
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            log.error(e.getMessage());
             return "";
         }
     }
@@ -225,7 +227,7 @@ public class API {
                     .build();
             return newHttpClient().send(httpRequest, HttpResponse.BodyHandlers.ofString()).body();
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            log.error(e.getMessage());
             return "";
         }
     }

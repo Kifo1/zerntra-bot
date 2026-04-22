@@ -7,6 +7,7 @@ import de.kifo.common.button.handle.ButtonBase;
 import de.kifo.common.enums.button.ButtonType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
@@ -18,6 +19,7 @@ import static com.google.common.collect.ImmutableSet.of;
 import static com.google.common.reflect.ClassPath.from;
 import static java.util.stream.Collectors.toSet;
 
+@Slf4j
 @AllArgsConstructor
 public class Registry {
 
@@ -56,11 +58,11 @@ public class Registry {
                 }
                 successCases.getAndIncrement();
             } catch (Exception e) {
-                System.out.println("Failed to register command: " + commandClass.getSimpleName());
-                e.printStackTrace();
+                log.error("Failed to register command: {}", commandClass.getSimpleName());
+                log.error(e.getMessage());
             }
         });
-        System.out.printf("Registered Commands: %d/%d%n", successCases.get(), commandClasses.size());
+        log.info("Registered Commands: {}/{}", successCases.get(), commandClasses.size());
     }
 
     public void registerAllListeners() {
@@ -73,7 +75,7 @@ public class Registry {
                     jda.addEventListener(this.injector.getInstance(listenerClass));
                     successCases.getAndIncrement();
                 });
-        System.out.printf("Registered Listeners: %d/%d%n", successCases.get(), listenerClasses.size());
+        log.info("Registered Listeners: {}/{}", successCases.get(), listenerClasses.size());
     }
 
     public void registerAllButtons() {
@@ -93,11 +95,11 @@ public class Registry {
 
                 successCases.getAndIncrement();
             } catch (Exception e) {
-                System.out.println("Failed to register button: " + buttonClass.getSimpleName());
-                e.printStackTrace();
+                log.error("Failed to register button: {}", buttonClass.getSimpleName());
+                log.error(e.getMessage());
             }
         });
-        System.out.printf("Registered Buttons: %d/%d%n", successCases.get(), buttonClasses.size());
+        log.info("Registered Buttons: {}/{}", successCases.get(), buttonClasses.size());
     }
 
     private Set<Class<?>> getAllClassesFromPackage(String packageName) {
@@ -109,7 +111,7 @@ public class Registry {
                     .map(ClassPath.ClassInfo::load)
                     .collect(toSet());
         } catch (IOException e) {
-            System.out.println(e);
+            log.error(e.getMessage());
         }
         return of();
     }
