@@ -41,12 +41,12 @@ dependencies {
     annotationProcessor(libs.org.projectlombok.lombok)
 
     // JDAVE
-    implementation("club.minnced:jdave-api:0.1.8")
+    implementation(libs.club.minnced.jdave.api)
 
-    implementation("club.minnced:jdave-native-linux-x86-64:0.1.8")
-    implementation("club.minnced:jdave-native-linux-aarch64:0.1.8")
-    implementation("club.minnced:jdave-native-win-x86-64:0.1.8")
-    implementation("club.minnced:jdave-native-darwin:0.1.8")
+    implementation(libs.club.minnced.jdave.native.linux)
+    implementation(libs.club.minnced.jdave.native.aarch64)
+    implementation(libs.club.minnced.jdave.native.win)
+    implementation(libs.club.minnced.jdave.native.darwin)
 }
 
 group = "de.kifo"
