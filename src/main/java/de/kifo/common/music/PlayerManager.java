@@ -7,6 +7,9 @@ import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
+import com.sedmelluq.discord.lavaplayer.tools.io.HttpClientTools;
+import com.sedmelluq.discord.lavaplayer.tools.io.HttpInterface;
+import com.sedmelluq.discord.lavaplayer.tools.io.HttpInterfaceManager;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
@@ -21,6 +24,7 @@ import dev.lavalink.youtube.clients.WebWithThumbnail;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import org.apache.http.client.config.RequestConfig;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -59,8 +63,26 @@ public class PlayerManager {
         final String clientId = getenv("SPOTIFY_CLIENT_ID");
         final String clientSecret = getenv("SPOTIFY_CLIENT_SECRET");
         final String spDc = getenv("SPOTIFY_SPCD");
-        SpotifySourceManager spotifySourceManager = new SpotifySourceManager(clientId, clientSecret, spDc, "US", ignored -> audioPlayerManager, new DefaultMirroringAudioTrackResolver(null));
-        spotifySourceManager.setCustomTokenEndpoint("http://host.docker.internal:8090/api/token");
+        HttpInterfaceManager spotifyTokenHttpManager = HttpClientTools.createDefaultThreadLocalManager();
+        spotifyTokenHttpManager.configureRequests(config -> RequestConfig.copy(config)
+                .setConnectTimeout(15000)
+                .setSocketTimeout(30000)
+                .build());
+        SpotifySourceManager spotifySourceManager = new SpotifySourceManager(
+                clientId,
+                clientSecret,
+                true,
+                "http://host.docker.internal:8090/api/token",
+                spDc,
+                "US",
+                ignored -> audioPlayerManager,
+                new DefaultMirroringAudioTrackResolver(null)
+        ) {
+            @Override
+            public HttpInterface getHttpInterface() {
+                return spotifyTokenHttpManager.getInterface();
+            }
+        };
         audioPlayerManager.registerSourceManager(spotifySourceManager);
 
         registerRemoteSources(audioPlayerManager, com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager.class);
