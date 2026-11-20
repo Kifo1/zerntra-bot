@@ -1,7 +1,7 @@
 plugins {
     `java-library`
     application
-    id("com.gradleup.shadow") version "9.4.1"
+    id("com.gradleup.shadow") version "9.6.1"
     `maven-publish`
 }
 
@@ -47,6 +47,9 @@ dependencies {
     implementation(libs.club.minnced.jdave.native.aarch64)
     implementation(libs.club.minnced.jdave.native.win)
     implementation(libs.club.minnced.jdave.native.darwin)
+
+    // Logging
+    implementation(libs.org.slf4j.slf4j.simple)
 }
 
 group = "de.kifo"

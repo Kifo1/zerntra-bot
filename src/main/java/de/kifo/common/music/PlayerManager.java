@@ -12,6 +12,13 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 import de.kifo.JavaBot;
 import dev.lavalink.youtube.YoutubeAudioSourceManager;
+import dev.lavalink.youtube.clients.AndroidVrWithThumbnail;
+import dev.lavalink.youtube.clients.ClientOptions;
+import dev.lavalink.youtube.clients.IosWithThumbnail;
+import dev.lavalink.youtube.clients.MusicWithThumbnail;
+import dev.lavalink.youtube.clients.WebEmbeddedWithThumbnail;
+import dev.lavalink.youtube.clients.WebWithThumbnail;
+import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
@@ -23,6 +30,7 @@ import static com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers.regist
 import static de.kifo.JavaBot.messageService;
 import static java.lang.System.getenv;
 
+@Slf4j
 public class PlayerManager {
 
     @Inject
@@ -32,15 +40,27 @@ public class PlayerManager {
     private final AudioPlayerManager audioPlayerManager = new DefaultAudioPlayerManager();
 
     public PlayerManager() {
-        YoutubeAudioSourceManager youtubeAudioSourceManager = new YoutubeAudioSourceManager();
+        ClientOptions webOptions = ClientOptions.DEFAULT.copy();
+        webOptions.setPlayback(false);
+
+        ClientOptions iosOptions = ClientOptions.DEFAULT.copy();
+        iosOptions.setSearching(false);
+
+        YoutubeAudioSourceManager youtubeAudioSourceManager = new YoutubeAudioSourceManager(
+                true,
+                new MusicWithThumbnail(),
+                new WebWithThumbnail(webOptions),
+                new IosWithThumbnail(iosOptions),
+                new AndroidVrWithThumbnail(),
+                new WebEmbeddedWithThumbnail()
+        );
         audioPlayerManager.registerSourceManager(youtubeAudioSourceManager);
 
         final String clientId = getenv("SPOTIFY_CLIENT_ID");
         final String clientSecret = getenv("SPOTIFY_CLIENT_SECRET");
         final String spDc = getenv("SPOTIFY_SPCD");
         SpotifySourceManager spotifySourceManager = new SpotifySourceManager(clientId, clientSecret, spDc, "US", ignored -> audioPlayerManager, new DefaultMirroringAudioTrackResolver(null));
-        spotifySourceManager.setPreferAnonymousToken(false);
-        spotifySourceManager.setCustomTokenEndpoint("http://localhost:8090/api/token");
+        spotifySourceManager.setCustomTokenEndpoint("http://host.docker.internal:8090/api/token");
         audioPlayerManager.registerSourceManager(spotifySourceManager);
 
         registerRemoteSources(audioPlayerManager, com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager.class);
@@ -96,6 +116,7 @@ public class PlayerManager {
 
             @Override
             public void loadFailed(FriendlyException e) {
+                log.error("Failed to load track {}: {}", trackURL, e.getMessage(), e);
                 future.complete(messageService.error("This song could not be found."));
             }
         });

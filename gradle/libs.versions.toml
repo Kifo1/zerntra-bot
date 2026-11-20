@@ -1,13 +1,14 @@
 [versions]
-com-github-topi314-lavasrc-lavasrc-plugin = "4.8.1"
-com-google-code-gson-gson = "2.13.2"
+com-github-topi314-lavasrc-lavasrc-plugin = "84e1bf1"
+com-google-code-gson-gson = "2.15.0"
 com-google-inject-guice = "7.0.0"
-dev-arbjerg-lavaplayer = "2.2.6"
-dev-lavalink-youtube-youtube-plugin = "1.18.0"
-net-dv8tion-jda = "6.3.2"
-org-projectlombok-lombok = "1.18.42"
+dev-arbjerg-lavaplayer = "2.2.7"
+dev-lavalink-youtube-youtube-plugin = "e41dd95f8bd134b51e75080fb28cc805fecb431a"
+net-dv8tion-jda = "6.7.0"
+org-projectlombok-lombok = "1.18.48"
 club-minnced-jdave-api = "0.1.8"
 club-minnced-jdave-native = "0.1.8"
+org-slf4j-slf4j-simple = "2.0.19"
 
 [libraries]
 com-github-topi314-lavasrc-lavasrc-plugin = { module = "com.github.topi314.lavasrc:lavasrc-plugin", version.ref = "com-github-topi314-lavasrc-lavasrc-plugin" }
@@ -19,6 +20,7 @@ net-dv8tion-jda = { module = "net.dv8tion:JDA", version.ref = "net-dv8tion-jda" 
 org-projectlombok-lombok = { module = "org.projectlombok:lombok", version.ref = "org-projectlombok-lombok" }
 club-minnced-jdave-api = { module  = "club.minnced:jdave-api", version.ref = "club-minnced-jdave-api" }
 club-minnced-jdave-native-linux = { module = "club.minnced:jdave-native-linux-x86-64", version.ref = "club-minnced-jdave-native" }
-club-minnced-jdave-native-aarch64 = { module = "club.minnced:jdave-native-aarch64", version.ref = "club-minnced-jdave-native" }
+club-minnced-jdave-native-aarch64 = { module = "club.minnced:jdave-native-linux-aarch64", version.ref = "club-minnced-jdave-native" }
 club-minnced-jdave-native-win = { module = "club.minnced:jdave-native-win-x86-64", version.ref = "club-minnced-jdave-native" }
 club-minnced-jdave-native-darwin = { module = "club.minnced:jdave-native-darwin", version.ref = "club-minnced-jdave-native" }
+org-slf4j-slf4j-simple = { module = "org.slf4j:slf4j-simple", version.ref = "org-slf4j-slf4j-simple" }
